@@ -1,0 +1,27 @@
+﻿Build started 15.11.2012 09:08:00.
+     1>Project "C:\Users\FloO\Documents\Ecoles, Jobs\EPFL\5eme Semestre\Introduction to Computer Graphics\Projet\ClothDemo\TestProject\TestProject.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Release\ClothDemo.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Particle.cpp
+         Particle.cpp
+     1>Particle.cpp(6): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>Particle.cpp(17): warning C4305: 'initializing' : truncation from 'double' to 'float'
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\FloO\Documents\Ecoles, Jobs\EPFL\5eme Semestre\Introduction to Computer Graphics\Projet\ClothDemo\Release\ClothDemo.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\ClothDemo.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\FloO\Documents\Ecoles, Jobs\EPFL\5eme Semestre\Introduction to Computer Graphics\Projet\ClothDemo\Release\ClothDemo.pdb" /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\FloO\Documents\Ecoles, Jobs\EPFL\5eme Semestre\Introduction to Computer Graphics\Projet\ClothDemo\Release\ClothDemo.lib" /MACHINE:X86 Release\Cloth.obj
+         Release\Main.obj
+         Release\Particle.obj
+         Release\Vector3f.obj
+         Generating code
+         Finished generating code
+         TestProject.vcxproj -> C:\Users\FloO\Documents\Ecoles, Jobs\EPFL\5eme Semestre\Introduction to Computer Graphics\Projet\ClothDemo\Release\ClothDemo.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\FloO\Documents\Ecoles, Jobs\EPFL\5eme Semestre\Introduction to Computer Graphics\Projet\ClothDemo\Release\ClothDemo.exe;#1" /manifest Release\ClothDemo.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Release\ClothDemo.unsuccessfulbuild".
+         Touching "Release\ClothDemo.lastbuildstate".
+     1>Done Building Project "C:\Users\FloO\Documents\Ecoles, Jobs\EPFL\5eme Semestre\Introduction to Computer Graphics\Projet\ClothDemo\TestProject\TestProject.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.69
