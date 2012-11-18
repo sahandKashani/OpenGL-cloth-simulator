@@ -12,7 +12,7 @@
 				<Option object_output="Debug" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="../../data/sphere.obj" />
+				<Option parameters="../../data/bunny.obj" />
 				<Compiler>
 					<Add option="-D_DEBUG" />
 					<Add option="-D_CONSOLE" />
@@ -23,12 +23,12 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="cloth-simulator" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../../src/cloth-simulator" />
+				<Option output="03-CartoonViewer" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../src/exercises/03-CartoonViewer" />
 				<Option object_output="Release" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="../../data/sphere.obj" />
+				<Option parameters="../../../data/bunny.obj" />
 				<Compiler>
 					<Add option="-DNDEBUG" />
 					<Add option="-D_CONSOLE" />
