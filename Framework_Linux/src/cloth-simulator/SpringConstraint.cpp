@@ -1,4 +1,5 @@
 #include "../math/Vector3.h"
+#include "MassElement.cpp"
 
 class SpringConstraint {
 
@@ -8,7 +9,7 @@ private:
     MassElement* m2;
 
 public:
-    SpringConstraint(MassElement p_m1, MassElement p_m2) :
+    SpringConstraint(MassElement* p_m1, MassElement* p_m2) :
         m1(p_m1), m2(p_m2)
     {
         Vector3 vectorBetweenM1AndM2 = m2->getPosition() - m1->getPosition();
@@ -20,4 +21,4 @@ public:
         m1->translateByOffset(correctionVectorPerMassElement);
         m2->translateByOffset(-correctionVectorPerMassElement);
     }
-}
+};
