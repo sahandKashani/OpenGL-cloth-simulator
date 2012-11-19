@@ -19,6 +19,17 @@ ClothViewer(const char* _title, int _width, int _height)
     init();
 }
 
+void ClothViewer::idle() {
+    if (isWatchOn) {
+        float prevTime = currentTime;
+        currentTime = watch.stop();
+
+        float timeElapsed = currentTime - prevTime;
+
+        // TODO : apply forces to the cloth
+    }
+}
+
 
 //-----------------------------------------------------------------------------
 
@@ -110,6 +121,17 @@ keyboard(int key, int x, int y) {
         case 'h':
             printf("Help:\n");
             printf("'h'\t-\thelp\n");
+            break;
+
+        case ' ':
+            if (isWatchOn) {
+                watch.stop();
+                currentTime = 0.0;
+            } else {
+                watch.start();
+            }
+
+            isWatchOn = !isWatchOn;
             break;
 
         default:

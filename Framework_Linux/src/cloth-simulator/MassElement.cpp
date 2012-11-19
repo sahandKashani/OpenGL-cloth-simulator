@@ -39,4 +39,8 @@ public:
             position = position + offset;
         }
     }
+
+    Vector3 getPosition() {
+        return Vector3(position);
+    }
 };

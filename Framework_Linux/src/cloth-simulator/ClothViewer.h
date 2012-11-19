@@ -24,6 +24,7 @@
 #include "../gl/Light3D.h"
 #include "../gl/texture.h"
 #include "../gl/fbo.h"
+#include "../utils/StopWatch.h"
 
 //== CLASS DEFINITION =========================================================
 
@@ -46,7 +47,7 @@ class ClothViewer : public TrackballViewer {
         virtual void init();
         virtual void keyboard(int key, int x, int y);
         virtual void reshape(int w, int h);
-
+        virtual void idle();
         virtual void draw_scene(DrawMode _draw_mode);
 
     private:
@@ -89,6 +90,10 @@ class ClothViewer : public TrackballViewer {
 
         // edge texture
         Texture m_edgeTexture;
+
+        StopWatch watch;
+        bool isWatchOn;
+        float currentTime;
 
 
 };

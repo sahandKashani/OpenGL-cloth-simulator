@@ -26,6 +26,6 @@ void main() {
     // color = shadingCoefficient * color;
 
     // gl_FragColor = vec4(color, 1.0);
-    gl_FragColor = vec4(color * dot(N,L), 1.0);
+    gl_FragColor = vec4(color * max(0.0, dot(N,L)), 1.0);
 
 }
