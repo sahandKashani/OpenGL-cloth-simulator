@@ -12,7 +12,7 @@
 				<Option object_output="Debug" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="../../data/helix.obj" />
+				<Option parameters="../../data/sphere.obj" />
 				<Compiler>
 					<Add option="-D_DEBUG" />
 					<Add option="-D_CONSOLE" />

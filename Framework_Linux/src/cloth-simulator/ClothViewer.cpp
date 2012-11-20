@@ -1,17 +1,5 @@
-//=============================================================================
-// //   Exercise code for the lecture //
-//=============================================================================
-//=============================================================================
-// //  CLASS ClothViewer - IMPLEMENTATION //
-//=============================================================================
-
-//== INCLUDES =================================================================
-
 #include "ClothViewer.h"
 #include "../utils/Mesh3DReader.h"
-
-//== IMPLEMENTATION ==========================================================
-
 
 ClothViewer::
 ClothViewer(const char* _title, int _width, int _height)
@@ -30,9 +18,7 @@ void ClothViewer::idle() {
     }
 }
 
-
 //-----------------------------------------------------------------------------
-
 
 void
 ClothViewer::
@@ -45,8 +31,6 @@ init() {
 
     // load shaders
     m_cartoonShader.create("cartoon.vs", "cartoon.fs");
-    m_depthShader.create("depth.vs", "depth.fs");
-    m_edgeShader.create("edge.vs", "edge.fs");
     m_blendingShader.create("blending.vs", "blending.fs");
 
     // setup 1D color texture with 4 colors
@@ -60,10 +44,7 @@ init() {
     m_cartoonShadingTexture.create(4, 1, GL_RGB, GL_RGB, GL_FLOAT, tex, GL_NEAREST);
 }
 
-
-
 //-----------------------------------------------------------------------------
-
 
 void
 ClothViewer::
@@ -74,17 +55,10 @@ reshape(int _w, int _h) {
     m_fbo.create(_w, _h, true);
 
     m_cartoonOutputTexture.create(_w, _h, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE);
-    // try GL_RGB4, GL_RGB8, GL_RGB10, GL_RGB16 to see effect of edge precision
-    m_depthTexture.create(_w, _h, GL_RGB16, GL_RGB, GL_UNSIGNED_BYTE);
-    m_edgeTexture.create(_w, _h, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE);
 
     // attach textures to frame buffer
     m_fbo.attachTexture(GL_COLOR_ATTACHMENT0_EXT, m_cartoonOutputTexture.getID());
-    m_fbo.attachTexture(GL_COLOR_ATTACHMENT1_EXT, m_depthTexture.getID());
-    m_fbo.attachTexture(GL_COLOR_ATTACHMENT2_EXT, m_edgeTexture.getID());
-
 }
-
 
 //-----------------------------------------------------------------------------
 
@@ -105,14 +79,9 @@ loadMesh(const std::string& filenameOBJ, const std::string& filenameMTL) {
     Vector3 center = 0.5 * (bbmin + bbmax);
 
     set_scene_pos(center, radius);
-
-
 }
 
-
-
 //-----------------------------------------------------------------------------
-
 
 void
 ClothViewer::
@@ -144,7 +113,6 @@ keyboard(int key, int x, int y) {
 
 //-----------------------------------------------------------------------------
 
-
 void
 ClothViewer::
 draw_scene(DrawMode _draw_mode) {
@@ -153,23 +121,13 @@ draw_scene(DrawMode _draw_mode) {
     drawCartoon();
     m_fbo.unbind();
 
-    // draw depth image
-    m_fbo.bind(GL_COLOR_ATTACHMENT1_EXT);
-    drawDepth();
-    m_fbo.unbind();
-
-    // calculate edges on depth image
-    m_fbo.bind(GL_COLOR_ATTACHMENT2_EXT);
-    drawEdge();
-    m_fbo.unbind();
-
     // blend edges and cartoon shading
     blendCartoonAndEdge();
 
 }
 
-
 //-----------------------------------------------------------------------------
+
 void
 ClothViewer::
 drawCartoon() {
@@ -236,40 +194,6 @@ drawCartoon() {
 }
 
 //-----------------------------------------------------------------------------
-void
-ClothViewer::
-drawDepth() {
-
-    // clear screen
-    glEnable(GL_DEPTH_TEST);
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    m_depthShader.bind();
-
-    // set parameters
-    m_depthShader.setMatrix4x4Uniform("worldcamera", m_camera.getTransformation().Inverse());
-    m_depthShader.setMatrix4x4Uniform("projection", m_camera.getProjectionMatrix());
-    m_depthShader.setMatrix4x4Uniform("modelworld", m_mesh.getTransformation());
-    m_depthShader.setFloatUniform("near", m_camera.getNearPlane());
-    m_depthShader.setFloatUniform("far", m_camera.getFarPlane());
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-
-    glVertexPointer(3, GL_DOUBLE, 0, m_mesh.getVertexPointer());
-
-    for (unsigned int i = 0; i < m_mesh.getNumberOfParts(); i++) {
-        glDrawElements(GL_TRIANGLES, m_mesh.getNumberOfFaces(i) * 3, GL_UNSIGNED_INT, m_mesh.getVertexIndicesPointer(i));
-    }
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-
-    m_depthShader.unbind();
-
-}
-
-
-//-----------------------------------------------------------------------------
 
 void
 ClothViewer::
@@ -287,30 +211,8 @@ renderFullScreenQuad() {
     glEnd();
 }
 
-
 //-----------------------------------------------------------------------------
-void
-ClothViewer::
-drawEdge() {
 
-    // clear screen
-    glDisable(GL_DEPTH_TEST);
-
-    m_edgeShader.bind();
-    m_depthTexture.setLayer(0);
-    m_depthTexture.bind();
-    m_edgeShader.setIntUniform("texture", m_depthTexture.getLayer());
-    m_edgeShader.setFloatUniform("dx", 1.0 / width_);
-    m_edgeShader.setFloatUniform("dy", 1.0 / height_);
-
-    // render a quad over full image
-    renderFullScreenQuad();
-
-    m_edgeShader.unbind();
-
-}
-
-//-----------------------------------------------------------------------------
 void
 ClothViewer::
 blendCartoonAndEdge() {
@@ -322,8 +224,6 @@ blendCartoonAndEdge() {
     m_cartoonOutputTexture.setLayer(0);
     m_cartoonOutputTexture.bind();
     m_blendingShader.setIntUniform("texture1", m_cartoonOutputTexture.getLayer());
-    m_edgeTexture.setLayer(1);
-    m_edgeTexture.bind();
     m_blendingShader.setIntUniform("texture2", m_edgeTexture.getLayer());
 
 
@@ -332,6 +232,3 @@ blendCartoonAndEdge() {
 
     m_blendingShader.unbind();
 }
-
-
-//=============================================================================
