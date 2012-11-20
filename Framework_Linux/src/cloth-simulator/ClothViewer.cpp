@@ -123,7 +123,6 @@ draw_scene(DrawMode _draw_mode) {
 
     // blend edges and cartoon shading
     blendCartoonAndEdge();
-
 }
 
 //-----------------------------------------------------------------------------

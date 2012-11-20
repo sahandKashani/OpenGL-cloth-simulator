@@ -3,7 +3,7 @@
 #include "../math/Vector3.h"
 
 #define AIR_DAMPENING 0.01
-#define MASS 1.01
+#define MASS 1.0
 
 class Node {
 
