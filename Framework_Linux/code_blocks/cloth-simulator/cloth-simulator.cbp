@@ -48,8 +48,6 @@
 		<Unit filename="../../src/cloth-simulator/Cloth.cpp" />
 		<Unit filename="../../src/cloth-simulator/ClothViewer.cpp" />
 		<Unit filename="../../src/cloth-simulator/ClothViewer.h" />
-		<Unit filename="../../src/cloth-simulator/MassElement.cpp" />
-		<Unit filename="../../src/cloth-simulator/SpringConstraint.cpp" />
 		<Unit filename="../../src/cloth-simulator/main.cpp" />
 		<Unit filename="../../src/gl/Camera3D.h" />
 		<Unit filename="../../src/gl/GlutViewer.cpp" />
