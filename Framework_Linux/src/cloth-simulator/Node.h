@@ -2,8 +2,9 @@
 #define NODE_HH
 
 #include "../math/Vector3.h"
+#include "../gl/Object3D.h"
 
-class Node
+class Node : public Object3D
 {
 
 private:
@@ -27,6 +28,8 @@ public:
     void translateByOffset(Vector3 offset);
 
     Vector3 getPosition();
+
+    void draw();
 };
 
 #endif

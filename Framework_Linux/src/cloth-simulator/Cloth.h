@@ -31,6 +31,8 @@ private:
 
 public:
 
+    Cloth();
+
     Cloth(float p_cloth_width, float p_cloth_height, int p_number_of_nodes_on_width, int p_number_of_nodes_on_height);
 
     void draw();

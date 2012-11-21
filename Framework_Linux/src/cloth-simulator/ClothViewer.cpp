@@ -51,13 +51,8 @@ ClothViewer::
 reshape(int _w, int _h) {
     TrackballViewer::reshape(_w, _h);
 
-    // resize framebuffer and textures
-    m_fbo.create(_w, _h, true);
-
     m_cartoonOutputTexture.create(_w, _h, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE);
 
-    // attach textures to frame buffer
-    m_fbo.attachTexture(GL_COLOR_ATTACHMENT0_EXT, m_cartoonOutputTexture.getID());
 }
 
 //-----------------------------------------------------------------------------
@@ -116,15 +111,8 @@ keyboard(int key, int x, int y) {
 void
 ClothViewer::
 draw_scene(DrawMode _draw_mode) {
-    // draw cartoon shading
-    m_fbo.bind(GL_COLOR_ATTACHMENT0_EXT);
     drawCartoon();
-    m_fbo.unbind();
 
-    // blend edges and cartoon shading
-    blendCartoonAndEdge();
-
-    // drawBall();
 }
 
 //-----------------------------------------------------------------------------
@@ -192,44 +180,4 @@ drawCartoon() {
 
     m_cartoonShadingTexture.unbind();
     m_cartoonShader.unbind();
-}
-
-//-----------------------------------------------------------------------------
-
-void
-ClothViewer::
-renderFullScreenQuad() {
-    // render full screen quad (note that vertex coordinates are already in opengl coordinates, so no transformation required!)
-    glBegin(GL_QUADS);
-    glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f);
-    glVertex2f(-1.0f, -1.0f);
-    glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0f, 0.0f);
-    glVertex2f(1.0f, -1.0f);
-    glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0f, 1.0f);
-    glVertex2f(1.0f, 1.0f);
-    glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0f);
-    glVertex2f(-1.0f, 1.0f);
-    glEnd();
-}
-
-//-----------------------------------------------------------------------------
-
-void
-ClothViewer::
-blendCartoonAndEdge() {
-
-    // clear screen
-    glDisable(GL_DEPTH_TEST);
-
-    m_blendingShader.bind();
-    m_cartoonOutputTexture.setLayer(0);
-    m_cartoonOutputTexture.bind();
-    m_blendingShader.setIntUniform("texture1", m_cartoonOutputTexture.getLayer());
-    m_blendingShader.setIntUniform("texture2", m_edgeTexture.getLayer());
-
-
-    // render a quad over full image
-    renderFullScreenQuad();
-
-    m_blendingShader.unbind();
 }

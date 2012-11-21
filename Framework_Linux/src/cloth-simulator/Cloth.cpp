@@ -69,6 +69,9 @@ void Cloth::addNodes()
    }
 }
 
+Cloth::Cloth()
+{}
+
 Cloth::Cloth(float p_cloth_width = 50.0, float p_cloth_height = 50.0, int p_number_of_nodes_on_width = 20, int p_number_of_nodes_on_height = 20) :
     cloth_width(p_cloth_width),
     cloth_height(p_cloth_height),

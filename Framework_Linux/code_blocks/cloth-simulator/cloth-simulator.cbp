@@ -12,7 +12,7 @@
 				<Option object_output="Debug" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="../../data/bunny.obj" />
+				<Option parameters="../../data/dodecahedra.obj" />
 				<Compiler>
 					<Add option="-D_DEBUG" />
 					<Add option="-D_CONSOLE" />
