@@ -55,9 +55,8 @@ class ClothViewer : public TrackballViewer {
         void drawDepth();
         void drawEdge();
         void blendCartoonAndEdge();
-
+        void drawBall();
         void renderFullScreenQuad();
-
 
     protected:
 

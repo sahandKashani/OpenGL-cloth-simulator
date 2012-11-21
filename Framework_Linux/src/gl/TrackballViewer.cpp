@@ -27,8 +27,8 @@ TrackballViewer(const char* _title, int _width, int _height)
     for (int i = 0; i < 10; ++i) {
         button_down_[i] = false;
     }
-    
-    
+
+
     init();
 }
 
@@ -44,7 +44,7 @@ init() {
     glColor4f(0.0, 0.0, 0.0, 1.0);
     glDisable(GL_DITHER);
     glEnable(GL_DEPTH_TEST);
-    
+
     set_scene_pos(Vector3(0.0, 0.0, 0.0), 1.0);
 }
 
@@ -57,7 +57,7 @@ TrackballViewer::
 reshape(int _w, int _h) {
     width_  = _w;
     height_ = _h;
-    
+
     m_camera.setSize(_w, _h);
     glViewport(0, 0, _w, _h);
     glutPostRedisplay();
@@ -72,7 +72,7 @@ set_scene_pos(const Vector3& _pos, float _radius) {
     m_center = _pos;
     // set camera radius so that is can observe the scene
     m_camera.setRadius(_radius);
-    
+
     view_all();
 }
 
@@ -85,13 +85,13 @@ TrackballViewer::
 view_all() {
     // move camera to world coordinate center
     m_camera.translateWorld(- m_camera.origin());
-    
+
     // move camera to object center
     m_camera.translateWorld(m_center);
-    
+
     // move camera (zoom) so that object center is in negative view direction of camera
     m_camera.zoomCamera(-1.0);
-    
+
     // keep camera rotation center in camera coordinates
     m_camera_rotation_depth = (m_camera.getTransformation() * m_center).z;
 }
@@ -111,11 +111,11 @@ map_to_sphere(int _x, int _y, Vector3& _v3D) {
         double sinx         = sin(M_PI * x * 0.5);
         double siny         = sin(M_PI * y * 0.5);
         double sinx2siny2   = sinx * sinx + siny * siny;
-        
+
         _v3D.x = sinx;
         _v3D.y = siny;
         _v3D.z = sinx2siny2 < 1.0 ? sqrt(1.0 - sinx2siny2) : 0.0;
-        
+
         return true;
     } else {
         return false;
@@ -130,7 +130,7 @@ void
 TrackballViewer::
 display() {
     draw_scene(draw_mode_);
-    
+
     // switch back-buffer to front-buffer
     glutSwapBuffers();
 }
@@ -185,26 +185,24 @@ TrackballViewer::
 draw_scene(DrawMode _draw_mode) {
     // clear screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     Matrix4 projectionMatrixGL =
         (m_camera.getProjectionMatrix() * m_camera.getTransformation().Inverse()).Transpose();
     glMultMatrixd(projectionMatrixGL.dataBlock());
-    
-    glMatrixMode(GL_MODELVIEW);
-    
-    
+
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     //Matrix4 modelViewMatrixGL = m_object.getTransformation().Transpose();
     //glMultMatrixd( modelViewMatrixGL.dataBlock() );
-    
-    
+
+
     glDisable(GL_LIGHTING);
     glColor3f(0, 0, 0);
     glutSolidTeapot(0.5);
-    
+
 }
 
 
@@ -221,13 +219,13 @@ mouse(int button, int state, int x, int y) {
         last_point_ok_ = map_to_sphere(x, y, last_point_3D_);
         button_down_[button] = true;
     }
-    
-    
+
+
     // mouse release
     else {
         last_point_ok_ = false;
         button_down_[button] = false;
-        
+
         // GLUT: button 3 or 4 -> mouse wheel clicked
         if (button == 3) {
             zoom(0, (int)(y - 0.05 * width_));
@@ -235,9 +233,9 @@ mouse(int button, int state, int x, int y) {
             zoom(0, (int)(y + 0.05 * width_));
         }
     }
-    
+
     modifiers_ = glutGetModifiers();
-    
+
     glutPostRedisplay();
 }
 
@@ -253,24 +251,24 @@ motion(int x, int y) {
             (button_down_[0] && (modifiers_ == GLUT_ACTIVE_SHIFT))) {
         zoom(x, y);
     }
-    
+
     // translation
     else if (button_down_[1] ||
              (button_down_[0] && (modifiers_ == GLUT_ACTIVE_ALT))) {
         translation(x, y);
     }
-    
+
     // rotation
     else if (button_down_[0]) {
         rotation(x, y);
     }
-    
-    
+
+
     // remeber points
     last_x_ = x;
     last_y_ = y;
     last_point_ok_ = map_to_sphere(x, y, last_point_3D_);
-    
+
     glutPostRedisplay();
 }
 
@@ -284,13 +282,13 @@ rotation(int x, int y) {
     if (last_point_ok_) {
         Vector3  new_point_3D;
         bool   new_point_ok;
-        
+
         new_point_ok = map_to_sphere(x, y, new_point_3D);
-        
+
         if (new_point_ok) {
             Vector3 axis      = last_point_3D_.cross(new_point_3D);
             float cos_angle = last_point_3D_.dot(new_point_3D);
-            
+
             if (fabs(cos_angle) < 1.0) {
                 axis.normalize();
                 float angle = 2.0 * acos(cos_angle);
@@ -311,26 +309,26 @@ translation(int x, int y) {
     // change in x and y since last mouse event
     float dx = -(x - last_x_) / float(width_);
     float dy = -(y - last_y_) / float(height_);
-    
+
     // transform world center into camera coordinates
     Vector3 ptCamera = m_camera.getTransformation().Inverse() * m_center;
-    
+
     // get depth, -1 du to negative viewing direction of OpenGL
     double z = -ptCamera.z;
-    
+
     // find scaling of dx and dy from window coordiantes to near plane
     // coordiantes and from there to camera coordinates at the object's depth
     double near = m_camera.getNearPlane();
-    
+
     double top, bottom, left, right;
     m_camera.getScreenExtents(top, bottom, left, right);
-    
+
     // translate the camera accordingly
     float tx = 2.0 * dx  * right / near * z;
     float ty = -2.0 * dy * top / near * z;
     m_camera.translateObject(Vector3(tx, ty, 0.0));
-    
-    
+
+
 }
 
 
@@ -342,10 +340,10 @@ TrackballViewer::
 zoom(int x, int y) {
     float dy = y - last_y_;
     float h  = height_;
-    
+
     float frac = dy / h;
     float dist = m_camera.getRadius() *  frac * 3.0;
-    
+
     m_camera.translateObject(Vector3(0, 0, dist));
     m_camera_rotation_depth += dist;
 }
