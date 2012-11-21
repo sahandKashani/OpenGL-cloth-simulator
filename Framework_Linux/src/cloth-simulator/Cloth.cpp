@@ -83,3 +83,10 @@ Cloth::Cloth(float p_cloth_width = 50.0, float p_cloth_height = 50.0, int p_numb
    createShearSpringConstraints();
    createBendingSpringConstraints();
 }
+
+void Cloth::draw()
+{
+    for(std::vector<Node>::iterator node_iterator = nodes.begin(); node_iterator != nodes.end(); ++node_iterator) {
+
+    }
+}
