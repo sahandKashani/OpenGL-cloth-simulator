@@ -36,8 +36,8 @@ GlutViewer(const char* _title, int _width, int _height)
     glutInitWindowSize(_width, _height);
     windowID_ = glutCreateWindow(_title);
     windows__[windowID_] = this;
-    
-    
+
+
     // register callbacks
     glutDisplayFunc(display__);
     glutKeyboardFunc(keyboard__);
@@ -48,12 +48,12 @@ GlutViewer(const char* _title, int _width, int _height)
     glutReshapeFunc(reshape__);
     glutVisibilityFunc(visibility__);
     glutIdleFunc(idle__);
-    
+
     //Init glew for windows
     //#ifdef _WIN32
     glewInit();
     //#endif
-    
+
     // create popupmenu
     //create_popup_menu();
     //glEnable(GL_MULTISAMPLE);
@@ -125,12 +125,12 @@ void GlutViewer::create_popup_menu() {
     // register 'processmenu__' as callback
     // to popupmenu events
     menuID_ = glutCreateMenu(processmenu__);
-    
+
     // add entries to the popupmenu
     glutAddMenuEntry("Wireframe",    WIREFRAME);
     glutAddMenuEntry("Solid Flat",   SOLID_FLAT);
     glutAddMenuEntry("Solid Smooth", SOLID_SMOOTH);
-    
+
     // attach the menu to the right button
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -153,20 +153,20 @@ void GlutViewer::processmenu(int id) {
         case WIREFRAME:
             draw_mode_ = WIREFRAME;
             break;
-            
+
         case SOLID_FLAT:
             draw_mode_ = SOLID_FLAT;
             break;
-            
+
         case SOLID_SMOOTH:
             draw_mode_ = SOLID_SMOOTH;
             break;
-            
+
         default:
             std::cerr << "Draw mode not supported! Switching to 'Wireframe'." << std::endl;
             draw_mode_ = WIREFRAME;
     }
-    
+
     glutPostRedisplay();
 }
 
@@ -189,10 +189,10 @@ void GlutViewer::keyboard(int key, int x, int y) {
                     glutPositionWindow(bak_left_, bak_top_);
                     fullscreen_ = false;
                 }
-                
+
                 break;
             }
-            
+
             // ESC
         case 27: {
                 exit(0);
