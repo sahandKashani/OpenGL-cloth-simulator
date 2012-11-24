@@ -1,5 +1,6 @@
 #include "Cloth.h"
 #include "Node.h"
+#include <iostream>
 
 Node* Cloth::getNode(int x, int y)
 {
@@ -62,9 +63,10 @@ void Cloth::addNodes()
 
            float x_position = cloth_width * ((float) x) / ((float) number_of_nodes_on_width);
            float y_position = cloth_height * ((float) y) / ((float) number_of_nodes_on_height);
-           Vector3 node_position = Vector3(x_position, y_position, 5.0);
+           Vector3 node_position = Vector3(x_position, y_position, 0.0);
 
            nodes[y * number_of_nodes_on_width + x] = Node(node_position, true);
+           node_position.print("added node");
        }
    }
 }
@@ -87,6 +89,6 @@ Cloth::Cloth(float p_cloth_width = 50.0, float p_cloth_height = 50.0, int p_numb
 void Cloth::draw()
 {
     for(std::vector<Node>::iterator node_iterator = nodes.begin(); node_iterator != nodes.end(); ++node_iterator) {
-
+        // node_iterator->draw();
     }
 }

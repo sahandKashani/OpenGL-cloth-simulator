@@ -28,6 +28,8 @@ void ClothViewer::init()
 
     // load shaders
     m_cartoonShader.create("cartoon.vs", "cartoon.fs");
+
+    m_cloth = Cloth(3.0, 3.0, 3, 3);
 }
 
 void ClothViewer::reshape(int _w, int _h)
@@ -82,12 +84,15 @@ void ClothViewer::keyboard(int key, int x, int y)
 
 void ClothViewer::draw_scene(DrawMode _draw_mode)
 {
-    drawCartoon();
+    // drawCartoon();
     drawCloth();
 }
 
 void ClothViewer::drawCloth()
 {
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     m_cloth.draw();
 }
 

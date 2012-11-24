@@ -1,5 +1,6 @@
 #include "Node.h"
 #include "../math/Vector3.h"
+#include "../gl/gl.h"
 
 #define AIR_DAMPENING 0.01
 #define MASS 1.0
@@ -37,4 +38,19 @@ void Node::translateByOffset(Vector3 offset)
 Vector3 Node::getPosition()
 {
     return position;
+}
+
+void Node::draw()
+{
+    Vector3 positionWorld = m_transformationMatrix * position;
+
+    // position.print("positionObject");
+    positionWorld.print("positionWorld");
+
+    glColor3f(1.0, 0.0, 0.0);
+    glPushMatrix();
+        glTranslated(positionWorld.x, positionWorld.y, positionWorld.y);
+        glutSolidSphere(1,10,10);
+    glPopMatrix();
+
 }
