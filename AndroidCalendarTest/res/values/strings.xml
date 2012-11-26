@@ -5,11 +5,12 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="writeCalendar">Write to calendar</string>
     <string name="getFromCalendar">Get from calendar</string>
-    <string name="title_activity_event_details">EventDetailsActivity</string>
+    <string name="title_activity_event_details">Event details</string>
     <string name="eventTitle">Event Title</string>
     <string name="goTo">Go to...</string>
     <string name="place">Room number / building</string>
     <string name="begin">21.11.2012 - 08h00</string>
     <string name="end">21.12.2012 - 21h00</string>
+    <string name="exportToCalendar">Export to Android Calendar</string>
 
 </resources>
