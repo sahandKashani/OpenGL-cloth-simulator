@@ -17,5 +17,12 @@
         android:layout_height="wrap_content"
         android:onClick="getFromCalendar"
         android:text="@string/getFromCalendar" />
+    
+    <Button
+        android:id="@+id/goTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goTo"
+        android:text="@string/goTo" />
 
 </LinearLayout>

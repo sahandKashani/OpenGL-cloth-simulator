@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -55,4 +57,11 @@ public class MainActivity extends Activity {
     	    .setData(builder.build());
     	startActivity(intent);
     }
+    
+    public void goTo(View view) {
+    	Intent intent = new Intent(this.getApplicationContext(), EventDetailsActivity.class);
+    	startActivity(intent);
+    	this.finish();
+    }
+    
 }
