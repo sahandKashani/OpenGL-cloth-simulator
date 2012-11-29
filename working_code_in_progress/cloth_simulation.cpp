@@ -16,13 +16,16 @@
 #include <vector>
 
 // macros
-#define NUMBER_NODES_WIDTH 5
-#define NUMBER_NODES_HEIGHT 10
+#define NUMBER_NODES_WIDTH 17
+#define NUMBER_NODES_HEIGHT 21
 
 // Global variables
-bool drawNodesEnabled = true;
-bool drawConstraintsEnabled = true;
 bool drawWireFrameEnabled = false;
+bool drawNodesEnabled = true;
+bool drawStructuralConstraintsEnabled = false;
+bool drawShearConstraintsEnabled = false;
+bool drawStructuralBendConstraintsEnabled = false;
+bool drawShearBendConstraintsEnabled = false;
 
 // -----------------------------------------------------------------------------
 // Node class
@@ -115,10 +118,8 @@ private:
     // -------------------------------------------------------------------------
     // drawing methods
     void drawNodes();
-    void drawConstraints();
     void drawStructuralConstraints();
     void drawShearConstraints();
-    void drawBendConstraints();
     void drawStructuralBendConstraints();
     void drawShearBendConstraints();
 
@@ -154,19 +155,25 @@ void Cloth::createConstraints()
 
 void Cloth::createStructuralConstraints()
 {
-    for(int x = 0; x < NUMBER_NODES_WIDTH - 1; x += 1)
+    for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT - 1; y += 1)
+        for(int y = 0; y < NUMBER_NODES_HEIGHT; y += 1)
         {
-            Node* centerNode = &nodes[x][y];
-            Node* rightNode = &nodes[x + 1][y];
-            Node* topNode = &nodes[x][y + 1];
+            if(x < NUMBER_NODES_WIDTH - 1)
+            {
+                Node* leftNode = &nodes[x][y];
+                Node* rightNode = &nodes[x + 1][y];
+                Constraint rightConstraint(leftNode, rightNode);
+                structuralConstraints.push_back(rightConstraint);
+            }
 
-            Constraint rightConstraint(centerNode, rightNode);
-            Constraint topConstraint(centerNode, topNode);
-
-            structuralConstraints.push_back(rightConstraint);
-            structuralConstraints.push_back(topConstraint);
+            if(y < NUMBER_NODES_HEIGHT - 1)
+            {
+                Node* bottomNode = &nodes[x][y];
+                Node* topNode = &nodes[x][y + 1];
+                Constraint topConstraint(bottomNode, topNode);
+                structuralConstraints.push_back(topConstraint);
+            }
         }
     }
 }
@@ -199,19 +206,25 @@ void Cloth::createBendConstraints()
 
 void Cloth::createStructuralBendConstraints()
 {
-    for(int x = 0; x < NUMBER_NODES_WIDTH - 2; x += 1)
+    for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT - 2; y += 1)
+        for(int y = 0; y < NUMBER_NODES_HEIGHT; y += 1)
         {
-            Node* bottomNode = &nodes[x][y];
-            Node* rightNode = &nodes[x + 2][y];
-            Node* topNode = &nodes[x][y + 2];
+            if(x < NUMBER_NODES_WIDTH - 2)
+            {
+                Node* leftNode = &nodes[x][y];
+                Node* rightNode = &nodes[x + 2][y];
+                Constraint rightConstraint(leftNode, rightNode);
+                structuralBendConstraints.push_back(rightConstraint);
+            }
 
-            Constraint rightConstraint(bottomNode, rightNode);
-            Constraint topConstraint(bottomNode, topNode);
-
-            structuralBendConstraints.push_back(rightConstraint);
-            structuralBendConstraints.push_back(topConstraint);
+            if(y < NUMBER_NODES_HEIGHT - 2)
+            {
+                Node* bottomNode = &nodes[x][y];
+                Node* topNode = &nodes[x][y + 2];
+                Constraint topConstraint(bottomNode, topNode);
+                structuralBendConstraints.push_back(topConstraint);
+            }
         }
     }
 }
@@ -243,9 +256,24 @@ void Cloth::draw()
         drawNodes();
     }
 
-    if(drawConstraintsEnabled)
+    if(drawStructuralConstraintsEnabled)
     {
-        drawConstraints();
+        drawStructuralConstraints();
+    }
+
+    if(drawShearConstraintsEnabled)
+    {
+        drawShearConstraints();
+    }
+
+    if(drawStructuralBendConstraintsEnabled)
+    {
+        drawStructuralBendConstraints();
+    }
+
+    if(drawShearBendConstraintsEnabled)
+    {
+        drawShearBendConstraints();
     }
 }
 
@@ -259,13 +287,6 @@ void Cloth::drawNodes()
             nodes[x][y].draw();
         }
     }
-}
-
-void Cloth::drawConstraints()
-{
-    drawStructuralConstraints();
-    drawShearConstraints();
-    drawBendConstraints();
 }
 
 void Cloth::drawStructuralConstraints()
@@ -310,12 +331,6 @@ void Cloth::drawShearConstraints()
     }
 }
 
-void Cloth::drawBendConstraints()
-{
-    drawStructuralBendConstraints();
-    drawShearBendConstraints();
-}
-
 void Cloth::drawStructuralBendConstraints()
 {
     for(
@@ -358,45 +373,12 @@ void Cloth::drawShearBendConstraints()
     }
 }
 
-// void Cloth::drawTriangles()
-// {
-//     // loop over edges (not vertices)
-//     for(int row = 0; row < NUMBER_NODES_HEIGHT - 1; row += 1)
-//     {
-//         for(int col = 0; col < NUMBER_NODES_WIDTH - 1; col += 1)
-//         {
-//             float x1 = (nodes[row][col]).getPosition().x;
-//             float y1 = (nodes[row][col]).getPosition().y;
-//             float z1 = (nodes[row][col]).getPosition().z;
-
-//             float x2 = (nodes[row + 1][col]).getPosition().x;
-//             float y2 = (nodes[row + 1][col]).getPosition().y;
-//             float z2 = (nodes[row + 1][col]).getPosition().z;
-
-//             float x3 = (nodes[row + 1][col + 1]).getPosition().x;
-//             float y3 = (nodes[row + 1][col + 1]).getPosition().y;
-//             float z3 = (nodes[row + 1][col + 1]).getPosition().z;
-
-//             float x4 = (nodes[row][col + 1]).getPosition().x;
-//             float y4 = (nodes[row][col + 1]).getPosition().y;
-//             float z4 = (nodes[row][col + 1]).getPosition().z;
-
-//             glBegin(GL_TRIANGLE_STRIP);
-//                 glVertex3f(x1, y1, z1);
-//                 glVertex3f(x2, y2, z2);
-//                 glVertex3f(x3, y3, z3);
-
-//                 glVertex3f(x4, y4, z4);
-//             glEnd();
-//         }
-//     }
-// }
-
 // -----------------------------------------------------------------------------
 // GLUT setup
 
 // Cloth declaration
 Cloth cloth;
+
 // How far the camera should be so that all nodes on the height are visible
 float cameraDistanceZ = NUMBER_NODES_HEIGHT;
 
@@ -443,14 +425,24 @@ void display(void)
 void keyboard(unsigned char key, int x, int y)
 {
     switch (key) {
-        case 'c':
-            drawConstraintsEnabled = !drawConstraintsEnabled;
-            break;
-        case 'n':
-            drawNodesEnabled = !drawNodesEnabled;
+        case 'q':
+            drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
             break;
         case 'w':
+            drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
+            break;
+        case 'e':
+            drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
+            break;
+        case 'r':
+            drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
+            break;
+        case 'x':
+            drawNodesEnabled = !drawNodesEnabled;
+            break;
+        case 'y':
             drawWireFrameEnabled = !drawWireFrameEnabled;
+            break;
         default:
             break;
     }
