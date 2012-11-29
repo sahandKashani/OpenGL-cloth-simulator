@@ -169,6 +169,11 @@ class Vector3 {
             return sqrt(lengthSquared());
         }
 
+        void print() const
+        {
+            std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
+        }
+
         // Vector3 Data
         double x, y, z;
 };
