@@ -1,14 +1,16 @@
 ICG 2012: Cloth Simulation Project
 
-Florian Briant
+Coders:
+    - Florian Briant
+    - Sébastien Corthésy
+    - Sahand Kashani-Akhavan
 
-Sébastien Corthésy
+SSH address:
+    - git@github.com:scorthes/clothSimulation.git
 
-Kashani-Akhavan Sahand
-
-SSH address: git@github.com:scorthes/clothSimulation.git
-
-Mail address: clothSimulation@groupes.epfl.ch
+Mail address:
+    - clothSimulation@groupes.epfl.ch
 
 Please work on working_code_in_progress/cloth_simulation.cpp, which contains all the project code.
+
 The command necessary to compile the project can be found on the first line of the cloth_simulation.cpp file.
