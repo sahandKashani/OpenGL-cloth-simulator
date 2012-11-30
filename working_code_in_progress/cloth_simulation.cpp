@@ -15,9 +15,12 @@
 // used for stocking Constraints
 #include <vector>
 
+// used for printing
+#include <string>
+
 // macros
-#define NUMBER_NODES_WIDTH 17
-#define NUMBER_NODES_HEIGHT 21
+#define NUMBER_NODES_WIDTH 21
+#define NUMBER_NODES_HEIGHT 23
 
 // Global variables
 bool drawWireFrameEnabled = false;
@@ -26,6 +29,15 @@ bool drawStructuralConstraintsEnabled = false;
 bool drawShearConstraintsEnabled = false;
 bool drawStructuralBendConstraintsEnabled = false;
 bool drawShearBendConstraintsEnabled = false;
+
+float pitchAngle = 0.0;
+float yawAngle = 0.0;
+float rollAngle = 0.0;
+
+// increments in degrees
+float pitchAngleIncrement = 5.0;
+float yawAngleIncrement = 5.0;
+float rollAngleIncrement = 5.0;
 
 // -----------------------------------------------------------------------------
 // Node class
@@ -58,9 +70,19 @@ void Node::draw()
     // for each node to draw.
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
+
+        // we always want the nodes to be drawn as solid spheres, even if
+        // drawWireFrameEnabled is true.
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glutSolidSphere(0.15, 20, 20);
     glPopMatrix();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
+
+    // put back wireframe if necessary, so other objects will be rendered correctly.
+    if(drawWireFrameEnabled)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
 }
 // -----------------------------------------------------------------------------
 
@@ -382,8 +404,86 @@ Cloth cloth;
 // How far the camera should be so that all nodes on the height are visible
 float cameraDistanceZ = NUMBER_NODES_HEIGHT;
 
+void showHelp()
+{
+    // help controls
+    std::cout << "help controls:" << std::endl;
+    std::cout << "  h: show help" << std::endl;
+
+    std::cout << std::endl;
+
+    // drawing controls
+    std::cout << "drawing controls:" << std::endl;
+    std::cout << "  x: toggle draw nodes" << std::endl;
+    std::cout << "  q: toggle draw structural      constraints" << std::endl;
+    std::cout << "  w: toggle draw shear           constraints" << std::endl;
+    std::cout << "  e: toggle draw structural bend constraints" << std::endl;
+    std::cout << "  r: toggle draw shear bend      constraints" << std::endl;
+    std::cout << "  y: toggle draw wireframe" << std::endl;
+
+    std::cout << std::endl;
+
+    // yaw, pitch and roll controls
+    std::cout << "yaw, pitch and roll controls:" << std::endl;
+    std::cout << "  l: increment yaw   by " << yawAngleIncrement << "°" << std::endl;
+    std::cout << "  j: decrement yaw   by " << yawAngleIncrement << "°" << std::endl;
+    std::cout << "  i: increment pitch by " << pitchAngleIncrement << "°" << std::endl;
+    std::cout << "  k: decrement pitch by " << pitchAngleIncrement << "°" << std::endl;
+    std::cout << "  o: increment roll  by " << rollAngleIncrement << "°" << std::endl;
+    std::cout << "  u: decrement roll  by " << rollAngleIncrement << "°" << std::endl;
+
+    std::cout << std::endl;
+
+    // camera position controls
+    // TODO
+    // std::cout << "camera position controls:" << std::endl;
+
+    // std::cout << std::endl;
+}
+
+// prints "true" if controlVariableEnabled is true, and "false" otherwise
+std::string isEnabled(bool controlVariableEnabled)
+{
+    if(controlVariableEnabled)
+    {
+        return "true";
+    }
+    else
+    {
+        return "false";
+    }
+}
+
+void showDrawStatus()
+{
+    std::cout << "draw status:" << std::endl;
+    std::cout << "  draw nodes                       = " << isEnabled(drawNodesEnabled) << std::endl;
+    std::cout << "  draw structural constraints      = " << isEnabled(drawStructuralConstraintsEnabled) << std::endl;
+    std::cout << "  draw shear constraints           = " << isEnabled(drawShearConstraintsEnabled) << std::endl;
+    std::cout << "  draw structural bend constraints = " << isEnabled(drawStructuralBendConstraintsEnabled) << std::endl;
+    std::cout << "  draw shear bend constraints      = " << isEnabled(drawShearBendConstraintsEnabled) << std::endl;
+    std::cout << "  draw wireframe                   = " << isEnabled(drawWireFrameEnabled) << std::endl;
+
+    std::cout << std::endl;
+}
+
+void showCameraStatus()
+{
+    std::cout << "camera status:" << std::endl;
+    std::cout << "  yaw:   " << yawAngle << "°" << std::endl;
+    std::cout << "  pitch: " << pitchAngle << "°" << std::endl;
+    std::cout << "  roll:  " << rollAngle << "°" << std::endl;
+
+    std::cout << std::endl;
+}
+
 void init(void)
 {
+    // show help at the very beginning
+    showHelp();
+    showDrawStatus();
+    showCameraStatus();
+
     glClearColor(0.0, 0.0, 0.0, 0.0);
 }
 
@@ -424,24 +524,94 @@ void display(void)
 
 void keyboard(unsigned char key, int x, int y)
 {
-    switch (key) {
+    switch(key)
+    {
+        // help controls
+        case 'h':
+            showHelp();
+            break;
+
+        // drawing controls
         case 'q':
             drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
+            showDrawStatus();
             break;
         case 'w':
             drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
+            showDrawStatus();
             break;
         case 'e':
             drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
+            showDrawStatus();
             break;
         case 'r':
             drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
+            showDrawStatus();
             break;
         case 'x':
             drawNodesEnabled = !drawNodesEnabled;
+            showDrawStatus();
             break;
         case 'y':
             drawWireFrameEnabled = !drawWireFrameEnabled;
+            showDrawStatus();
+            break;
+
+        // yaw, pitch and roll controls
+        case 'k':
+            // turn camera "down" one notch
+            pitchAngle -= pitchAngleIncrement;
+            showCameraStatus();
+            break;
+        case 'i':
+            // turn camera "up" one notch
+            pitchAngle += pitchAngleIncrement;
+            showCameraStatus();
+            break;
+        case 'j':
+            // turn camera "left" one notch
+            yawAngle -= yawAngleIncrement;
+            showCameraStatus();
+            break;
+        case 'l':
+            // turn camera "right" one notch
+            yawAngle += yawAngleIncrement;
+            showCameraStatus();
+            break;
+        case 'u':
+            // tilt camera "left" one notch
+            rollAngle -= rollAngleIncrement;
+            showCameraStatus();
+            break;
+        case 'o':
+            // tilt camera "right" one notch
+            rollAngle += rollAngleIncrement;
+            showCameraStatus();
+            break;
+
+        default:
+            break;
+    }
+
+    glutPostRedisplay();
+}
+
+void keyboardArrows(int key, int x, int y)
+{
+    // TODO : Move the camera around scene horizontally or vertically
+    switch(key)
+    {
+        case GLUT_KEY_UP:
+
+            break;
+        case GLUT_KEY_DOWN:
+
+            break;
+        case GLUT_KEY_LEFT:
+
+            break;
+        case GLUT_KEY_RIGHT:
+
             break;
         default:
             break;
@@ -471,6 +641,7 @@ int main(int argc, char** argv)
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
+    glutSpecialFunc(keyboardArrows);
     glutMainLoop();
     return 0;
 }
