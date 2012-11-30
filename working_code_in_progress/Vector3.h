@@ -17,6 +17,7 @@
 #include <assert.h>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 class Vector3 {
     public:
@@ -25,9 +26,11 @@ class Vector3 {
             : x(_x), y(_y), z(_z) {
         }
 
-        void print(std::string vector_name)
+        std::string toString() const
         {
-            std::cout << vector_name << " = (" << x << ", " << y << ", " << z << ")" << std::endl;
+            std::stringstream vector;
+            vector << "(" << x << ", " << y << ", " << z << ")";
+            return vector.str();
         }
 
         Vector3 operator+(const Vector3& v) const {
@@ -167,11 +170,6 @@ class Vector3 {
 
         double length() const {
             return sqrt(lengthSquared());
-        }
-
-        void print() const
-        {
-            std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
         }
 
         // Vector3 Data
