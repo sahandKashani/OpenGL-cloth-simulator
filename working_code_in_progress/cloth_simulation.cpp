@@ -20,8 +20,8 @@
 #include <string>
 
 // macros
-#define NUMBER_NODES_WIDTH 10
-#define NUMBER_NODES_HEIGHT 10
+#define NUMBER_NODES_WIDTH 31
+#define NUMBER_NODES_HEIGHT 31
 
 // Global variables
 bool drawWireFrameEnabled = false;
@@ -31,14 +31,14 @@ bool drawShearConstraintsEnabled = false;
 bool drawStructuralBendConstraintsEnabled = false;
 bool drawShearBendConstraintsEnabled = false;
 
-// float pitchAngle = 0.0;
-// float yawAngle = 0.0;
-// float rollAngle = 0.0;
+float pitchAngleInRadians = 0.0;
+float yawAngleInRadians = 0.0;
+float rollAngleInRadians = 0.0;
 
-// // increments in degrees
-// float pitchAngleIncrementInDegrees = 5.0;
-// float yawAngleIncrementInDegrees = 5.0;
-// float rollAngleIncrementInDegrees = 5.0;
+// angle increments in radians
+float pitchAngleIncrementInRadians = 0.5;
+float yawAngleIncrementInRadians = 0.5;
+float rollAngleIncrementInRadians = 0.5;
 
 // -----------------------------------------------------------------------------
 // Camera class
@@ -56,10 +56,14 @@ public:
     Vector3 getUpDirection();
     void setPosition(Vector3 pos);
     void setViewDirection(Vector3 direction);
-    void move(Vector3 direction);
-    void rotateX(float angleInRadians);
-    void rotateY(float angleInRadians);
-    void rotateZ(float angleInRadians);
+    void setUpDirection(Vector3 direction);
+    void translate(Vector3 direction);
+    void rotateObjectX(float angleInRadians);
+    void rotateObjectY(float angleInRadians);
+    void rotateObjectZ(float angleInRadians);
+    void rotateWorldX(float angleInRadians);
+    void rotateWorldY(float angleInRadians);
+    void rotateWorldZ(float angleInRadians);
 };
 
 // initialize camera with the following properties:
@@ -97,12 +101,18 @@ void Camera::setViewDirection(Vector3 direction)
     viewDirection = direction;
 }
 
-void Camera::move(Vector3 direction)
+void Camera::setUpDirection(Vector3 direction)
 {
-    position += direction;
+    upDirection = direction;
 }
 
-void Camera::rotateX(float angleInRadians)
+void Camera::translate(Vector3 direction)
+{
+    position += direction;
+    viewDirection = Vector3(direction.x, direction.y, viewDirection.z + direction.z);
+}
+
+void Camera::rotateObjectX(float angleInRadians)
 {
     Matrix4 rotationMatrix = Matrix4(1.0, 0.0                , 0.0                 , 0.0,
                                      0.0, cos(angleInRadians), -sin(angleInRadians), 0.0,
@@ -114,7 +124,7 @@ void Camera::rotateX(float angleInRadians)
     viewDirection = rotationMatrix * viewDirection;
 }
 
-void Camera::rotateY(float angleInRadians)
+void Camera::rotateObjectY(float angleInRadians)
 {
     Matrix4 rotationMatrix = Matrix4(cos(angleInRadians) , 0.0, sin(angleInRadians), 0.0,
                                      0.0                 , 1.0, 0.0                , 0.0,
@@ -126,7 +136,7 @@ void Camera::rotateY(float angleInRadians)
     viewDirection = rotationMatrix * viewDirection;
 }
 
-void Camera::rotateZ(float angleInRadians)
+void Camera::rotateObjectZ(float angleInRadians)
 {
     Matrix4 rotationMatrix = Matrix4(cos(angleInRadians), -sin(angleInRadians), 0.0, 0.0,
                                      sin(angleInRadians), cos(angleInRadians) , 0.0, 0.0,
@@ -164,8 +174,6 @@ Vector3 Node::getPosition()
 }
 
 void Node::draw()
-
-// TODO : go back to origin.
 {
     // push matrix so we can come back to the "origin" (on element (0.0, 0.0, 0.0))
     // for each node to draw.
@@ -227,7 +235,7 @@ private:
     std::vector<Constraint> shearBendConstraints;
 
     // node creation method
-    void addNodes();
+    void createNodes();
 
     // -------------------------------------------------------------------------
     // constraint creation methods
@@ -253,11 +261,11 @@ public:
 
 Cloth::Cloth()
 {
-    addNodes();
+    createNodes();
     createConstraints();
 }
 
-void Cloth::addNodes()
+void Cloth::createNodes()
 {
     for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
     {
@@ -505,43 +513,6 @@ Cloth cloth;
 // Declare a camera at origin
 Camera camera;
 
-// void showHelp()
-// {
-//     // help controls
-//     std::cout << "help controls:" << std::endl;
-//     std::cout << "  h: show help" << std::endl;
-
-//     std::cout << std::endl;
-
-//     // drawing controls
-//     std::cout << "drawing controls:" << std::endl;
-//     std::cout << "  x: toggle draw nodes" << std::endl;
-//     std::cout << "  q: toggle draw structural      constraints" << std::endl;
-//     std::cout << "  w: toggle draw shear           constraints" << std::endl;
-//     std::cout << "  e: toggle draw structural bend constraints" << std::endl;
-//     std::cout << "  r: toggle draw shear bend      constraints" << std::endl;
-//     std::cout << "  y: toggle draw wireframe" << std::endl;
-
-//     std::cout << std::endl;
-
-//     // yaw, pitch and roll controls
-//     std::cout << "yaw, pitch and roll controls:" << std::endl;
-//     std::cout << "  l: increment yaw   by " << yawAngleIncrementInDegrees << "°" << std::endl;
-//     std::cout << "  j: decrement yaw   by " << yawAngleIncrementInDegrees << "°" << std::endl;
-//     std::cout << "  i: increment pitch by " << pitchAngleIncrementInDegrees << "°" << std::endl;
-//     std::cout << "  k: decrement pitch by " << pitchAngleIncrementInDegrees << "°" << std::endl;
-//     std::cout << "  o: increment roll  by " << rollAngleIncrementInDegrees << "°" << std::endl;
-//     std::cout << "  u: decrement roll  by " << rollAngleIncrementInDegrees << "°" << std::endl;
-
-//     std::cout << std::endl;
-
-//     // camera position controls
-//     // TODO
-//     // std::cout << "camera position controls:" << std::endl;
-
-//     // std::cout << std::endl;
-// }
-
 // prints "true" if controlVariableEnabled is true, and "false" otherwise
 std::string isEnabled(bool controlVariableEnabled)
 {
@@ -555,49 +526,83 @@ std::string isEnabled(bool controlVariableEnabled)
     }
 }
 
-void showDrawStatus()
+void showHelp()
 {
-    std::cout << "draw status:" << std::endl;
-    std::cout << "  draw nodes                       = " << isEnabled(drawNodesEnabled) << std::endl;
-    std::cout << "  draw structural constraints      = " << isEnabled(drawStructuralConstraintsEnabled) << std::endl;
-    std::cout << "  draw shear constraints           = " << isEnabled(drawShearConstraintsEnabled) << std::endl;
-    std::cout << "  draw structural bend constraints = " << isEnabled(drawStructuralBendConstraintsEnabled) << std::endl;
-    std::cout << "  draw shear bend constraints      = " << isEnabled(drawShearBendConstraintsEnabled) << std::endl;
-    std::cout << "  draw wireframe                   = " << isEnabled(drawWireFrameEnabled) << std::endl;
+    // help controls
+    std::cout << "help controls:" << std::endl;
+    std::cout << "  h: show help" << std::endl;
+
+    std::cout << std::endl;
+
+    // drawing controls
+    std::cout << "drawing controls:" << std::endl;
+    std::cout << "  x: toggle draw nodes" << std::endl;
+    std::cout << "  q: toggle draw structural      constraints" << std::endl;
+    std::cout << "  w: toggle draw shear           constraints" << std::endl;
+    std::cout << "  e: toggle draw structural bend constraints" << std::endl;
+    std::cout << "  r: toggle draw shear bend      constraints" << std::endl;
+    std::cout << "  y: toggle draw wireframe" << std::endl;
+
+    std::cout << std::endl;
+
+    // yaw, pitch and roll controls
+    std::cout << "yaw, pitch and roll controls:" << std::endl;
+    std::cout << "  j: decrement yaw   by " << yawAngleIncrementInRadians << " rad" << std::endl;
+    std::cout << "  l: increment yaw   by " << yawAngleIncrementInRadians << " rad" << std::endl;
+    std::cout << "  k: decrement pitch by " << pitchAngleIncrementInRadians << " rad" << std::endl;
+    std::cout << "  i: increment pitch by " << pitchAngleIncrementInRadians << " rad" << std::endl;
+    std::cout << "  u: decrement roll  by " << rollAngleIncrementInRadians << " rad" << std::endl;
+    std::cout << "  o: increment roll  by " << rollAngleIncrementInRadians << " rad" << std::endl;
+
+    std::cout << std::endl;
+
+    // camera position controls
+    std::cout << "camera position controls:" << std::endl;
+    std::cout << "  "
 
     std::cout << std::endl;
 }
 
-// void showCameraStatus()
-// {
-//     std::cout << "camera status:" << std::endl;
-//     std::cout << "  yaw:   " << yawAngle << "°" << std::endl;
-//     std::cout << "  pitch: " << pitchAngle << "°" << std::endl;
-//     std::cout << "  roll:  " << rollAngle << "°" << std::endl;
+void showDrawStatus()
+{
+    std::cout << "draw status:" << std::endl;
+    std::cout << "  draw nodes                      : " << isEnabled(drawNodesEnabled) << std::endl;
+    std::cout << "  draw structural constraints     : " << isEnabled(drawStructuralConstraintsEnabled) << std::endl;
+    std::cout << "  draw shear constraints          : " << isEnabled(drawShearConstraintsEnabled) << std::endl;
+    std::cout << "  draw structural bend constraints: " << isEnabled(drawStructuralBendConstraintsEnabled) << std::endl;
+    std::cout << "  draw shear bend constraints     : " << isEnabled(drawShearBendConstraintsEnabled) << std::endl;
+    std::cout << "  draw wireframe                  : " << isEnabled(drawWireFrameEnabled) << std::endl;
 
-//     std::cout << std::endl;
-// }
+    std::cout << std::endl;
+}
+
+void showCameraStatus()
+{
+    std::cout << "camera status:" << std::endl;
+    std::cout << "  camera position      : " << camera.getPosition().toString() << std::endl;
+    std::cout << "  camera view direction: " << camera.getViewDirection().toString() << std::endl;
+    std::cout << "  camera up direction  : " << camera.getUpDirection().toString() << std::endl;
+    std::cout << "  yaw                  : " << yawAngleInRadians << " rad" << std::endl;
+    std::cout << "  pitch                : " << pitchAngleInRadians << " rad" << std::endl;
+    std::cout << "  roll                 : " << rollAngleInRadians << " rad" << std::endl;
+
+    std::cout << std::endl;
+}
 
 void init()
 {
     float cameraX = (NUMBER_NODES_WIDTH - 1) / 2.0;
     float cameraY = (NUMBER_NODES_HEIGHT - 1) / 2.0;
-    float cameraZ = NUMBER_NODES_HEIGHT;
+    // move camera back
+    float cameraZ = -NUMBER_NODES_HEIGHT;
 
-
-    camera.setPosition(Vector3(cameraX, cameraY, cameraZ));
-    camera.setViewDirection(Vector3(cameraX, cameraY, 1.0));
-
-    std::cout << "cameraPosition = " << camera.getPosition().toString() << std::endl;
-    std::cout << "cameraViewDirection = " << camera.getViewDirection().toString() << std::endl;
-    std::cout << "cameraUpDirection = " << camera.getUpDirection().toString() << std::endl;
-
-    std::cout << std::endl;
+    camera.setPosition(Vector3(0.0, 0.0, 0.0));
+    camera.translate(Vector3(cameraX, cameraY, cameraZ));
 
     // show help at the very beginning
-    // showHelp();
-    // showDrawStatus();
-    // showCameraStatus();
+    showHelp();
+    showDrawStatus();
+    showCameraStatus();
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
 }
@@ -630,7 +635,6 @@ void display()
     Vector3 cameraViewDirection = camera.getViewDirection();
     Vector3 cameraUpDirection = camera.getUpDirection();
 
-    // glPushMatrix();
     gluLookAt(cameraPosition.x,
               cameraPosition.y,
               cameraPosition.z,
@@ -640,12 +644,9 @@ void display()
               cameraUpDirection.x,
               cameraUpDirection.y,
               cameraUpDirection.z);
-    // glPopMatrix();
 
-    // glPushMatrix();
     // draw cloth
     cloth.draw();
-    // glPopMatrix();
 
     // force redraw
     glFlush();
@@ -657,71 +658,72 @@ void keyboard(unsigned char key, int x, int y)
     {
         // help controls
         case 'h':
-            // showHelp();
+            showHelp();
             break;
 
         // drawing controls
         case 'q':
             drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
-            // showDrawStatus();
+            showDrawStatus();
             break;
         case 'w':
             drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
-            // showDrawStatus();
+            showDrawStatus();
             break;
         case 'e':
             drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
-            // showDrawStatus();
+            showDrawStatus();
             break;
         case 'r':
             drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
-            // showDrawStatus();
+            showDrawStatus();
             break;
         case 'x':
             drawNodesEnabled = !drawNodesEnabled;
-            // showDrawStatus();
+            showDrawStatus();
             break;
         case 'y':
             drawWireFrameEnabled = !drawWireFrameEnabled;
-            // showDrawStatus();
+            showDrawStatus();
             break;
 
         // yaw, pitch and roll controls
         case 'k':
             // turn camera "down" one notch
-            // pitchAngle -= pitchAngleIncrementInDegrees;
-            // showCameraStatus();
+            pitchAngleInRadians -= pitchAngleIncrementInRadians;
+            showCameraStatus();
             break;
         case 'i':
             // turn camera "up" one notch
-            // pitchAngle += pitchAngleIncrementInDegrees;
-            // showCameraStatus();
+            pitchAngleInRadians += pitchAngleIncrementInRadians;
+            showCameraStatus();
             break;
         case 'j':
             // turn camera "left" one notch
-            // yawAngle -= yawAngleIncrementInDegrees;
-            // showCameraStatus();
+            yawAngleInRadians -= yawAngleIncrementInRadians;
+            showCameraStatus();
             break;
         case 'l':
             // turn camera "right" one notch
-            // yawAngle += yawAngleIncrementInDegrees;
-            // showCameraStatus();
+            yawAngleInRadians += yawAngleIncrementInRadians;
+            showCameraStatus();
             break;
         case 'u':
             // tilt camera "left" one notch
-            // rollAngle -= rollAngleIncrementInDegrees;
-            // showCameraStatus();
+            rollAngleInRadians -= rollAngleIncrementInRadians;
+            showCameraStatus();
             break;
         case 'o':
             // tilt camera "right" one notch
-            // rollAngle += rollAngleIncrementInDegrees;
-            // showCameraStatus();
+            rollAngleInRadians += rollAngleIncrementInRadians;
+            showCameraStatus();
             break;
 
         default:
             break;
     }
 
+    // redraw screen after a change in preferences
     glutPostRedisplay();
 }
 
@@ -746,6 +748,7 @@ void keyboardArrows(int key, int x, int y)
             break;
     }
 
+    // redraw screen after a change in preferences
     glutPostRedisplay();
 }
 
@@ -772,8 +775,8 @@ int main(int argc, char** argv)
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
 
-    // glutKeyboardFunc(keyboard);
-    // glutSpecialFunc(keyboardArrows);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(keyboardArrows);
 
     glutMainLoop();
     return 0;
