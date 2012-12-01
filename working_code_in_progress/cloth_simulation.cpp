@@ -768,8 +768,8 @@ void display()
     // draw cloth
     cloth.draw();
 
-    // force redraw
-    glFlush();
+    // swap buffers needed for double buffering
+    glutSwapBuffers();
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -879,17 +879,27 @@ void keyboardArrows(int key, int x, int y)
 void reshape(int w, int h)
 {
     glMatrixMode(GL_PROJECTION);
+
+
+    // reset projection matrix
     glLoadIdentity();
-    // set a big clipping plane for now (no display errors)
-    gluPerspective(60.0, 1.0, 1.5, 200.0);
+
+    // set window size to new values
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+
+    // set a big clipping plane for now (no display errors)
+    float aspectRatio = (1.0 * w) / h;
+    gluPerspective(60.0, aspectRatio, 1.0, 1000.0);
+
+    // go back to modelview matrix (for other functions)
     glMatrixMode(GL_MODELVIEW);
 }
 
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    // TODO : depth
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
     glutInitWindowSize(500, 500);
 
@@ -899,7 +909,7 @@ int main(int argc, char** argv)
     // normal laptop screen
     // glutInitWindowPosition(100, 100);
 
-    glutCreateWindow(argv[0]);
+    glutCreateWindow("Cloth Simulation");
 
     init();
     glutDisplayFunc(display);
