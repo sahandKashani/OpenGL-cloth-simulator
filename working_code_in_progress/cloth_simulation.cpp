@@ -19,8 +19,8 @@
 // used for printing
 #include <string>
 
-const int numberNodesWidth = 31;
-const int numberNodesHeight = 31;
+const int numberNodesWidth = 10;
+const int numberNodesHeight = 10;
 float nearPlane = 1.0;
 float farPlane = 1000.0;
 
@@ -48,10 +48,11 @@ private:
     // used for getters only, not for computation
     float yaw;
     float pitch;
+    float roll;
 
-    // rotation around camera axis
-    void rotateAroundXAxisObject(float angleInRadians);
-    void rotateAroundYAxisObject(float angleInRadians);
+    // don't want people from outside to use this, it's only for
+    // rotateAroundZAxisObject
+    void rotateAroundZAxisWorld(float angleInRadians);
 
 public:
     Camera();
@@ -60,17 +61,21 @@ public:
     Vector3 getUpDirection();
     float getYaw();
     float getPitch();
+    float getRoll();
     void setViewDirection(Vector3 direction);
     void setUpDirection(Vector3 direction);
-    void offsetYaw(float angleInRadians);
-    void offsetPitch(float angleInRadians);
 
     // translation
     void translate(Vector3 direction);
 
     // rotation around world axis
-    void rotateAroundYAxisWorld(float angleInRadians);
     void rotateAroundXAxisWorld(float angleInRadians);
+    void rotateAroundYAxisWorld(float angleInRadians);
+
+    // rotation around camera axis
+    void rotateAroundXAxisObject(float angleInRadians);
+    void rotateAroundYAxisObject(float angleInRadians);
+    void rotateAroundZAxisObject(float angleInRadians);
 };
 
 // initialize camera with the following properties:
@@ -79,12 +84,14 @@ public:
 // upDirection = (0.0, 1.0, 0.0)
 // yaw = 0.0
 // pitch = 0.0
+// roll = 0.0
 Camera::Camera() :
     position(Vector3(0.0, 0.0, 0.0)),
     viewDirection(Vector3(0.0, 0.0, 1.0)),
     upDirection(Vector3(0.0, 1.0, 0.0)),
     yaw(0.0),
-    pitch(0.0)
+    pitch(0.0),
+    roll(0.0)
 {}
 
 Vector3 Camera::getPosition()
@@ -112,6 +119,11 @@ float Camera::getPitch()
     return pitch;
 }
 
+float Camera::getRoll()
+{
+    return roll;
+}
+
 void Camera::setViewDirection(Vector3 direction)
 {
     viewDirection = direction;
@@ -120,18 +132,6 @@ void Camera::setViewDirection(Vector3 direction)
 void Camera::setUpDirection(Vector3 direction)
 {
     upDirection = direction;
-}
-
-void Camera::offsetYaw(float angleInRadians)
-{
-    yaw += angleInRadians;
-    rotateAroundYAxisObject(angleInRadians);
-}
-
-void Camera::offsetPitch(float angleInRadians)
-{
-    pitch += angleInRadians;
-    rotateAroundXAxisObject(angleInRadians);
 }
 
 void Camera::translate(Vector3 direction)
@@ -143,6 +143,7 @@ void Camera::translate(Vector3 direction)
 // TODO : doesn't work
 void Camera::rotateAroundXAxisObject(float angleInRadians)
 {
+    pitch += angleInRadians;
     Vector3 oldPosition = position;
     // go to (0.0, 0.0, 0.0)
     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
@@ -153,10 +154,22 @@ void Camera::rotateAroundXAxisObject(float angleInRadians)
 // TODO : doesn't work
 void Camera::rotateAroundYAxisObject(float angleInRadians)
 {
+    yaw += angleInRadians;
     Vector3 oldPosition = position;
     // go to (0.0, 0.0, 0.0)
     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
     rotateAroundYAxisWorld(angleInRadians);
+    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+}
+
+// TODO : doesn't work
+void Camera::rotateAroundZAxisObject(float angleInRadians)
+{
+    roll += angleInRadians;
+    Vector3 oldPosition = position;
+    // go to (0.0, 0.0, 0.0)
+    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+    rotateAroundZAxisWorld(angleInRadians);
     translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
 }
 
@@ -178,6 +191,18 @@ void Camera::rotateAroundYAxisWorld(float angleInRadians)
                                      0.0                 , 1.0, 0.0                , 0.0,
                                      -sin(angleInRadians), 0.0, cos(angleInRadians), 0.0,
                                      0.0                 , 0.0, 0.0                , 1.0);
+
+    position = rotationMatrix * position;
+    viewDirection = rotationMatrix * viewDirection;
+    upDirection = rotationMatrix * upDirection;
+}
+
+void Camera::rotateAroundZAxisWorld(float angleInRadians)
+{
+    Matrix4 rotationMatrix = Matrix4(cos(angleInRadians), -sin(angleInRadians), 0.0, 0.0,
+                                     sin(angleInRadians), cos(angleInRadians) , 0.0, 0.0,
+                                     0.0                , 0.0                 , 1.0, 0.0,
+                                     0.0                , 0.0                 , 0.0, 1.0);
 
     position = rotationMatrix * position;
     viewDirection = rotationMatrix * viewDirection;
@@ -221,7 +246,10 @@ void Node::draw()
     // for each node to draw.
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
-        glutSolidSphere(0.15, 20, 20);
+
+        // draw a cube, rather than a sphere, because spheres are computationally
+        // expensive (20+ sides needed for it to look like a sphere)
+        glutSolidCube(0.15);
     glPopMatrix();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
 }
@@ -361,14 +389,23 @@ Cloth::Cloth()
 
 void Cloth::createNodes()
 {
-    // float  = -numberNodesWidth
+    float xPosCentered = -numberNodesWidth / 2.0;
+    float yPosCenteredInit = -numberNodesHeight / 2.0;
+
     for(int x = 0; x < numberNodesWidth; x += 1)
     {
+        // start yPosCentered at beginning again
+        float yPosCentered = yPosCenteredInit;
+
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
             // put elements in rectangular grid with 0.0 depth
-            nodes[x][y] = Vector3(x, y, 0.0);
+            // note that the nodes are centered around (0.0, 0.0, 0.0)
+            nodes[x][y] = Vector3(xPosCentered, yPosCentered, 0.0);
+            yPosCentered += 1.0;
         }
+
+        xPosCentered += 1.0;
     }
 }
 
@@ -655,6 +692,8 @@ void showHelp()
     std::cout << "  l: increment yaw   by " << angleIncrement << " rad" << std::endl;
     std::cout << "  k: decrement pitch by " << angleIncrement << " rad" << std::endl;
     std::cout << "  i: increment pitch by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  u: decrement roll  by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  o: increment roll  by " << angleIncrement << " rad" << std::endl;
 
     std::cout << std::endl;
 
@@ -695,6 +734,7 @@ void showCameraStatus()
     std::cout << "  camera up direction  : " << camera.getUpDirection().toString() << std::endl;
     std::cout << "  yaw                  : " << camera.getYaw() << " rad" << std::endl;
     std::cout << "  pitch                : " << camera.getPitch() << " rad" << std::endl;
+    std::cout << "  roll                 : " << camera.getRoll() << " rad" << std::endl;
 
     std::cout << std::endl;
 }
@@ -706,7 +746,8 @@ void init()
     // move camera back
     float cameraZ = -numberNodesHeight;
 
-    camera.translate(Vector3(cameraX, cameraY, cameraZ));
+    // camera.translate(Vector3(cameraX, cameraY, cameraZ));
+    camera.translate(Vector3(0.0, 0.0, cameraZ));
 
 
 
@@ -804,22 +845,30 @@ void keyboard(unsigned char key, int x, int y)
         // yaw and pitch controls
         case 'k':
             // turn camera "down" one notch
-            camera.offsetPitch(-angleIncrement);
+            camera.rotateAroundXAxisObject(-angleIncrement);
             showCameraStatus();
             break;
         case 'i':
             // turn camera "up" one notch
-            camera.offsetPitch(angleIncrement);
+            camera.rotateAroundXAxisObject(angleIncrement);
             showCameraStatus();
             break;
         case 'j':
             // turn camera "left" one notch
-            camera.offsetYaw(-angleIncrement);
+            camera.rotateAroundYAxisObject(-angleIncrement);
             showCameraStatus();
             break;
         case 'l':
             // turn camera "right" one notch
-            camera.offsetYaw(angleIncrement);
+            camera.rotateAroundYAxisObject(angleIncrement);
+            showCameraStatus();
+            break;
+        case 'u':
+            camera.rotateAroundZAxisObject(-angleIncrement);
+            showCameraStatus();
+            break;
+        case 'o':
+            camera.rotateAroundZAxisObject(angleIncrement);
             showCameraStatus();
             break;
         default:
