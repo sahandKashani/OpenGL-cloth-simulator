@@ -31,14 +31,23 @@ bool drawShearConstraintsEnabled = false;
 bool drawStructuralBendConstraintsEnabled = false;
 bool drawShearBendConstraintsEnabled = false;
 
+// camera angles
 float pitchAngleInRadians = 0.0;
 float yawAngleInRadians = 0.0;
 float rollAngleInRadians = 0.0;
 
-// angle increments in radians
+// camera angle increments in radians
 float pitchAngleIncrementInRadians = 0.5;
 float yawAngleIncrementInRadians = 0.5;
 float rollAngleIncrementInRadians = 0.5;
+
+// camera world angles
+float worldAngleXInRadians = 0.0;
+float worldAngleYInRadians = 0.0;
+
+// camera world angle increments in radians
+float worldAngleXIncrementInRadians = 0.5;
+float worldAngleYIncrementInRadians = 0.5;
 
 // -----------------------------------------------------------------------------
 // Camera class
@@ -63,7 +72,6 @@ public:
     void rotateObjectZ(float angleInRadians);
     void rotateWorldX(float angleInRadians);
     void rotateWorldY(float angleInRadians);
-    void rotateWorldZ(float angleInRadians);
 };
 
 // initialize camera with the following properties:
@@ -146,6 +154,22 @@ void Camera::rotateObjectZ(float angleInRadians)
     // position doesn't change
     // viewDirection doesn't change
     upDirection = rotationMatrix * upDirection;
+}
+
+void Camera::rotateWorldX(float angleInRadians)
+{
+    // go to (0.0, 0.0, 0.0)
+    translate(Vector3(-position.x, -position.y, -position.z));
+    rotateObjectX(angleInRadians);
+    translate(Vector3(position.x, position.y, position.z));
+}
+
+void Camera::rotateWorldY(float angleInRadians)
+{
+    // go to (0.0, 0.0, 0.0)
+    translate(Vector3(-position.x, -position.y, -position.z));
+    rotateObjectY(angleInRadians);
+    translate(Vector3(position.x, position.y, position.z));
 }
 
 // -----------------------------------------------------------------------------
@@ -558,7 +582,10 @@ void showHelp()
 
     // camera position controls
     std::cout << "camera position controls:" << std::endl;
-    std::cout << "  "
+    std::cout << "  left arrow:  rotate camera horizontally left      around (0.0, 0.0, 0.0) by " << worldAngleXIncrementInRadians << " rad" << std::endl;
+    std::cout << "  right arrow: rotate camera horizontally right     around (0.0, 0.0, 0.0) by " << worldAngleXIncrementInRadians << " rad" << std::endl;
+    std::cout << "  up arrow:    rotate camera vertically   upwards   around (0.0, 0.0, 0.0) by " << worldAngleYIncrementInRadians << " rad" << std::endl;
+    std::cout << "  down arrow:  rotate camera vertically   downwards around (0.0, 0.0, 0.0) by " << worldAngleYIncrementInRadians << " rad" << std::endl;
 
     std::cout << std::endl;
 }
@@ -647,6 +674,14 @@ void display()
 
     // draw cloth
     cloth.draw();
+
+    // TODO : call rotations in function of state.
+    // camera.rotateWorldX();
+    // camera.rotateWorldY();
+    // camera.rotateWorldZ();
+    // camera.rotateObjectX();
+    // camera.rotateObjectY();
+    // camera.rotateObjectZ();
 
     // force redraw
     glFlush();
