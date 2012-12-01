@@ -189,15 +189,20 @@ class Node
 {
 private:
     Vector3 position;
+    bool moveable;
 
 public:
     Node();
     Node(Vector3 pos);
     Vector3 getPosition();
     void draw();
+    bool isMoveable();
+    void setMoveable(bool isMovePossible);
 };
 
-Node::Node() : position(Vector3(0.0, 0.0, 0.0))
+Node::Node() :
+    position(Vector3(0.0, 0.0, 0.0)),
+    moveable(true)
 {}
 
 Node::Node(Vector3 pos) : position(pos)
@@ -218,6 +223,16 @@ void Node::draw()
     glPopMatrix();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
 }
+
+bool Node::isMoveable()
+{
+    return moveable;
+}
+
+void Node::setMoveable(bool isMovePossible)
+{
+    moveable = isMovePossible;
+}
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -234,9 +249,12 @@ public:
     Node* getFirstNode();
     Node* getSecondNode();
     float getDistanceAtRest();
+    void satisfyConstraint();
 };
 
-Constraint::Constraint(Node* n1, Node* n2) : node1(n1), node2(n2)
+Constraint::Constraint(Node* n1, Node* n2) :
+    node1(n1),
+    node2(n2)
 {
     Vector3 vectorBetween2Nodes = n1->getPosition() - n2->getPosition();
     distanceAtRest = vectorBetween2Nodes.length();
@@ -255,6 +273,16 @@ Node* Constraint::getSecondNode()
 float Constraint::getDistanceAtRest()
 {
     return distanceAtRest;
+}
+
+void Constraint::satisfyConstraint()
+{
+    Vector3 vectorFromNode1ToNode2 = node2->getPosition() - node1->getPosition();
+    float currentDistance = vectorFromNode1ToNode2.length();
+    float restToCurrentDistanceRatio = distanceAtRest / currentDistance;
+    Vector3 offsetVector = vectorFromNode1ToNode2 * (1 - restToCurrentDistanceRatio) * 0.5;
+
+    // if()
 }
 // -----------------------------------------------------------------------------
 
