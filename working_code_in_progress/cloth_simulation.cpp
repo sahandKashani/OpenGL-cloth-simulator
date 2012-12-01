@@ -227,15 +227,20 @@ class Constraint
 private:
     Node* node1;
     Node* node2;
+    float distanceAtRest;
 
 public:
     Constraint(Node* n1, Node* n2);
     Node* getFirstNode();
     Node* getSecondNode();
+    float getDistanceAtRest();
 };
 
 Constraint::Constraint(Node* n1, Node* n2) : node1(n1), node2(n2)
-{}
+{
+    Vector3 vectorBetween2Nodes = n1->getPosition() - n2->getPosition();
+    distanceAtRest = vectorBetween2Nodes.length();
+}
 
 Node* Constraint::getFirstNode()
 {
@@ -245,6 +250,11 @@ Node* Constraint::getFirstNode()
 Node* Constraint::getSecondNode()
 {
     return node2;
+}
+
+float Constraint::getDistanceAtRest()
+{
+    return distanceAtRest;
 }
 // -----------------------------------------------------------------------------
 
@@ -643,8 +653,8 @@ void init()
 
     // show help at the very beginning
     // TODO : enable later
-    showHelp();
-    showDrawStatus();
+    // showHelp();
+    // showDrawStatus();
     showCameraStatus();
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
