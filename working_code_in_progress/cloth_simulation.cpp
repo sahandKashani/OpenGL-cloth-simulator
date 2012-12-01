@@ -19,11 +19,10 @@
 // used for printing
 #include <string>
 
-// macros
-#define NUMBER_NODES_WIDTH 31
-#define NUMBER_NODES_HEIGHT 31
-#define NEAR_PLANE 1.0
-#define FAR_PLANE 1000.0
+const int numberNodesWidth = 31;
+const int numberNodesHeight = 31;
+float nearPlane = 1.0;
+float farPlane = 1000.0;
 
 // Global variables
 bool drawWireFrameEnabled =                 false;
@@ -61,7 +60,6 @@ public:
     Vector3 getUpDirection();
     float getYaw();
     float getPitch();
-    void setPosition(Vector3 pos);
     void setViewDirection(Vector3 direction);
     void setUpDirection(Vector3 direction);
     void offsetYaw(float angleInRadians);
@@ -112,11 +110,6 @@ float Camera::getYaw()
 float Camera::getPitch()
 {
     return pitch;
-}
-
-void Camera::setPosition(Vector3 pos)
-{
-    position = pos;
 }
 
 void Camera::setViewDirection(Vector3 direction)
@@ -331,7 +324,7 @@ void Constraint::satisfyConstraint()
 class Cloth
 {
 private:
-    Node nodes[NUMBER_NODES_WIDTH][NUMBER_NODES_HEIGHT];
+    Node nodes[numberNodesWidth][numberNodesHeight];
     std::vector<Constraint> structuralConstraints;
     std::vector<Constraint> shearConstraints;
     std::vector<Constraint> structuralBendConstraints;
@@ -368,9 +361,10 @@ Cloth::Cloth()
 
 void Cloth::createNodes()
 {
-    for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
+    // float  = -numberNodesWidth
+    for(int x = 0; x < numberNodesWidth; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT; y += 1)
+        for(int y = 0; y < numberNodesHeight; y += 1)
         {
             // put elements in rectangular grid with 0.0 depth
             nodes[x][y] = Vector3(x, y, 0.0);
@@ -387,11 +381,11 @@ void Cloth::createConstraints()
 
 void Cloth::createStructuralConstraints()
 {
-    for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
+    for(int x = 0; x < numberNodesWidth; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT; y += 1)
+        for(int y = 0; y < numberNodesHeight; y += 1)
         {
-            if(x < NUMBER_NODES_WIDTH - 1)
+            if(x < numberNodesWidth - 1)
             {
                 Node* leftNode = &nodes[x][y];
                 Node* rightNode = &nodes[x + 1][y];
@@ -399,7 +393,7 @@ void Cloth::createStructuralConstraints()
                 structuralConstraints.push_back(rightConstraint);
             }
 
-            if(y < NUMBER_NODES_HEIGHT - 1)
+            if(y < numberNodesHeight - 1)
             {
                 Node* bottomNode = &nodes[x][y];
                 Node* topNode = &nodes[x][y + 1];
@@ -412,9 +406,9 @@ void Cloth::createStructuralConstraints()
 
 void Cloth::createShearConstraints()
 {
-    for(int x = 0; x < NUMBER_NODES_WIDTH - 1; x += 1)
+    for(int x = 0; x < numberNodesWidth - 1; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT - 1; y += 1)
+        for(int y = 0; y < numberNodesHeight - 1; y += 1)
         {
             Node* lowerLeftNode = &nodes[x][y];
             Node* lowerRightNode = &nodes[x + 1][y];
@@ -438,11 +432,11 @@ void Cloth::createBendConstraints()
 
 void Cloth::createStructuralBendConstraints()
 {
-    for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
+    for(int x = 0; x < numberNodesWidth; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT; y += 1)
+        for(int y = 0; y < numberNodesHeight; y += 1)
         {
-            if(x < NUMBER_NODES_WIDTH - 2)
+            if(x < numberNodesWidth - 2)
             {
                 Node* leftNode = &nodes[x][y];
                 Node* rightNode = &nodes[x + 2][y];
@@ -450,7 +444,7 @@ void Cloth::createStructuralBendConstraints()
                 structuralBendConstraints.push_back(rightConstraint);
             }
 
-            if(y < NUMBER_NODES_HEIGHT - 2)
+            if(y < numberNodesHeight - 2)
             {
                 Node* bottomNode = &nodes[x][y];
                 Node* topNode = &nodes[x][y + 2];
@@ -463,9 +457,9 @@ void Cloth::createStructuralBendConstraints()
 
 void Cloth::createShearBendConstraints()
 {
-    for(int x = 0; x < NUMBER_NODES_WIDTH - 2; x += 1)
+    for(int x = 0; x < numberNodesWidth - 2; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT - 2; y += 1)
+        for(int y = 0; y < numberNodesHeight - 2; y += 1)
         {
             Node* lowerLeftNode = &nodes[x][y];
             Node* lowerRightNode = &nodes[x + 2][y];
@@ -516,9 +510,9 @@ void Cloth::drawNodes()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // loop over vertices (not edges)
-    for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
+    for(int x = 0; x < numberNodesWidth; x += 1)
     {
-        for(int y = 0; y < NUMBER_NODES_HEIGHT; y += 1)
+        for(int y = 0; y < numberNodesHeight; y += 1)
         {
             nodes[x][y].draw();
         }
@@ -707,13 +701,14 @@ void showCameraStatus()
 
 void init()
 {
-    float cameraX = (NUMBER_NODES_WIDTH - 1) / 2.0;
-    float cameraY = (NUMBER_NODES_HEIGHT - 1) / 2.0;
+    float cameraX = (numberNodesWidth - 1) / 2.0;
+    float cameraY = (numberNodesHeight - 1) / 2.0;
     // move camera back
-    float cameraZ = -NUMBER_NODES_HEIGHT;
+    float cameraZ = -numberNodesHeight;
 
-    camera.setPosition(Vector3(0.0, 0.0, 0.0));
     camera.translate(Vector3(cameraX, cameraY, cameraZ));
+
+
 
     // show help at the very beginning
     // TODO : enable later
@@ -875,7 +870,7 @@ void reshape(int w, int h)
 
     // set a big clipping plane for now (no display errors)
     float aspectRatio = (1.0 * w) / h;
-    gluPerspective(60.0, aspectRatio, NEAR_PLANE, FAR_PLANE);
+    gluPerspective(60.0, aspectRatio, nearPlane, farPlane);
 
     // go back to modelview matrix (for other functions)
     glMatrixMode(GL_MODELVIEW);
