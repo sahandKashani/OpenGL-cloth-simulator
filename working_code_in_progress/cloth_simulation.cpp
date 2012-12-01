@@ -438,7 +438,7 @@ void Cloth::drawNodes()
     }
 
     // re-enable wireframe if necessary
-    chooseRenderingMethod();
+    // chooseRenderingMethod();
 }
 
 void Cloth::drawStructuralConstraints()
@@ -669,16 +669,15 @@ void display()
               cameraUpDirection.y,
               cameraUpDirection.z);
 
+    // TODO : call rotations in function of state.
+    // camera.rotateWorldX(worldAngleXInRadians);
+    // camera.rotateWorldY(worldAngleYInRadians);
+    // camera.rotateObjectX(pitchAngleInRadians);
+    // camera.rotateObjectY(yawAngleInRadians);
+    // camera.rotateObjectZ(rollAngleInRadians);
+
     // draw cloth
     cloth.draw();
-
-    // TODO : call rotations in function of state.
-    // camera.rotateWorldX();
-    // camera.rotateWorldY();
-    // camera.rotateWorldZ();
-    // camera.rotateObjectX();
-    // camera.rotateObjectY();
-    // camera.rotateObjectZ();
 
     // force redraw
     glFlush();
