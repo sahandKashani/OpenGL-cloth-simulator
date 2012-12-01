@@ -203,19 +203,9 @@ void Node::draw()
     // for each node to draw.
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
-
-        // we always want the nodes to be drawn as solid spheres, even if
-        // drawWireFrameEnabled is true.
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glutSolidSphere(0.15, 20, 20);
     glPopMatrix();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
-
-    // put back wireframe if necessary, so other objects will be rendered correctly.
-    if(drawWireFrameEnabled)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
 }
 // -----------------------------------------------------------------------------
 
@@ -434,6 +424,10 @@ void Cloth::draw()
 
 void Cloth::drawNodes()
 {
+    // we always want the nodes to be drawn as solid spheres, even if
+    // drawWireFrameEnabled is true.
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
     // loop over vertices (not edges)
     for(int x = 0; x < NUMBER_NODES_WIDTH; x += 1)
     {
@@ -442,6 +436,9 @@ void Cloth::drawNodes()
             nodes[x][y].draw();
         }
     }
+
+    // re-enable wireframe if necessary
+    chooseRenderingMethod();
 }
 
 void Cloth::drawStructuralConstraints()
