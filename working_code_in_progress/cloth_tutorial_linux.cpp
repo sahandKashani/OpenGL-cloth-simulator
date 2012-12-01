@@ -410,7 +410,7 @@ public:
 
 
 // Just below are three global variables holding the actual animated stuff; Cloth and Ball
-Cloth cloth1(14,14,30,30); // one Cloth object of the Cloth class
+Cloth cloth1(14,14,35,35); // one Cloth object of the Cloth class
 Vec3 ball_pos(7,-5,0); // the center of our one ball
 float ball_radius = 2; // the radius of our one ball
 
