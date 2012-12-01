@@ -11,7 +11,7 @@
 /* Some physics constants */
 #define DAMPING 0.01 // how much to damp the cloth simulation each frame
 #define TIME_STEPSIZE2 0.5*0.5 // how large time step each particle takes each frame
-#define CONSTRAINT_ITERATIONS 15 // how many iterations of constraint satisfaction each frame (more is rigid, less is soft)
+#define CONSTRAINT_ITERATIONS 10 // how many iterations of constraint satisfaction each frame (more is rigid, less is soft)
 
 
 class Vec3 // a minimal vector class of 3 floats and overloaded math operators
@@ -410,7 +410,7 @@ public:
 
 
 // Just below are three global variables holding the actual animated stuff; Cloth and Ball
-Cloth cloth1(14,10,55,45); // one Cloth object of the Cloth class
+Cloth cloth1(14,14,30,30); // one Cloth object of the Cloth class
 Vec3 ball_pos(7,-5,0); // the center of our one ball
 float ball_radius = 2; // the radius of our one ball
 
