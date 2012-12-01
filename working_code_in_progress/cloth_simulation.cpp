@@ -37,17 +37,19 @@ float yawAngleInRadians = 0.0;
 float rollAngleInRadians = 0.0;
 
 // camera angle increments in radians
-float pitchAngleIncrementInRadians = 0.5;
-float yawAngleIncrementInRadians = 0.5;
-float rollAngleIncrementInRadians = 0.5;
+// increment must be power of 2 for precision reasons
+float pitchAngleIncrementInRadians = 0.125;
+float yawAngleIncrementInRadians = 0.125;
+float rollAngleIncrementInRadians = 0.125;
 
 // camera world angles
-float worldAngleXInRadians = 0.0;
-float worldAngleYInRadians = 0.0;
+float worldAngleHorizontalInRadians = 0.0;
+float worldAngleVerticalInRadians = 0.0;
 
 // camera world angle increments in radians
-float worldAngleXIncrementInRadians = 0.5;
-float worldAngleYIncrementInRadians = 0.5;
+// increment must be power of 2 for precision reasons
+float worldAngleHorizontalIncrementInRadians = 0.125;
+float worldAngleVerticalIncrementInRadians = 0.125;
 
 // -----------------------------------------------------------------------------
 // Camera class
@@ -70,8 +72,8 @@ public:
     void rotateObjectX(float angleInRadians);
     void rotateObjectY(float angleInRadians);
     void rotateObjectZ(float angleInRadians);
-    void rotateWorldX(float angleInRadians);
-    void rotateWorldY(float angleInRadians);
+    void rotateWorldHorizontal(float angleInRadians);
+    void rotateWorldVertical(float angleInRadians);
 };
 
 // initialize camera with the following properties:
@@ -156,20 +158,29 @@ void Camera::rotateObjectZ(float angleInRadians)
     upDirection = rotationMatrix * upDirection;
 }
 
-void Camera::rotateWorldX(float angleInRadians)
+void Camera::rotateWorldHorizontal(float angleInRadians)
 {
+    std::cout << "-------" << std::endl;
+    std::cout << "before rotateWorldHorizontal pos = " << position.toString() << std::endl;
+
+    Vector3 oldPosition = position;
     // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-position.x, -position.y, -position.z));
-    rotateObjectX(angleInRadians);
-    translate(Vector3(position.x, position.y, position.z));
+    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+    std::cout << "after translation to origin pos = " << position.toString() << std::endl;
+    rotateObjectY(angleInRadians);
+    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+
+    std::cout << "after rotateWorldHorizontal pos = " << position.toString() << std::endl;
+    std::cout << "-------" << std::endl;
 }
 
-void Camera::rotateWorldY(float angleInRadians)
+void Camera::rotateWorldVertical(float angleInRadians)
 {
+    Vector3 oldPosition = position;
     // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-position.x, -position.y, -position.z));
-    rotateObjectY(angleInRadians);
-    translate(Vector3(position.x, position.y, position.z));
+    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+    rotateObjectX(angleInRadians);
+    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
 }
 
 // -----------------------------------------------------------------------------
@@ -437,8 +448,10 @@ void Cloth::drawNodes()
         }
     }
 
-    // re-enable wireframe if necessary
-    // chooseRenderingMethod();
+    if(drawWireFrameEnabled)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
 }
 
 void Cloth::drawStructuralConstraints()
@@ -579,10 +592,15 @@ void showHelp()
 
     // camera position controls
     std::cout << "camera position controls:" << std::endl;
-    std::cout << "  left arrow:  rotate camera horizontally left      around (0.0, 0.0, 0.0) by " << worldAngleXIncrementInRadians << " rad" << std::endl;
-    std::cout << "  right arrow: rotate camera horizontally right     around (0.0, 0.0, 0.0) by " << worldAngleXIncrementInRadians << " rad" << std::endl;
-    std::cout << "  up arrow:    rotate camera vertically   upwards   around (0.0, 0.0, 0.0) by " << worldAngleYIncrementInRadians << " rad" << std::endl;
-    std::cout << "  down arrow:  rotate camera vertically   downwards around (0.0, 0.0, 0.0) by " << worldAngleYIncrementInRadians << " rad" << std::endl;
+    // note, these are unicode characters for representing arrows.
+    // - Leftwards  Arrow (\u2190)
+    // - Rightwards Arrow (\u2192)
+    // - Upwards    Arrow (\u2191)
+    // - Downwards  Arrow (\u2193)
+    std::cout << "  \u2190: rotate camera horizontally left      around (0.0, 0.0, 0.0) by " << worldAngleHorizontalIncrementInRadians << " rad" << std::endl;
+    std::cout << "  \u2192: rotate camera horizontally right     around (0.0, 0.0, 0.0) by " << worldAngleHorizontalIncrementInRadians << " rad" << std::endl;
+    std::cout << "  \u2191: rotate camera vertically   upwards   around (0.0, 0.0, 0.0) by " << worldAngleVerticalIncrementInRadians << " rad" << std::endl;
+    std::cout << "  \u2193: rotate camera vertically   downwards around (0.0, 0.0, 0.0) by " << worldAngleVerticalIncrementInRadians << " rad" << std::endl;
 
     std::cout << std::endl;
 }
@@ -624,6 +642,7 @@ void init()
     camera.translate(Vector3(cameraX, cameraY, cameraZ));
 
     // show help at the very beginning
+    // TODO : enable later
     showHelp();
     showDrawStatus();
     showCameraStatus();
@@ -670,8 +689,8 @@ void display()
               cameraUpDirection.z);
 
     // TODO : call rotations in function of state.
-    // camera.rotateWorldX(worldAngleXInRadians);
-    // camera.rotateWorldY(worldAngleYInRadians);
+    // camera.rotateWorldHorizontal(worldAngleHorizontalInRadians);
+    // camera.rotateWorldVertical(worldAngleVerticalInRadians);
     // camera.rotateObjectX(pitchAngleInRadians);
     // camera.rotateObjectY(yawAngleInRadians);
     // camera.rotateObjectZ(rollAngleInRadians);
@@ -764,16 +783,20 @@ void keyboardArrows(int key, int x, int y)
     switch(key)
     {
         case GLUT_KEY_UP:
-
+            worldAngleVerticalInRadians += worldAngleVerticalIncrementInRadians;
+            showCameraStatus();
             break;
         case GLUT_KEY_DOWN:
-
+            worldAngleVerticalIncrementInRadians -= worldAngleVerticalIncrementInRadians;
+            showCameraStatus();
             break;
         case GLUT_KEY_LEFT:
-
+            worldAngleHorizontalInRadians -= worldAngleHorizontalIncrementInRadians;
+            showCameraStatus();
             break;
         case GLUT_KEY_RIGHT:
-
+            worldAngleHorizontalInRadians += worldAngleHorizontalIncrementInRadians;
+            showCameraStatus();
             break;
         default:
             break;
@@ -799,7 +822,13 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 
     glutInitWindowSize(500, 500);
-    glutInitWindowPosition(100, 100);
+
+    // INF3 room
+    glutInitWindowPosition(1070, 655);
+
+    // normal laptop screen
+    // glutInitWindowPosition(100, 100);
+
     glutCreateWindow(argv[0]);
 
     init();
