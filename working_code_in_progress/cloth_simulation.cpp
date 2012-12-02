@@ -54,9 +54,7 @@ private:
     float pitch;
     float roll;
 
-    Matrix4 getXAxisWorldRotationMatrix(float angleInRadians);
-    Matrix4 getYAxisWorldRotationMatrix(float angleInRadians);
-    Matrix4 getZAxisWorldRotationMatrix(float angleInRadians);
+    Matrix4 getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection);
 
 public:
     Camera();
@@ -145,30 +143,38 @@ void Camera::translate(Vector3 direction)
     viewDirection += direction;
 }
 
-Matrix4 Camera::getXAxisWorldRotationMatrix(float angleInRadians)
+Matrix4 Camera::getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection)
 {
-    Matrix4 rotationMatrix = Matrix4(1.0, 0.0                , 0.0                 , 0.0,
-                                     0.0, cos(angleInRadians), -sin(angleInRadians), 0.0,
-                                     0.0, sin(angleInRadians),  cos(angleInRadians), 0.0,
-                                     0.0, 0.0                , 0.0                 , 1.0);
-    return rotationMatrix;
-}
+    // application of Rodriguez' rotation formula (taken from Wikipedia not from
+    // the course, since the course slides were using a left-handed coordinate system,
+    // but we want to use a right-handed one.)
 
-Matrix4 Camera::getYAxisWorldRotationMatrix(float angleInRadians)
-{
-    Matrix4 rotationMatrix = Matrix4(cos(angleInRadians) , 0.0, sin(angleInRadians), 0.0,
-                                     0.0                 , 1.0, 0.0                , 0.0,
-                                     -sin(angleInRadians), 0.0, cos(angleInRadians), 0.0,
-                                     0.0                 , 0.0, 0.0                , 1.0);
-    return rotationMatrix;
-}
+    // normalize direction
+    Vector3 unitRotationAxisDirection = rotationAxisDirection.normalize();
 
-Matrix4 Camera::getZAxisWorldRotationMatrix(float angleInRadians)
-{
-    Matrix4 rotationMatrix = Matrix4(cos(angleInRadians), -sin(angleInRadians), 0.0, 0.0,
-                                     sin(angleInRadians), cos(angleInRadians) , 0.0, 0.0,
-                                     0.0                , 0.0                 , 1.0, 0.0,
-                                     0.0                , 0.0                 , 0.0, 1.0);
+    float u_x = unitRotationAxisDirection.x;
+    float u_y = unitRotationAxisDirection.y;
+    float u_z = unitRotationAxisDirection.z;
+
+    float cosa = cos(angleInRadians);
+    float sina = sin(angleInRadians);
+
+    // first column of final rotation matrix
+    Vector3 col1 = Vector3(cosa + u_x * u_x * (1.0 - cosa)      ,
+                           u_y * u_x * (1.0 - cosa) + u_z * sina,
+                           u_z * u_x * (1.0 - cosa) - u_y * sina);
+
+    // second column of final rotation matrix
+    Vector3 col2 = Vector3(u_x * u_y * (1.0 - cosa) - u_z * sina,
+                           cosa + u_y * u_y * (1.0 - cosa)      ,
+                           u_z * u_y * (1.0 - cosa) + u_x * sina);
+
+    // third column of final rotation matrix
+    Vector3 col3 = Vector3(u_x * u_z * (1.0 - cosa) + u_y * sina,
+                           u_y * u_z * (1.0 - cosa) - u_x * sina,
+                           cosa + u_z * u_z * (1.0 - cosa)      );
+
+    Matrix4 rotationMatrix = Matrix4(col1, col2, col3);
     return rotationMatrix;
 }
 
@@ -181,7 +187,9 @@ void Camera::rotateAroundXAxisObject(float angleInRadians)
     // go to (0.0, 0.0, 0.0)
     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
 
-    Matrix4 rotationMatrix = getXAxisWorldRotationMatrix(angleInRadians);
+    Vector3 rotationAxis = upDirection.cross(viewDirection);
+    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+
     // position does not change
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
@@ -199,7 +207,9 @@ void Camera::rotateAroundYAxisObject(float angleInRadians)
     // go to (0.0, 0.0, 0.0)
     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
 
-    Matrix4 rotationMatrix = getYAxisWorldRotationMatrix(angleInRadians);
+    Vector3 rotationAxis = upDirection;
+    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+
     // position does not change
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
@@ -217,7 +227,9 @@ void Camera::rotateAroundZAxisObject(float angleInRadians)
     // go to (0.0, 0.0, 0.0)
     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
 
-    Matrix4 rotationMatrix = getZAxisWorldRotationMatrix(angleInRadians);
+    Vector3 rotationAxis = viewDirection;
+    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+
     // position does not change
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
@@ -228,7 +240,9 @@ void Camera::rotateAroundZAxisObject(float angleInRadians)
 
 void Camera::rotateAroundXAxisWorld(float angleInRadians)
 {
-    Matrix4 rotationMatrix = getXAxisWorldRotationMatrix(angleInRadians);
+    Vector3 rotationAxis = Vector3(1.0, 0.0, 0.0);
+    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+
     position = rotationMatrix * position;
     upDirection = rotationMatrix * upDirection;
     viewDirection = rotationMatrix * viewDirection;
@@ -236,7 +250,9 @@ void Camera::rotateAroundXAxisWorld(float angleInRadians)
 
 void Camera::rotateAroundYAxisWorld(float angleInRadians)
 {
-    Matrix4 rotationMatrix = getYAxisWorldRotationMatrix(angleInRadians);
+    Vector3 rotationAxis = Vector3(0.0, 1.0, 0.0);
+    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+
     position = rotationMatrix * position;
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
@@ -244,7 +260,9 @@ void Camera::rotateAroundYAxisWorld(float angleInRadians)
 
 void Camera::rotateAroundZAxisWorld(float angleInRadians)
 {
-    Matrix4 rotationMatrix = getZAxisWorldRotationMatrix(angleInRadians);
+    Vector3 rotationAxis = Vector3(0.0, 0.0, 1.0);
+    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+
     position = rotationMatrix * position;
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
@@ -951,12 +969,12 @@ void keyboard(unsigned char key, int x, int y)
         // yaw, pitch and roll camera controls
         case 'k':
             // turn camera "down" one notch
-            camera.rotateAroundXAxisObject(-angleIncrement);
+            camera.rotateAroundXAxisObject(angleIncrement);
             showCameraStatus();
             break;
         case 'i':
             // turn camera "up" one notch
-            camera.rotateAroundXAxisObject(angleIncrement);
+            camera.rotateAroundXAxisObject(-angleIncrement);
             showCameraStatus();
             break;
         case 'j':
@@ -971,12 +989,12 @@ void keyboard(unsigned char key, int x, int y)
             break;
         case 'u':
             // tilt camera "left" one notch
-            camera.rotateAroundZAxisObject(angleIncrement);
+            camera.rotateAroundZAxisObject(-angleIncrement);
             showCameraStatus();
             break;
         case 'o':
             // tilt camera "right" one notch
-            camera.rotateAroundZAxisObject(-angleIncrement);
+            camera.rotateAroundZAxisObject(angleIncrement);
             showCameraStatus();
             break;
         default:
