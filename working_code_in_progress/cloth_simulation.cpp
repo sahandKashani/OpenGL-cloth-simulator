@@ -724,6 +724,8 @@ void normalKeyboard(unsigned char key, int x, int y);
 void normalKeyboardRelease(unsigned char key, int x, int y);
 void reshape(int w, int h);
 void applyChanges();
+void resetCameraPosition();
+void specialKeyboard(int key, int x, int y);
 
 // TODO
 void drawBoundingBox();
@@ -757,56 +759,63 @@ std::string isEnabled(bool controlVariableEnabled)
 
 void showHelp()
 {
+    std::cout << "********************************" << std::endl;
+    std::cout << "***           help           ***" << std::endl;
+    std::cout << "********************************" << std::endl;
+
     // help controls
     std::cout << "help controls:" << std::endl;
-    std::cout << "  0: show help" << std::endl;
+    std::cout << "  F1: show help" << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "camera position reset:" << std::endl;
+    std::cout << "  F2: reset camera position" << std::endl;
 
     std::cout << std::endl;
 
     // drawing controls
     std::cout << "drawing controls:" << std::endl;
-    std::cout << "  1: toggle draw structural      constraints" << std::endl;
-    std::cout << "  2: toggle draw shear           constraints" << std::endl;
-    std::cout << "  3: toggle draw structural bend constraints" << std::endl;
-    std::cout << "  4: toggle draw shear      bend constraints" << std::endl;
-    std::cout << "  5: toggle draw nodes" << std::endl;
-    std::cout << "  6: toggle draw wireframe" << std::endl;
+    std::cout << "  F3: toggle draw structural      constraints" << std::endl;
+    std::cout << "  F4: toggle draw shear           constraints" << std::endl;
+    std::cout << "  F5: toggle draw structural bend constraints" << std::endl;
+    std::cout << "  F6: toggle draw shear      bend constraints" << std::endl;
+    std::cout << "  F7: toggle draw nodes" << std::endl;
+    std::cout << "  F8: toggle draw wireframe" << std::endl;
+    std::cout << "  F9: toggle draw world axis" << std::endl;
 
     std::cout << std::endl;
 
     // yaw, pitch and roll controls
     std::cout << "camera object rotation controls:" << std::endl;
-    std::cout << "  j: yaw   left  by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  l: yaw   right by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  k: pitch down  by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  i: pitch up    by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  u: roll  left  by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  o: roll  right by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  j: yaw   left " << std::endl;
+    std::cout << "  l: yaw   right" << std::endl;
+    std::cout << "  k: pitch down " << std::endl;
+    std::cout << "  i: pitch up   " << std::endl;
+    std::cout << "  u: roll  left " << std::endl;
+    std::cout << "  o: roll  right" << std::endl;
 
     std::cout << std::endl;
 
     // world camera controls
     std::cout << "camera world rotation controls:" << std::endl;
-    std::cout << "  s: rotate camera left  around world X axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  w: rotate camera right around world X axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  a: rotate camera left  around world Y axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  d: rotate camera right around world Y axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  e: rotate camera left  around world Z axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  q: rotate camera right around world Z axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  s: rotate camera left  around world X axis" << std::endl;
+    std::cout << "  w: rotate camera right around world X axis" << std::endl;
+    std::cout << "  a: rotate camera left  around world Y axis" << std::endl;
+    std::cout << "  d: rotate camera right around world Y axis" << std::endl;
+    std::cout << "  e: rotate camera left  around world Z axis" << std::endl;
+    std::cout << "  q: rotate camera right around world Z axis" << std::endl;
 
     std::cout << std::endl;
 
     // camera position controls
     std::cout << "camera translation controls:" << std::endl;
-    // note, these are unicode characters for representing arrows.
-    // - Leftwards  Arrow (\u2190)
-    // - Rightwards Arrow (\u2192)
-    // - Upwards    Arrow (\u2191)
-    // - Downwards  Arrow (\u2193)
-    std::cout << "  \u2190: translate camera left  by " << translationIncrement << std::endl;
-    std::cout << "  \u2192: translate camera right by " << translationIncrement << std::endl;
-    std::cout << "  \u2191: translate camera up    by " << translationIncrement << std::endl;
-    std::cout << "  \u2193: translate camera down  by " << translationIncrement << std::endl;
+    std::cout << "  f: translate camera left" << std::endl;
+    std::cout << "  h: translate camera right" << std::endl;
+    std::cout << "  t: translate camera up" << std::endl;
+    std::cout << "  g: translate camera down" << std::endl;
+    std::cout << "  r: translate camera back" << std::endl;
+    std::cout << "  z: translate camera front" << std::endl;
 
     std::cout << std::endl;
 }
@@ -820,6 +829,7 @@ void showDrawStatus()
     std::cout << "  draw structural bend constraints: " << isEnabled(drawStructuralBendConstraintsEnabled) << std::endl;
     std::cout << "  draw shear bend constraints     : " << isEnabled(drawShearBendConstraintsEnabled) << std::endl;
     std::cout << "  draw wireframe                  : " << isEnabled(drawWireFrameEnabled) << std::endl;
+    std::cout << "  draw world axis                 : " << isEnabled(drawWorldAxisEnabled) << std::endl;
 
     std::cout << std::endl;
 }
@@ -839,10 +849,7 @@ void showCameraStatus()
 
 void init()
 {
-    // move camera back
-    float cameraZ = numberNodesHeight;
-
-    camera.translate(Vector3(0.0, 0.0, cameraZ));
+    resetCameraPosition();
 
     // show help, draw status, and camera status at program launch
     showHelp();
@@ -851,6 +858,16 @@ void init()
 
     // clear keyboard press status
     initializeKeyboardStatus();
+}
+
+void resetCameraPosition()
+{
+    // reset the camera
+    camera = Camera();
+
+    // move camera back
+    float cameraZ = numberNodesHeight;
+    camera.translate(Vector3(0.0, 0.0, cameraZ));
 }
 
 // determines if a wireframe is to be drawn, or a textured version
@@ -1048,8 +1065,7 @@ void applyContinuousKeyboardCommands()
                     break;
             } // end switch(key)
 
-            // TODO : called to often
-            // showCameraStatus();
+            showCameraStatus();
 
         } // end if(keyboardStatus[key])
     } // end loop
@@ -1064,40 +1080,6 @@ void normalKeyboard(unsigned char key, int x, int y)
             exit(0);
             break;
 
-        // help controls
-        case '0':
-            showHelp();
-            break;
-
-        // drawing controls
-        case '1':
-            drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
-            showDrawStatus();
-            break;
-        case '2':
-            drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
-            showDrawStatus();
-            break;
-        case '3':
-            drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
-            showDrawStatus();
-            break;
-        case '4':
-            drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
-            showDrawStatus();
-            break;
-        case '5':
-            drawNodesEnabled = !drawNodesEnabled;
-            showDrawStatus();
-            break;
-        case '6':
-            drawWireFrameEnabled = !drawWireFrameEnabled;
-            showDrawStatus();
-            break;
-        case '7':
-            drawWorldAxisEnabled = !drawWorldAxisEnabled;
-            showDrawStatus();
-
         // toggle enable state for other keyboard buttons which are to be
         // continuously applied (like rotations, translations, ...)
         default:
@@ -1108,6 +1090,43 @@ void normalKeyboard(unsigned char key, int x, int y)
 void normalKeyboardRelease(unsigned char key, int x, int y)
 {
     keyboardStatus[key] = false;
+}
+
+void specialKeyboard(int key, int x, int y)
+{
+    switch(key)
+    {
+        case GLUT_KEY_F1:
+            showHelp();
+            break;
+        case GLUT_KEY_F2:
+            resetCameraPosition();
+            break;
+        case GLUT_KEY_F3:
+            drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
+            break;
+        case GLUT_KEY_F4:
+            drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
+            break;
+        case GLUT_KEY_F5:
+            drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
+            break;
+        case GLUT_KEY_F6:
+            drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
+            break;
+        case GLUT_KEY_F7:
+            drawNodesEnabled = !drawNodesEnabled;
+            break;
+        case GLUT_KEY_F8:
+            drawWireFrameEnabled = !drawWireFrameEnabled;
+            break;
+        case GLUT_KEY_F9:
+            drawWorldAxisEnabled = !drawWorldAxisEnabled;
+            break;
+
+        default:
+            break;
+    }
 }
 
 void reshape(int w, int h)
@@ -1155,6 +1174,7 @@ int main(int argc, char** argv)
 
     glutKeyboardFunc(normalKeyboard);
     glutKeyboardUpFunc(normalKeyboardRelease);
+    glutSpecialFunc(specialKeyboard);
 
     glutMainLoop();
     return 0;
