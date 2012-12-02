@@ -725,6 +725,14 @@ void normalKeyboardRelease(unsigned char key, int x, int y);
 void reshape(int w, int h);
 void applyChanges();
 
+// TODO
+void drawBoundingBox();
+
+void drawBoundingBox()
+{
+
+}
+
 // used for idle callback
 void applyChanges()
 {
