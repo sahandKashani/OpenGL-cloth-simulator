@@ -731,12 +731,12 @@ void showHelp()
 
     // world camera controls
     std::cout << "camera world rotation controls:" << std::endl;
-    std::cout << "  s: rotate left  around world X axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  w: rotate right around world X axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  a: rotate left  around world Y axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  d: rotate right around world Y axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  q: rotate left  around world Z axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  e: rotate right around world Z axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  s: rotate camera left  around world X axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  w: rotate camera right around world X axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  a: rotate camera left  around world Y axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  d: rotate camera right around world Y axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  e: rotate camera left  around world Z axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  q: rotate camera right around world Z axis by " << angleIncrement << " rad" << std::endl;
 
     std::cout << std::endl;
 
@@ -747,7 +747,6 @@ void showHelp()
     // - Rightwards Arrow (\u2192)
     // - Upwards    Arrow (\u2191)
     // - Downwards  Arrow (\u2193)
-    // TODO : might not be correct terms
     std::cout << "  \u2190: translate camera left  by " << translationIncrement << std::endl;
     std::cout << "  \u2192: translate camera right by " << translationIncrement << std::endl;
     std::cout << "  \u2191: translate camera up    by " << translationIncrement << std::endl;
@@ -771,7 +770,6 @@ void showDrawStatus()
 
 void showCameraStatus()
 {
-    if(false){
     std::cout << "camera status:" << std::endl;
     std::cout << "  camera position      : " << camera.getPosition().toString() << std::endl;
     std::cout << "  camera view direction: " << camera.getViewDirection().toString() << std::endl;
@@ -780,7 +778,7 @@ void showCameraStatus()
     std::cout << "  pitch                : " << camera.getPitch() << " rad" << std::endl;
     std::cout << "  roll                 : " << camera.getRoll() << " rad" << std::endl;
 
-    std::cout << std::endl;}
+    std::cout << std::endl;
 }
 
 void init()
@@ -791,10 +789,9 @@ void init()
     camera.translate(Vector3(0.0, 0.0, cameraZ));
 
     // show help at the very beginning
-    // TODO : enable later
     showHelp();
-    // showDrawStatus();
-    // showCameraStatus();
+    showDrawStatus();
+    showCameraStatus();
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
 }
@@ -925,33 +922,33 @@ void keyboard(unsigned char key, int x, int y)
             showDrawStatus();
             break;
 
-        // world axis controls
+        // world axis camera controls
         case 'a':
-            camera.rotateAroundYAxisWorld(angleIncrement);
-            showCameraStatus();
-            break;
-        case 'd':
             camera.rotateAroundYAxisWorld(-angleIncrement);
             showCameraStatus();
             break;
-        case 's':
-            camera.rotateAroundXAxisWorld(angleIncrement);
+        case 'd':
+            camera.rotateAroundYAxisWorld(angleIncrement);
             showCameraStatus();
             break;
-        case 'w':
+        case 's':
             camera.rotateAroundXAxisWorld(-angleIncrement);
             showCameraStatus();
             break;
-        case 'q':
-            camera.rotateAroundZAxisWorld(angleIncrement);
+        case 'w':
+            camera.rotateAroundXAxisWorld(angleIncrement);
             showCameraStatus();
             break;
-        case 'e':
+        case 'q':
             camera.rotateAroundZAxisWorld(-angleIncrement);
             showCameraStatus();
             break;
+        case 'e':
+            camera.rotateAroundZAxisWorld(angleIncrement);
+            showCameraStatus();
+            break;
 
-        // yaw, pitch and roll controls
+        // yaw, pitch and roll camera controls
         case 'k':
             // turn camera "down" one notch
             camera.rotateAroundXAxisObject(-angleIncrement);
