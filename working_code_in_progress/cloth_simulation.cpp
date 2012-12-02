@@ -9,7 +9,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-// math iemports
+// math imports
 #include "Vector3.h"
 #include "Matrix4.h"
 
@@ -34,7 +34,7 @@ bool drawShearBendConstraintsEnabled =      false;
 
 // camera angle increments in radians
 // increment must be power of 2 for precision reasons
-float angleIncrement = 0.125;
+float angleIncrement = 0.0625;
 
 // camera translation increments
 // increment must be power of 2 for precision reasons
@@ -709,38 +709,49 @@ void showHelp()
 
     // drawing controls
     std::cout << "drawing controls:" << std::endl;
-    std::cout << "  x: toggle draw nodes" << std::endl;
-    std::cout << "  q: toggle draw structural      constraints" << std::endl;
-    std::cout << "  w: toggle draw shear           constraints" << std::endl;
-    std::cout << "  e: toggle draw structural bend constraints" << std::endl;
-    std::cout << "  r: toggle draw shear      bend constraints" << std::endl;
-    std::cout << "  y: toggle draw wireframe" << std::endl;
+    std::cout << "  1: toggle draw structural      constraints" << std::endl;
+    std::cout << "  2: toggle draw shear           constraints" << std::endl;
+    std::cout << "  3: toggle draw structural bend constraints" << std::endl;
+    std::cout << "  4: toggle draw shear      bend constraints" << std::endl;
+    std::cout << "  5: toggle draw nodes" << std::endl;
+    std::cout << "  6: toggle draw wireframe" << std::endl;
 
     std::cout << std::endl;
 
-    // yaw and pitch controls
-    std::cout << "yaw and pitch controls:" << std::endl;
-    std::cout << "  j: decrement yaw   by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  l: increment yaw   by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  k: decrement pitch by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  i: increment pitch by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  u: decrement roll  by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  o: increment roll  by " << angleIncrement << " rad" << std::endl;
+    // yaw, pitch and roll controls
+    std::cout << "camera object rotation controls:" << std::endl;
+    std::cout << "  j: yaw   left  by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  l: yaw   right by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  k: pitch down  by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  i: pitch up    by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  u: roll  left  by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  o: roll  right by " << angleIncrement << " rad" << std::endl;
+
+    std::cout << std::endl;
+
+    // world camera controls
+    std::cout << "camera world rotation controls:" << std::endl;
+    std::cout << "  s: rotate left  around world X axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  w: rotate right around world X axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  a: rotate left  around world Y axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  d: rotate right around world Y axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  q: rotate left  around world Z axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  e: rotate right around world Z axis by " << angleIncrement << " rad" << std::endl;
 
     std::cout << std::endl;
 
     // camera position controls
-    std::cout << "camera position controls:" << std::endl;
+    std::cout << "camera translation controls:" << std::endl;
     // note, these are unicode characters for representing arrows.
     // - Leftwards  Arrow (\u2190)
     // - Rightwards Arrow (\u2192)
     // - Upwards    Arrow (\u2191)
     // - Downwards  Arrow (\u2193)
     // TODO : might not be correct terms
-    std::cout << "  \u2190: rotate camera horizontally left      around (0.0, 1.0, 0.0) world axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  \u2192: rotate camera horizontally right     around (0.0, 1.0, 0.0) world axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  \u2191: rotate camera vertically   upwards   around (1.0, 0.0, 0.0) world axis by " << angleIncrement << " rad" << std::endl;
-    std::cout << "  \u2193: rotate camera vertically   downwards around (1.0, 0.0, 0.0) world axis by " << angleIncrement << " rad" << std::endl;
+    std::cout << "  \u2190: translate camera left  by " << translationIncrement << std::endl;
+    std::cout << "  \u2192: translate camera right by " << translationIncrement << std::endl;
+    std::cout << "  \u2191: translate camera up    by " << translationIncrement << std::endl;
+    std::cout << "  \u2193: translate camera down  by " << translationIncrement << std::endl;
 
     std::cout << std::endl;
 }
@@ -760,6 +771,7 @@ void showDrawStatus()
 
 void showCameraStatus()
 {
+    if(false){
     std::cout << "camera status:" << std::endl;
     std::cout << "  camera position      : " << camera.getPosition().toString() << std::endl;
     std::cout << "  camera view direction: " << camera.getViewDirection().toString() << std::endl;
@@ -768,7 +780,7 @@ void showCameraStatus()
     std::cout << "  pitch                : " << camera.getPitch() << " rad" << std::endl;
     std::cout << "  roll                 : " << camera.getRoll() << " rad" << std::endl;
 
-    std::cout << std::endl;
+    std::cout << std::endl;}
 }
 
 void init()
@@ -780,7 +792,7 @@ void init()
 
     // show help at the very beginning
     // TODO : enable later
-    // showHelp();
+    showHelp();
     // showDrawStatus();
     // showCameraStatus();
 
@@ -841,7 +853,13 @@ void drawWorldAxis()
 void display()
 {
     // clear color buffer
+    glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // clear depth buffer
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -1021,8 +1039,7 @@ void reshape(int w, int h)
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
-    // TODO : depth
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 
     glutInitWindowSize(500, 500);
 
