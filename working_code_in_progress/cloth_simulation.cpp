@@ -19,8 +19,8 @@
 // used for printing
 #include <string>
 
-const int numberNodesWidth = 10;
-const int numberNodesHeight = 10;
+const int numberNodesWidth = 5;
+const int numberNodesHeight = 5;
 float nearPlane = 1.0;
 float farPlane = 1000.0;
 
@@ -36,6 +36,10 @@ bool drawShearBendConstraintsEnabled =      false;
 // increment must be power of 2 for precision reasons
 float angleIncrement = 0.125;
 
+// camera translation increments
+// increment must be power of 2 for precision reasons
+float translationIncrement = 0.125;
+
 // -----------------------------------------------------------------------------
 // Camera class
 class Camera
@@ -50,9 +54,9 @@ private:
     float pitch;
     float roll;
 
-    // don't want people from outside to use this, it's only for
-    // rotateAroundZAxisObject
-    void rotateAroundZAxisWorld(float angleInRadians);
+    Matrix4 getXAxisWorldRotationMatrix(float angleInRadians);
+    Matrix4 getYAxisWorldRotationMatrix(float angleInRadians);
+    Matrix4 getZAxisWorldRotationMatrix(float angleInRadians);
 
 public:
     Camera();
@@ -71,6 +75,7 @@ public:
     // rotation around world axis
     void rotateAroundXAxisWorld(float angleInRadians);
     void rotateAroundYAxisWorld(float angleInRadians);
+    void rotateAroundZAxisWorld(float angleInRadians);
 
     // rotation around camera axis
     void rotateAroundXAxisObject(float angleInRadians);
@@ -80,14 +85,14 @@ public:
 
 // initialize camera with the following properties:
 // position = (0.0, 0.0, 0.0)
-// viewDirection = (0.0, 0.0, 1.0)
+// viewDirection = (0.0, 0.0, -1.0)
 // upDirection = (0.0, 1.0, 0.0)
 // yaw = 0.0
 // pitch = 0.0
 // roll = 0.0
 Camera::Camera() :
     position(Vector3(0.0, 0.0, 0.0)),
-    viewDirection(Vector3(0.0, 0.0, 1.0)),
+    viewDirection(Vector3(0.0, 0.0, -1.0)),
     upDirection(Vector3(0.0, 1.0, 0.0)),
     yaw(0.0),
     pitch(0.0),
@@ -137,49 +142,93 @@ void Camera::setUpDirection(Vector3 direction)
 void Camera::translate(Vector3 direction)
 {
     position += direction;
-    viewDirection = Vector3(direction.x, direction.y, viewDirection.z + direction.z);
+    viewDirection += direction;
 }
 
-// TODO : doesn't work
-void Camera::rotateAroundXAxisObject(float angleInRadians)
-{
-    pitch += angleInRadians;
-    Vector3 oldPosition = position;
-    // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
-    rotateAroundXAxisWorld(angleInRadians);
-    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
-}
-
-// TODO : doesn't work
-void Camera::rotateAroundYAxisObject(float angleInRadians)
-{
-    yaw += angleInRadians;
-    Vector3 oldPosition = position;
-    // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
-    rotateAroundYAxisWorld(angleInRadians);
-    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
-}
-
-// TODO : doesn't work
-void Camera::rotateAroundZAxisObject(float angleInRadians)
-{
-    roll += angleInRadians;
-    Vector3 oldPosition = position;
-    // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
-    rotateAroundZAxisWorld(angleInRadians);
-    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
-}
-
-void Camera::rotateAroundXAxisWorld(float angleInRadians)
+Matrix4 Camera::getXAxisWorldRotationMatrix(float angleInRadians)
 {
     Matrix4 rotationMatrix = Matrix4(1.0, 0.0                , 0.0                 , 0.0,
                                      0.0, cos(angleInRadians), -sin(angleInRadians), 0.0,
                                      0.0, sin(angleInRadians),  cos(angleInRadians), 0.0,
                                      0.0, 0.0                , 0.0                 , 1.0);
+    return rotationMatrix;
+}
 
+Matrix4 Camera::getYAxisWorldRotationMatrix(float angleInRadians)
+{
+    Matrix4 rotationMatrix = Matrix4(cos(angleInRadians) , 0.0, sin(angleInRadians), 0.0,
+                                     0.0                 , 1.0, 0.0                , 0.0,
+                                     -sin(angleInRadians), 0.0, cos(angleInRadians), 0.0,
+                                     0.0                 , 0.0, 0.0                , 1.0);
+    return rotationMatrix;
+}
+
+Matrix4 Camera::getZAxisWorldRotationMatrix(float angleInRadians)
+{
+    Matrix4 rotationMatrix = Matrix4(cos(angleInRadians), -sin(angleInRadians), 0.0, 0.0,
+                                     sin(angleInRadians), cos(angleInRadians) , 0.0, 0.0,
+                                     0.0                , 0.0                 , 1.0, 0.0,
+                                     0.0                , 0.0                 , 0.0, 1.0);
+    return rotationMatrix;
+}
+
+void Camera::rotateAroundXAxisObject(float angleInRadians)
+{
+    pitch += angleInRadians;
+
+    Vector3 oldPosition = position;
+
+    // go to (0.0, 0.0, 0.0)
+    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+
+    Matrix4 rotationMatrix = getXAxisWorldRotationMatrix(angleInRadians);
+    // position does not change
+    viewDirection = rotationMatrix * viewDirection;
+    upDirection = rotationMatrix * upDirection;
+
+    // go back to the position the camera was previously in
+    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+}
+
+void Camera::rotateAroundYAxisObject(float angleInRadians)
+{
+    yaw += angleInRadians;
+
+    Vector3 oldPosition = position;
+
+    // go to (0.0, 0.0, 0.0)
+    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+
+    Matrix4 rotationMatrix = getYAxisWorldRotationMatrix(angleInRadians);
+    // position does not change
+    viewDirection = rotationMatrix * viewDirection;
+    upDirection = rotationMatrix * upDirection;
+
+    // go back to the position the camera was previously in
+    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+}
+
+void Camera::rotateAroundZAxisObject(float angleInRadians)
+{
+    roll += angleInRadians;
+
+    Vector3 oldPosition = position;
+
+    // go to (0.0, 0.0, 0.0)
+    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+
+    Matrix4 rotationMatrix = getZAxisWorldRotationMatrix(angleInRadians);
+    // position does not change
+    viewDirection = rotationMatrix * viewDirection;
+    upDirection = rotationMatrix * upDirection;
+
+    // go back to the position the camera was previously in
+    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+}
+
+void Camera::rotateAroundXAxisWorld(float angleInRadians)
+{
+    Matrix4 rotationMatrix = getXAxisWorldRotationMatrix(angleInRadians);
     position = rotationMatrix * position;
     upDirection = rotationMatrix * upDirection;
     viewDirection = rotationMatrix * viewDirection;
@@ -187,11 +236,7 @@ void Camera::rotateAroundXAxisWorld(float angleInRadians)
 
 void Camera::rotateAroundYAxisWorld(float angleInRadians)
 {
-    Matrix4 rotationMatrix = Matrix4(cos(angleInRadians) , 0.0, sin(angleInRadians), 0.0,
-                                     0.0                 , 1.0, 0.0                , 0.0,
-                                     -sin(angleInRadians), 0.0, cos(angleInRadians), 0.0,
-                                     0.0                 , 0.0, 0.0                , 1.0);
-
+    Matrix4 rotationMatrix = getYAxisWorldRotationMatrix(angleInRadians);
     position = rotationMatrix * position;
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
@@ -199,11 +244,7 @@ void Camera::rotateAroundYAxisWorld(float angleInRadians)
 
 void Camera::rotateAroundZAxisWorld(float angleInRadians)
 {
-    Matrix4 rotationMatrix = Matrix4(cos(angleInRadians), -sin(angleInRadians), 0.0, 0.0,
-                                     sin(angleInRadians), cos(angleInRadians) , 0.0, 0.0,
-                                     0.0                , 0.0                 , 1.0, 0.0,
-                                     0.0                , 0.0                 , 0.0, 1.0);
-
+    Matrix4 rotationMatrix = getZAxisWorldRotationMatrix(angleInRadians);
     position = rotationMatrix * position;
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
@@ -247,9 +288,7 @@ void Node::draw()
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
 
-        // draw a cube, rather than a sphere, because spheres are computationally
-        // expensive (20+ sides needed for it to look like a sphere)
-        glutSolidCube(0.15);
+        glutSolidSphere(0.15, 10, 10);
     glPopMatrix();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
 }
@@ -389,8 +428,8 @@ Cloth::Cloth()
 
 void Cloth::createNodes()
 {
-    float xPosCentered = -numberNodesWidth / 2.0;
-    float yPosCenteredInit = -numberNodesHeight / 2.0;
+    float xPosCentered = -(numberNodesWidth - 1) / 2.0;
+    float yPosCenteredInit = -(numberNodesHeight - 1) / 2.0;
 
     for(int x = 0; x < numberNodesWidth; x += 1)
     {
@@ -514,6 +553,8 @@ void Cloth::createShearBendConstraints()
 
 void Cloth::draw()
 {
+    glColor3f(1.0, 1.0, 1.0);
+
     if(drawNodesEnabled)
     {
         drawNodes();
@@ -542,10 +583,6 @@ void Cloth::draw()
 
 void Cloth::drawNodes()
 {
-    // we always want the nodes to be drawn as solid spheres, even if
-    // drawWireFrameEnabled is true.
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
     // loop over vertices (not edges)
     for(int x = 0; x < numberNodesWidth; x += 1)
     {
@@ -553,11 +590,6 @@ void Cloth::drawNodes()
         {
             nodes[x][y].draw();
         }
-    }
-
-    if(drawWireFrameEnabled)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 }
 
@@ -681,7 +713,7 @@ void showHelp()
     std::cout << "  q: toggle draw structural      constraints" << std::endl;
     std::cout << "  w: toggle draw shear           constraints" << std::endl;
     std::cout << "  e: toggle draw structural bend constraints" << std::endl;
-    std::cout << "  r: toggle draw shear bend      constraints" << std::endl;
+    std::cout << "  r: toggle draw shear      bend constraints" << std::endl;
     std::cout << "  y: toggle draw wireframe" << std::endl;
 
     std::cout << std::endl;
@@ -741,15 +773,10 @@ void showCameraStatus()
 
 void init()
 {
-    float cameraX = (numberNodesWidth - 1) / 2.0;
-    float cameraY = (numberNodesHeight - 1) / 2.0;
     // move camera back
-    float cameraZ = -numberNodesHeight;
+    float cameraZ = numberNodesHeight;
 
-    // camera.translate(Vector3(cameraX, cameraY, cameraZ));
     camera.translate(Vector3(0.0, 0.0, cameraZ));
-
-
 
     // show help at the very beginning
     // TODO : enable later
@@ -773,12 +800,48 @@ void chooseRenderingMethod()
     }
 }
 
+void drawWorldAxis()
+{
+    // x-axis
+    glColor3f(1.0, 0.0, 0.0);
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(1.0, 0.0, 0.0);
+    glEnd();
+    glPushMatrix();
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glTranslatef(0.0, 0.0, 1.0);
+        glutSolidCone(0.15, 0.30, 10, 10);
+    glPopMatrix();
+
+    // y-axis
+    glColor3f(0.0, 1.0, 0.0);
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, 1.0, 0.0);
+    glEnd();
+    glPushMatrix();
+        glRotatef(-90, 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 0.0, 1.0);
+        glutSolidCone(0.15, 0.30, 10, 10);
+    glPopMatrix();
+
+    // z-axis
+    glColor3f(0.0, 0.0, 1.0);
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, 0.0, 1.0);
+    glEnd();
+    glPushMatrix();
+        glTranslatef(0.0, 0.0, 1.0);
+        glutSolidCone(0.15, 0.30, 10, 10);
+    glPopMatrix();
+}
+
 void display()
 {
     // clear color buffer
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0, 1.0, 1.0);
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -800,6 +863,8 @@ void display()
               cameraUpDirection.y,
               cameraUpDirection.z);
 
+    drawWorldAxis();
+
     // draw cloth
     cloth.draw();
 
@@ -817,32 +882,58 @@ void keyboard(unsigned char key, int x, int y)
             break;
 
         // drawing controls
-        case 'q':
+        case '1':
             drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
             showDrawStatus();
             break;
-        case 'w':
+        case '2':
             drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
             showDrawStatus();
             break;
-        case 'e':
+        case '3':
             drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
             showDrawStatus();
             break;
-        case 'r':
+        case '4':
             drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
             showDrawStatus();
             break;
-        case 'x':
+        case '5':
             drawNodesEnabled = !drawNodesEnabled;
             showDrawStatus();
             break;
-        case 'y':
+        case '6':
             drawWireFrameEnabled = !drawWireFrameEnabled;
             showDrawStatus();
             break;
 
-        // yaw and pitch controls
+        // world axis controls
+        case 'a':
+            camera.rotateAroundYAxisWorld(angleIncrement);
+            showCameraStatus();
+            break;
+        case 'd':
+            camera.rotateAroundYAxisWorld(-angleIncrement);
+            showCameraStatus();
+            break;
+        case 's':
+            camera.rotateAroundXAxisWorld(angleIncrement);
+            showCameraStatus();
+            break;
+        case 'w':
+            camera.rotateAroundXAxisWorld(-angleIncrement);
+            showCameraStatus();
+            break;
+        case 'q':
+            camera.rotateAroundZAxisWorld(angleIncrement);
+            showCameraStatus();
+            break;
+        case 'e':
+            camera.rotateAroundZAxisWorld(-angleIncrement);
+            showCameraStatus();
+            break;
+
+        // yaw, pitch and roll controls
         case 'k':
             // turn camera "down" one notch
             camera.rotateAroundXAxisObject(-angleIncrement);
@@ -855,20 +946,22 @@ void keyboard(unsigned char key, int x, int y)
             break;
         case 'j':
             // turn camera "left" one notch
-            camera.rotateAroundYAxisObject(-angleIncrement);
+            camera.rotateAroundYAxisObject(angleIncrement);
             showCameraStatus();
             break;
         case 'l':
             // turn camera "right" one notch
-            camera.rotateAroundYAxisObject(angleIncrement);
+            camera.rotateAroundYAxisObject(-angleIncrement);
             showCameraStatus();
             break;
         case 'u':
-            camera.rotateAroundZAxisObject(-angleIncrement);
+            // tilt camera "left" one notch
+            camera.rotateAroundZAxisObject(angleIncrement);
             showCameraStatus();
             break;
         case 'o':
-            camera.rotateAroundZAxisObject(angleIncrement);
+            // tilt camera "right" one notch
+            camera.rotateAroundZAxisObject(-angleIncrement);
             showCameraStatus();
             break;
         default:
@@ -884,19 +977,19 @@ void keyboardArrows(int key, int x, int y)
     switch(key)
     {
         case GLUT_KEY_UP:
-            camera.rotateAroundXAxisWorld(-angleIncrement);
+            camera.translate(Vector3(0.0, translationIncrement, 0.0));
             showCameraStatus();
             break;
         case GLUT_KEY_DOWN:
-            camera.rotateAroundXAxisWorld(angleIncrement);
+            camera.translate(Vector3(0.0, -translationIncrement, 0.0));
             showCameraStatus();
             break;
         case GLUT_KEY_LEFT:
-            camera.rotateAroundYAxisWorld(-angleIncrement);
+            camera.translate(Vector3(-translationIncrement, 0.0, 0.0));
             showCameraStatus();
             break;
         case GLUT_KEY_RIGHT:
-            camera.rotateAroundYAxisWorld(angleIncrement);
+            camera.translate(Vector3(translationIncrement, 0.0, 0.0));
             showCameraStatus();
             break;
         default:
