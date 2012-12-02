@@ -19,26 +19,27 @@
 // used for printing
 #include <string>
 
-const int numberNodesWidth = 5;
-const int numberNodesHeight = 5;
+const int numberNodesWidth = 6;
+const int numberNodesHeight = 6;
 float nearPlane = 1.0;
 float farPlane = 1000.0;
 
 // Global variables
-bool drawWireFrameEnabled =                 false;
-bool drawNodesEnabled =                     true;
-bool drawStructuralConstraintsEnabled =     false;
-bool drawShearConstraintsEnabled =          false;
+bool drawWireFrameEnabled                 = false;
+bool drawNodesEnabled                     = true;
+bool drawWorldAxisEnabled                 = true;
+bool drawStructuralConstraintsEnabled     = false;
+bool drawShearConstraintsEnabled          = false;
 bool drawStructuralBendConstraintsEnabled = false;
-bool drawShearBendConstraintsEnabled =      false;
+bool drawShearBendConstraintsEnabled      = false;
 
 // camera angle increments in radians
 // increment must be power of 2 for precision reasons
-float angleIncrement = 0.0625;
+float angleIncrement = 0.015625; // 2^(-6)
 
 // camera translation increments
 // increment must be power of 2 for precision reasons
-float translationIncrement = 0.125;
+float translationIncrement = 0.03125; // 2^(-5)
 
 // -----------------------------------------------------------------------------
 // Camera class
@@ -82,15 +83,15 @@ public:
 };
 
 // initialize camera with the following properties:
-// position = (0.0, 0.0, 0.0)
-// viewDirection = (0.0, 0.0, -1.0)
+// position = (0.0, 0.0, 1.0)
+// viewDirection = (0.0, 0.0, 0.0)
 // upDirection = (0.0, 1.0, 0.0)
 // yaw = 0.0
 // pitch = 0.0
 // roll = 0.0
 Camera::Camera() :
-    position(Vector3(0.0, 0.0, 0.0)),
-    viewDirection(Vector3(0.0, 0.0, -1.0)),
+    position(Vector3(0.0, 0.0, 1.0)),
+    viewDirection(Vector3(0.0, 0.0, 0.0)),
     upDirection(Vector3(0.0, 1.0, 0.0)),
     yaw(0.0),
     pitch(0.0),
@@ -704,6 +705,35 @@ Cloth cloth;
 // Declare a camera at origin
 Camera camera;
 
+// array which holds pressed status values of all keyboard keys other than the
+// special ones (arrows + F1..F12 keys + home + end ...)
+char keyboardStatus[256];
+
+// prototypes
+std::string isEnabled(bool controlVariableEnabled);
+void showHelp();
+void showDrawStatus();
+void showCameraStatus();
+void init();
+void chooseRenderingMethod();
+void drawWorldAxis();
+void display();
+void initializeKeyboardStatus();
+void applyContinuousKeyboardCommands();
+void normalKeyboard(unsigned char key, int x, int y);
+void normalKeyboardRelease(unsigned char key, int x, int y);
+void reshape(int w, int h);
+void applyChanges();
+
+// used for idle callback
+void applyChanges()
+{
+    applyContinuousKeyboardCommands();
+
+    // redraw the screen
+    glutPostRedisplay();
+}
+
 // prints "true" if controlVariableEnabled is true, and "false" otherwise
 std::string isEnabled(bool controlVariableEnabled)
 {
@@ -721,7 +751,7 @@ void showHelp()
 {
     // help controls
     std::cout << "help controls:" << std::endl;
-    std::cout << "  h: show help" << std::endl;
+    std::cout << "  0: show help" << std::endl;
 
     std::cout << std::endl;
 
@@ -806,12 +836,13 @@ void init()
 
     camera.translate(Vector3(0.0, 0.0, cameraZ));
 
-    // show help at the very beginning
+    // show help, draw status, and camera status at program launch
     showHelp();
     showDrawStatus();
     showCameraStatus();
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    // clear keyboard press status
+    initializeKeyboardStatus();
 }
 
 // determines if a wireframe is to be drawn, or a textured version
@@ -829,40 +860,43 @@ void chooseRenderingMethod()
 
 void drawWorldAxis()
 {
-    // x-axis
-    glColor3f(1.0, 0.0, 0.0);
-    glBegin(GL_LINES);
-        glVertex3f(0.0, 0.0, 0.0);
-        glVertex3f(1.0, 0.0, 0.0);
-    glEnd();
-    glPushMatrix();
-        glRotatef(90, 0.0, 1.0, 0.0);
-        glTranslatef(0.0, 0.0, 1.0);
-        glutSolidCone(0.15, 0.30, 10, 10);
-    glPopMatrix();
+    if(drawWorldAxisEnabled)
+    {
+        glColor3f(1.0, 0.0, 0.0);
+        // x-axis in red
+        glBegin(GL_LINES);
+            glVertex3f(0.0, 0.0, 0.0);
+            glVertex3f(1.0, 0.0, 0.0);
+        glEnd();
+        glPushMatrix();
+            glRotatef(90, 0.0, 1.0, 0.0);
+            glTranslatef(0.0, 0.0, 1.0);
+            glutSolidCone(0.15, 0.30, 10, 10);
+        glPopMatrix();
 
-    // y-axis
-    glColor3f(0.0, 1.0, 0.0);
-    glBegin(GL_LINES);
-        glVertex3f(0.0, 0.0, 0.0);
-        glVertex3f(0.0, 1.0, 0.0);
-    glEnd();
-    glPushMatrix();
-        glRotatef(-90, 1.0, 0.0, 0.0);
-        glTranslatef(0.0, 0.0, 1.0);
-        glutSolidCone(0.15, 0.30, 10, 10);
-    glPopMatrix();
+        // y-axis in green
+        glColor3f(0.0, 1.0, 0.0);
+        glBegin(GL_LINES);
+            glVertex3f(0.0, 0.0, 0.0);
+            glVertex3f(0.0, 1.0, 0.0);
+        glEnd();
+        glPushMatrix();
+            glRotatef(-90, 1.0, 0.0, 0.0);
+            glTranslatef(0.0, 0.0, 1.0);
+            glutSolidCone(0.15, 0.30, 10, 10);
+        glPopMatrix();
 
-    // z-axis
-    glColor3f(0.0, 0.0, 1.0);
-    glBegin(GL_LINES);
-        glVertex3f(0.0, 0.0, 0.0);
-        glVertex3f(0.0, 0.0, 1.0);
-    glEnd();
-    glPushMatrix();
-        glTranslatef(0.0, 0.0, 1.0);
-        glutSolidCone(0.15, 0.30, 10, 10);
-    glPopMatrix();
+        // z-axis in blue
+        glColor3f(0.0, 0.0, 1.0);
+        glBegin(GL_LINES);
+            glVertex3f(0.0, 0.0, 0.0);
+            glVertex3f(0.0, 0.0, 1.0);
+        glEnd();
+        glPushMatrix();
+            glTranslatef(0.0, 0.0, 1.0);
+            glutSolidCone(0.15, 0.30, 10, 10);
+        glPopMatrix();
+    }
 }
 
 void display()
@@ -879,6 +913,8 @@ void display()
     glLoadIdentity();
 
     chooseRenderingMethod();
+
+    applyChanges();
 
     Vector3 cameraPosition = camera.getPosition();
     Vector3 cameraViewDirection = camera.getViewDirection();
@@ -905,12 +941,123 @@ void display()
     glutSwapBuffers();
 }
 
-void keyboard(unsigned char key, int x, int y)
+void initializeKeyboardStatus()
+{
+    for(int i = 0; i < 256; i += 1)
+    {
+        keyboardStatus[i] = false;
+    }
+}
+
+void applyContinuousKeyboardCommands()
+{
+    for(int key = 0; key < 256; key += 1)
+    {
+        // if the key is being continuously held down
+        if(keyboardStatus[key])
+        {
+            switch(key)
+            {
+                // world axis camera controls
+                case 'a':
+                    camera.rotateAroundYAxisWorld(-angleIncrement);
+                    break;
+                case 'd':
+                    camera.rotateAroundYAxisWorld(angleIncrement);
+                    break;
+                case 's':
+                    camera.rotateAroundXAxisWorld(-angleIncrement);
+                    break;
+                case 'w':
+                    camera.rotateAroundXAxisWorld(angleIncrement);
+                    break;
+                case 'q':
+                    camera.rotateAroundZAxisWorld(-angleIncrement);
+                    break;
+                case 'e':
+                    camera.rotateAroundZAxisWorld(angleIncrement);
+                    break;
+
+                // yaw, pitch and roll camera controls
+                case 'k':
+                    // turn camera "down" one notch
+                    camera.rotateAroundXAxisObject(angleIncrement);
+                    break;
+                case 'i':
+                    // turn camera "up" one notch
+                    camera.rotateAroundXAxisObject(-angleIncrement);
+                    break;
+                case 'j':
+                    // turn camera "left" one notch
+                    camera.rotateAroundYAxisObject(angleIncrement);
+                    break;
+                case 'l':
+                    // turn camera "right" one notch
+                    camera.rotateAroundYAxisObject(-angleIncrement);
+                    break;
+                case 'u':
+                    // tilt camera "left" one notch
+                    camera.rotateAroundZAxisObject(-angleIncrement);
+                    break;
+                case 'o':
+                    // tilt camera "right" one notch
+                    camera.rotateAroundZAxisObject(angleIncrement);
+                    break;
+
+                // camera translation controls
+                case 'f':
+                    // translate camera left
+                    // calculate "x" axis of camera with a cross product between
+                    // it's upDirection and viewDirection
+                    camera.translate(camera.getUpDirection().cross(camera.getViewDirection()).normalize() * translationIncrement);
+                    break;
+                case 'h':
+                    // translate camera right
+                    // calculate "x" axis of camera with a cross product between
+                    // it's upDirection and viewDirection
+                    camera.translate(camera.getViewDirection().cross(camera.getUpDirection()).normalize() * translationIncrement);
+                    break;
+                case 't':
+                    // translate camera up
+                    camera.translate(camera.getUpDirection().normalize() * translationIncrement);
+                    break;
+                case 'g':
+                    // translate camera down
+                    camera.translate(-camera.getUpDirection().normalize() * translationIncrement);
+                    break;
+                case 'r':
+                    // translate camera back
+                    // TODO : gets stuck if advance too much
+                    camera.translate(camera.getViewDirection().normalize() * translationIncrement);
+                    break;
+                case 'z':
+                    // translate camera front
+                    // TODO : gets stuck if advance too much
+                    camera.translate(-camera.getViewDirection().normalize() * translationIncrement);
+                    break;
+
+                default:
+                    break;
+            } // end switch(key)
+
+            // TODO : called to often
+            // showCameraStatus();
+
+        } // end if(keyboardStatus[key])
+    } // end loop
+}
+
+void normalKeyboard(unsigned char key, int x, int y)
 {
     switch(key)
     {
+        // ESC control
+        case 27:
+            exit(0);
+            break;
+
         // help controls
-        case 'h':
+        case '0':
             showHelp();
             break;
 
@@ -939,98 +1086,20 @@ void keyboard(unsigned char key, int x, int y)
             drawWireFrameEnabled = !drawWireFrameEnabled;
             showDrawStatus();
             break;
+        case '7':
+            drawWorldAxisEnabled = !drawWorldAxisEnabled;
+            showDrawStatus();
 
-        // world axis camera controls
-        case 'a':
-            camera.rotateAroundYAxisWorld(-angleIncrement);
-            showCameraStatus();
-            break;
-        case 'd':
-            camera.rotateAroundYAxisWorld(angleIncrement);
-            showCameraStatus();
-            break;
-        case 's':
-            camera.rotateAroundXAxisWorld(-angleIncrement);
-            showCameraStatus();
-            break;
-        case 'w':
-            camera.rotateAroundXAxisWorld(angleIncrement);
-            showCameraStatus();
-            break;
-        case 'q':
-            camera.rotateAroundZAxisWorld(-angleIncrement);
-            showCameraStatus();
-            break;
-        case 'e':
-            camera.rotateAroundZAxisWorld(angleIncrement);
-            showCameraStatus();
-            break;
-
-        // yaw, pitch and roll camera controls
-        case 'k':
-            // turn camera "down" one notch
-            camera.rotateAroundXAxisObject(angleIncrement);
-            showCameraStatus();
-            break;
-        case 'i':
-            // turn camera "up" one notch
-            camera.rotateAroundXAxisObject(-angleIncrement);
-            showCameraStatus();
-            break;
-        case 'j':
-            // turn camera "left" one notch
-            camera.rotateAroundYAxisObject(angleIncrement);
-            showCameraStatus();
-            break;
-        case 'l':
-            // turn camera "right" one notch
-            camera.rotateAroundYAxisObject(-angleIncrement);
-            showCameraStatus();
-            break;
-        case 'u':
-            // tilt camera "left" one notch
-            camera.rotateAroundZAxisObject(-angleIncrement);
-            showCameraStatus();
-            break;
-        case 'o':
-            // tilt camera "right" one notch
-            camera.rotateAroundZAxisObject(angleIncrement);
-            showCameraStatus();
-            break;
+        // toggle enable state for other keyboard buttons which are to be
+        // continuously applied (like rotations, translations, ...)
         default:
-            break;
+            keyboardStatus[key] = true;
     }
-
-    // redraw screen after a change in preferences
-    glutPostRedisplay();
 }
 
-void keyboardArrows(int key, int x, int y)
+void normalKeyboardRelease(unsigned char key, int x, int y)
 {
-    switch(key)
-    {
-        case GLUT_KEY_UP:
-            camera.translate(Vector3(0.0, translationIncrement, 0.0));
-            showCameraStatus();
-            break;
-        case GLUT_KEY_DOWN:
-            camera.translate(Vector3(0.0, -translationIncrement, 0.0));
-            showCameraStatus();
-            break;
-        case GLUT_KEY_LEFT:
-            camera.translate(Vector3(-translationIncrement, 0.0, 0.0));
-            showCameraStatus();
-            break;
-        case GLUT_KEY_RIGHT:
-            camera.translate(Vector3(translationIncrement, 0.0, 0.0));
-            showCameraStatus();
-            break;
-        default:
-            break;
-    }
-
-    // redraw screen after a change in preferences
-    glutPostRedisplay();
+    keyboardStatus[key] = false;
 }
 
 void reshape(int w, int h)
@@ -1068,10 +1137,16 @@ int main(int argc, char** argv)
 
     init();
     glutDisplayFunc(display);
+
+    glutIdleFunc(applyChanges);
+
     glutReshapeFunc(reshape);
 
-    glutKeyboardFunc(keyboard);
-    glutSpecialFunc(keyboardArrows);
+    // disable keyboard repeat, because we will use variables for continuous animation
+    glutIgnoreKeyRepeat(1);
+
+    glutKeyboardFunc(normalKeyboard);
+    glutKeyboardUpFunc(normalKeyboardRelease);
 
     glutMainLoop();
     return 0;
