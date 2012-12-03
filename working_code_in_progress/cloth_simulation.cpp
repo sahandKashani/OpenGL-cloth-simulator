@@ -445,9 +445,16 @@ private:
     void drawStructuralBendConstraints();
     void drawShearBendConstraints();
 
+    // constraint satisfaction methods
+    void satisfyStructuralConstraints();
+    void satisfyShearConstraints();
+    void satisfyStructuralBendConstraints();
+    void satisfyShearBendConstraints();
+
 public:
     Cloth();
     void draw();
+    void satisfyConstraints();
 };
 
 Cloth::Cloth()
@@ -623,13 +630,59 @@ void Cloth::drawNodes()
     }
 }
 
+void Cloth::satisfyStructuralConstraints()
+{
+    for(std::vector<Constraint>::iterator structuralConstraintIterator = structuralConstraints.begin();
+        structuralConstraintIterator != structuralConstraints.end();
+        ++structuralConstraintIterator)
+    {
+        structuralConstraintIterator->satisfyConstraint();
+    }
+}
+
+void Cloth::satisfyShearConstraints()
+{
+    for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
+        shearConstraintIterator != shearConstraints.end();
+        ++shearConstraintIterator)
+    {
+        shearConstraintIterator->satisfyConstraint();
+    }
+}
+
+void Cloth::satisfyStructuralBendConstraints()
+{
+    for(std::vector<Constraint>::iterator structuralBendConstraintIterator = structuralBendConstraints.begin();
+        structuralBendConstraintIterator != structuralBendConstraints.end();
+        ++structuralBendConstraintIterator)
+    {
+        structuralBendConstraintIterator->satisfyConstraint();
+    }
+}
+
+void Cloth::satisfyShearBendConstraints()
+{
+    for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
+        shearBendConstraintIterator != shearBendConstraints.end();
+        ++shearBendConstraintIterator)
+    {
+        shearBendConstraintIterator->satisfyConstraint();
+    }
+}
+
+void Cloth::satisfyConstraints()
+{
+    satisfyStructuralConstraints();
+    satisfyShearConstraints();
+    satisfyStructuralBendConstraints();
+    satisfyShearBendConstraints();
+}
+
 void Cloth::drawStructuralConstraints()
 {
-    for(
-        std::vector<Constraint>::iterator structuralConstraintIterator = structuralConstraints.begin();
+    for(std::vector<Constraint>::iterator structuralConstraintIterator = structuralConstraints.begin();
         structuralConstraintIterator != structuralConstraints.end();
-        ++structuralConstraintIterator
-       )
+        ++structuralConstraintIterator)
     {
         Node* firstNode = structuralConstraintIterator->getFirstNode();
         Node* secondNode = structuralConstraintIterator->getSecondNode();
@@ -646,11 +699,9 @@ void Cloth::drawStructuralConstraints()
 
 void Cloth::drawShearConstraints()
 {
-    for(
-        std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
+    for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
         shearConstraintIterator != shearConstraints.end();
-        ++shearConstraintIterator
-       )
+        ++shearConstraintIterator)
     {
         Node* firstNode = shearConstraintIterator->getFirstNode();
         Node* secondNode = shearConstraintIterator->getSecondNode();
@@ -667,11 +718,9 @@ void Cloth::drawShearConstraints()
 
 void Cloth::drawStructuralBendConstraints()
 {
-    for(
-        std::vector<Constraint>::iterator structuralBendConstraintIterator = structuralBendConstraints.begin();
+    for(std::vector<Constraint>::iterator structuralBendConstraintIterator = structuralBendConstraints.begin();
         structuralBendConstraintIterator != structuralBendConstraints.end();
-        ++structuralBendConstraintIterator
-       )
+        ++structuralBendConstraintIterator)
     {
         Node* firstNode = structuralBendConstraintIterator->getFirstNode();
         Node* secondNode = structuralBendConstraintIterator->getSecondNode();
@@ -688,11 +737,9 @@ void Cloth::drawStructuralBendConstraints()
 
 void Cloth::drawShearBendConstraints()
 {
-    for(
-        std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
+    for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
         shearBendConstraintIterator != shearBendConstraints.end();
-        ++shearBendConstraintIterator
-       )
+        ++shearBendConstraintIterator)
     {
         Node* firstNode = shearBendConstraintIterator->getFirstNode();
         Node* secondNode = shearBendConstraintIterator->getSecondNode();
@@ -743,6 +790,8 @@ void specialKeyboard(int key, int x, int y);
 void applyChanges()
 {
     applyContinuousKeyboardCommands();
+
+    cloth.satisfyConstraints();
 
     // redraw the screen
     glutPostRedisplay();
