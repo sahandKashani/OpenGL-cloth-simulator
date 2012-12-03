@@ -276,6 +276,7 @@ class Node
 private:
     Vector3 position;
     bool moveable;
+    Vector3 force;
 
 public:
     Node();
@@ -285,15 +286,25 @@ public:
     bool isMoveable();
     void setMoveable(bool isMovePossible);
     void translate(Vector3 direction);
+    void addForce(Vector3 extraForce);
 };
 
 Node::Node() :
     position(Vector3(0.0, 0.0, 0.0)),
-    moveable(true)
+    moveable(true),
+    force(Vector3(0.0, 0.0, 0.0))
 {}
 
-Node::Node(Vector3 pos) : position(pos)
+Node::Node(Vector3 pos) :
+    position(pos),
+    moveable(true),
+    force(Vector3(0.0, 0.0, 0.0))
 {}
+
+void Node::addForce(Vector3 extraForce)
+{
+    force += extraForce;
+}
 
 Vector3 Node::getPosition()
 {
@@ -727,14 +738,6 @@ void applyChanges();
 void resetCameraPosition();
 void specialKeyboard(int key, int x, int y);
 
-// TODO
-void drawBoundingBox();
-
-void drawBoundingBox()
-{
-
-}
-
 // used for idle callback.
 // Will process all changes that occur, such as keyboard commands, new forces, ...
 void applyChanges()
@@ -858,8 +861,9 @@ void init()
 {
     resetCameraPosition();
 
+    // TODO : enable later
     // show help at program launch
-    showHelp();
+    // showHelp();
 
     // clear keyboard press status
     initializeKeyboardStatus();
