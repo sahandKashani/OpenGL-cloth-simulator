@@ -22,8 +22,8 @@
 // used for animation duration
 #include <sys/time.h>
 
-const int numberNodesWidth = 6;
-const int numberNodesHeight = 6;
+const int numberNodesWidth = 20;
+const int numberNodesHeight = 20;
 float nearPlane = 1.0;
 float farPlane = 1000.0;
 
@@ -31,10 +31,10 @@ float farPlane = 1000.0;
 bool drawWireFrameEnabled                 = false;
 bool drawNodesEnabled                     = true;
 bool drawWorldAxisEnabled                 = true;
-bool drawStructuralConstraintsEnabled     = false;
-bool drawShearConstraintsEnabled          = false;
-bool drawStructuralBendConstraintsEnabled = false;
-bool drawShearBendConstraintsEnabled      = false;
+bool drawStructuralConstraintsEnabled     = true;
+bool drawShearConstraintsEnabled          = true;
+bool drawStructuralBendConstraintsEnabled = true;
+bool drawShearBendConstraintsEnabled      = true;
 
 // camera angle increments in radians
 // increment must be power of 2 for precision reasons
@@ -509,9 +509,9 @@ void Cloth::createNodes()
         xPosCentered += 1.0;
     }
 
-    // TODO : fixing nodes for top of cape
+    // TODO : fixing top-left and top-right nodes for cape to be held up
     nodes[0][numberNodesHeight - 1].setMoveable(false);
-    // nodes[numberNodesWidth - 1][numberNodesHeight - 1].setMoveable(false);
+    nodes[numberNodesWidth - 1][numberNodesHeight - 1].setMoveable(false);
 }
 
 // moves the nodes depending on the forces that are being applied to them
@@ -1001,8 +1001,12 @@ void init()
     // the value of oldTime will be changed through it's pointer
     gettimeofday(&oldTime, NULL);
 
+    // TODO : find suitable values
     // gravity
     cloth.addForce(Vector3(0.0, -0.1, 0.0));
+
+    // wind
+    cloth.addForce(Vector3(0.0, 0.0, 0.05));
 
     // clear keyboard press status
     initializeKeyboardStatus();
@@ -1202,12 +1206,12 @@ void applyContinuousKeyboardCommands()
                     break;
                 case 'r':
                     // translate camera back
-                    // TODO : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
+                    // FIXME : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
                     camera.translate(camera.getViewDirection().normalize() * translationIncrement);
                     break;
                 case 'z':
                     // translate camera front
-                    // TODO : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
+                    // FIXME : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
                     camera.translate(-camera.getViewDirection().normalize() * translationIncrement);
                     break;
 
