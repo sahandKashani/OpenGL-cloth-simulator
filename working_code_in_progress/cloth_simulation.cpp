@@ -19,6 +19,9 @@
 // used for printing
 #include <string>
 
+// used for animation duration
+#include <sys/time.h>
+
 const int numberNodesWidth = 6;
 const int numberNodesHeight = 6;
 float nearPlane = 1.0;
@@ -287,6 +290,7 @@ public:
     void setMoveable(bool isMovePossible);
     void translate(Vector3 direction);
     void addForce(Vector3 extraForce);
+    void applyForces(float duration);
 };
 
 Node::Node() :
@@ -300,6 +304,11 @@ Node::Node(Vector3 pos) :
     moveable(true),
     force(Vector3(0.0, 0.0, 0.0))
 {}
+
+void Node::applyForces(float duration)
+{
+
+}
 
 void Node::addForce(Vector3 extraForce)
 {
@@ -451,10 +460,13 @@ private:
     void satisfyStructuralBendConstraints();
     void satisfyShearBendConstraints();
 
+
 public:
     Cloth();
     void draw();
     void satisfyConstraints();
+    void addForce(Vector3 force);
+    void applyForces(float duration);
 };
 
 Cloth::Cloth()
@@ -482,6 +494,29 @@ void Cloth::createNodes()
         }
 
         xPosCentered += 1.0;
+    }
+}
+
+// moves the nodes depending on the forces that are being applied to them
+void Cloth::applyForces(float duration)
+{
+    for(int x = 0; x < numberNodesWidth; x += 1)
+    {
+        for(int y = 0; y < numberNodesHeight; y += 1)
+        {
+            nodes[x][y].applyForces(duration);
+        }
+    }
+}
+
+void Cloth::addForce(Vector3 force)
+{
+    for(int x = 0; x < numberNodesWidth; x += 1)
+    {
+        for(int y = 0; y < numberNodesHeight; y += 1)
+        {
+            nodes[x][y].addForce(force);
+        }
     }
 }
 
@@ -767,6 +802,11 @@ Camera camera;
 // special ones (arrows + F1..F12 keys + home + end ...)
 char keyboardStatus[256];
 
+// the "timeval" structure contains 2 fields
+//     long int tv_sec = number of whole seconds of elapsed time
+//     long int tv_usec = number of microseconds of elapsed time (always lower than 1 million)
+struct timeval oldTime;
+
 // prototypes
 std::string isEnabled(bool controlVariableEnabled);
 void showHelp();
@@ -784,13 +824,39 @@ void reshape(int w, int h);
 void applyChanges();
 void resetCameraPosition();
 void specialKeyboard(int key, int x, int y);
+float getTimeDifference();
+
+float getTimeDifference()
+{
+    struct timeval currentTime;
+    gettimeofday(&currentTime, NULL);
+
+    struct timeval timeDifference;
+    timeDifference.tv_sec = currentTime.tv_sec - oldTime.tv_sec;
+    timeDifference.tv_usec = currentTime.tv_usec - oldTime.tv_usec;
+
+    float duration = timeDifference.tv_sec + timeDifference.tv_usec / 1000000.0;
+
+    // update oldTime for future time checks
+    oldTime = currentTime;
+
+    return duration;
+}
 
 // used for idle callback.
 // Will process all changes that occur, such as keyboard commands, new forces, ...
 void applyChanges()
 {
+    // find out what commands the keyboard is sending and apply them
     applyContinuousKeyboardCommands();
 
+    // calculate time difference from last call to applyChanges()
+    float duration = getTimeDifference();
+
+    // apply all forces to the cloth
+    cloth.applyForces(duration);
+
+    // satisfy all constraints of the cloth after forces are applied
     cloth.satisfyConstraints();
 
     // redraw the screen
@@ -913,6 +979,13 @@ void init()
     // TODO : enable later
     // show help at program launch
     // showHelp();
+
+    // initialize the time (needed for future animations)
+    // the value of oldTime will be changed through it's pointer
+    gettimeofday(&oldTime, NULL);
+
+    // gravity
+    cloth.addForce(Vector3(0.0, -1.0, 0.0));
 
     // clear keyboard press status
     initializeKeyboardStatus();
