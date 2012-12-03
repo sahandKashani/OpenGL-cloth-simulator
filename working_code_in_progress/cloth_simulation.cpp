@@ -475,7 +475,8 @@ private:
 
 public:
     Cloth();
-    Node nodes[numberNodesWidth][numberNodesHeight];
+    // Node nodes[numberNodesWidth][numberNodesHeight];
+    std::vector< std::vector<Node> > nodes;
     void draw();
     void satisfyConstraints();
     void addForce(Vector3 force);
@@ -497,14 +498,18 @@ void Cloth::createNodes()
     {
         // start yPosCentered at beginning again
         float yPosCentered = yPosCenteredInit;
+        std::vector<Node> nodeColumn;
 
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
             // put elements in rectangular grid with 0.0 depth
             // note that the nodes are centered around (0.0, 0.0, 0.0)
-            nodes[x][y] = Vector3(xPosCentered, yPosCentered, 0.0);
+            // nodes[x][y] = Vector3(xPosCentered, yPosCentered, 0.0);
+            nodeColumn.push_back(Node(Vector3(xPosCentered, yPosCentered, 0.0)));
             yPosCentered += 1.0;
         }
+
+        nodes.push_back(nodeColumn);
 
         xPosCentered += 1.0;
     }
