@@ -1,0 +1,128 @@
+# depslib dependency file v1.0
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/cloth-simulator/ClothViewer.cpp
+	"ClothViewer.h"
+	"../utils/Mesh3DReader.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/cloth-simulator/ClothViewer.h
+	<string>
+	<vector>
+	"../gl/TrackballViewer.h"
+	"../gl/shader.h"
+	"../gl/Mesh3D.h"
+	"../gl/Light3D.h"
+	"../gl/texture.h"
+	"../gl/fbo.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/TrackballViewer.h
+	<string>
+	<vector>
+	"GlutViewer.h"
+	"../math/Matrix4.h"
+	"../math/Vector3.h"
+	"Camera3D.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/GlutViewer.h
+	<iostream>
+	<map>
+	"gl.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/gl.h
+	<GLUT/glut.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<stdlib.h>
+	<glew.h>
+	<glut.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<GL/glew.h>
+	<GL/glut.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/math/Matrix4.h
+	<math.h>
+	<assert.h>
+	<iostream>
+	"Vector3.h"
+	"Vector4.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/math/Vector3.h
+	<math.h>
+	<assert.h>
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/math/Vector4.h
+	<math.h>
+	<assert.h>
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/Camera3D.h
+	"Object3D.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/Object3D.h
+	"../math/Matrix4.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/shader.h
+	<string>
+	"../math/Matrix4.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/Mesh3D.h
+	<vector>
+	"Object3D.h"
+	"texture.h"
+	"../math/Vector2.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/texture.h
+	<string>
+	"gl.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/math/Vector2.h
+	<math.h>
+	<assert.h>
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/Light3D.h
+	"Object3D.h"
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/fbo.h
+
+1353230058 /media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/utils/Mesh3DReader.h
+	<fstream>
+	<sstream>
+	<locale>
+	<map>
+	<string>
+	<algorithm>
+	<cctype>
+	"../gl/Mesh3D.h"
+
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/cloth-simulator/main.cpp
+	"ClothViewer.h"
+
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/GlutViewer.cpp
+	"GlutViewer.h"
+
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/Mesh3D.cpp
+	<assert.h>
+	"Mesh3D.h"
+	<cstdio>
+
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/TrackballViewer.cpp
+	"TrackballViewer.h"
+
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/fbo.cpp
+	"fbo.h"
+	"gl.h"
+	<cassert>
+	<iostream>
+
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/shader.cpp
+	"shader.h"
+	"gl.h"
+	<cassert>
+	<fstream>
+	<iostream>
+
+1353230058 source:/media/3bd1eb45-07f7-4080-9d3a-d5fd8fda730b/Documents/EPFL/ICG/project/Framework_Linux/src/gl/texture.cpp
+	"texture.h"
+	<fstream>
+	<cassert>
+

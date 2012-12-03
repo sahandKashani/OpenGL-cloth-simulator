@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical"
+    android:layout_marginLeft="20dp"
+    android:background="@android:drawable/list_selector_background"
+    android:onClick="openDetails">
+
+    <TextView
+        android:background="@color/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+         />
+    
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/time"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="5dip"
+        android:gravity="center"/>
+    
+    <TextView
+        android:id="@+id/eventTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/eventTitle"
+        android:textStyle="bold"
+        android:textSize="20dip"
+        android:layout_marginLeft="15dip" />
+
+
+    <TextView
+        android:id="@+id/place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="@string/place"
+        android:layout_marginRight="15dip"
+        android:layout_marginBottom="5dip"/>
+
+</LinearLayout>

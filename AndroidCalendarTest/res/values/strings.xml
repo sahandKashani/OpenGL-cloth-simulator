@@ -7,10 +7,23 @@
     <string name="getFromCalendar">Get from calendar</string>
     <string name="title_activity_event_details">Event details</string>
     <string name="eventTitle">Event Title</string>
-    <string name="goTo">Go to...</string>
+    <string name="goTo">Go to EventsActivity</string>
+    <string name="goTo2">Go to EventEditActivity</string>
     <string name="place">Room number / building</string>
-    <string name="begin">21.11.2012 - 08h00</string>
-    <string name="end">21.12.2012 - 21h00</string>
     <string name="exportToCalendar">Export to Android Calendar</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_events">Events</string>
+    <string name="events_page_title">Upcoming Events</string>
+    <string name="owner">Owner: </string>
+    <string name="time">All day</string>
+    <string name="title_activity_event_edit">Edit an event</string>
+    <string name="event_edit">Event edition</string>
+    <string name="edit_event_title_header">Event\'s title</string>
+    <string name="edit_event_title">Enter title here</string>
+    <string name="edit_event_begin_date_header">Event\'s begin date</string>
+    <string name="edit_event_begin_date">Click here to use date picker</string>
+    <string name="edit_event_begin_time_header">Event\'s begin time</string>
+    <string name="edit_event_begin_time">Click here to use time picker</string>
+    <string name="edit_event_submit">Create event</string>
 
 </resources>

@@ -10,37 +10,40 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/eventTitle"
-            android:textSize="32dip" 
+            android:textSize="28dip" 
             android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/time"
+            android:textSize="15dip" />
 
         <TextView
             android:id="@+id/place"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dip"
-            android:layout_marginTop="10dip"
+            android:layout_marginTop="25dip"
             android:text="@string/place"
             android:textSize="20dip"
             android:textStyle="italic" />
 
+        
         <TextView
-            android:id="@+id/begin"
+            android:id="@+id/owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dip"
-            android:layout_marginTop="20dip"
-            android:gravity="right"
-            android:text="@string/begin"
-            android:textSize="15dip" />
-
-        <TextView
-            android:id="@+id/end"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dip"
-            android:gravity="right"
-            android:text="@string/end"
-            android:textSize="15dip" />
+            android:gravity="left"
+            android:textStyle="italic"
+            android:text="@string/owner"
+            android:textSize="20dip"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="5dip"
+            
+             />
         
         <Button
             android:id="@+id/exportToCalendar"
@@ -48,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="@string/exportToCalendar"
             android:onClick="exportToCalendar"
-            android:layout_marginTop="30dip"
+            android:layout_marginTop="15dip"
             />
 
 </LinearLayout>
