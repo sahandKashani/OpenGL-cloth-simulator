@@ -35,11 +35,11 @@ bool drawShearBendConstraintsEnabled      = false;
 
 // camera angle increments in radians
 // increment must be power of 2 for precision reasons
-float angleIncrement = 0.015625; // 2^(-6)
+float angleIncrement = 0.03125; // 2^(-5)
 
 // camera translation increments
 // increment must be power of 2 for precision reasons
-float translationIncrement = 0.03125; // 2^(-5)
+float translationIncrement = 0.0625; // 2^(-4)
 
 // -----------------------------------------------------------------------------
 // Camera class
@@ -735,7 +735,8 @@ void drawBoundingBox()
 
 }
 
-// used for idle callback
+// used for idle callback.
+// Will process all changes that occur, such as keyboard commands, new forces, ...
 void applyChanges()
 {
     applyContinuousKeyboardCommands();
@@ -774,15 +775,21 @@ void showHelp()
 
     std::cout << std::endl;
 
+    std::cout << "status controls:" << std::endl;
+    std::cout << "  F3: show camera status" << std::endl;
+    std::cout << "  F4: show draw   status" << std::endl;
+
+    std::cout << std::endl;
+
     // drawing controls
     std::cout << "drawing controls:" << std::endl;
-    std::cout << "  F3: toggle draw structural      constraints" << std::endl;
-    std::cout << "  F4: toggle draw shear           constraints" << std::endl;
-    std::cout << "  F5: toggle draw structural bend constraints" << std::endl;
-    std::cout << "  F6: toggle draw shear      bend constraints" << std::endl;
-    std::cout << "  F7: toggle draw nodes" << std::endl;
-    std::cout << "  F8: toggle draw wireframe" << std::endl;
-    std::cout << "  F9: toggle draw world axis" << std::endl;
+    std::cout << "  F5 : toggle draw structural      constraints" << std::endl;
+    std::cout << "  F6 : toggle draw shear           constraints" << std::endl;
+    std::cout << "  F7 : toggle draw structural bend constraints" << std::endl;
+    std::cout << "  F8 : toggle draw shear      bend constraints" << std::endl;
+    std::cout << "  F9 : toggle draw nodes" << std::endl;
+    std::cout << "  F10: toggle draw wireframe" << std::endl;
+    std::cout << "  F11: toggle draw world axis" << std::endl;
 
     std::cout << std::endl;
 
@@ -851,10 +858,8 @@ void init()
 {
     resetCameraPosition();
 
-    // show help, draw status, and camera status at program launch
+    // show help at program launch
     showHelp();
-    showDrawStatus();
-    showCameraStatus();
 
     // clear keyboard press status
     initializeKeyboardStatus();
@@ -924,6 +929,8 @@ void drawWorldAxis()
     }
 }
 
+// The display function only takes care of drawing.
+// No modifications to any forces, keyboard commands, ... are processed here.
 void display()
 {
     // clear color buffer
@@ -936,10 +943,6 @@ void display()
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-    chooseRenderingMethod();
-
-    applyChanges();
 
     Vector3 cameraPosition = camera.getPosition();
     Vector3 cameraViewDirection = camera.getViewDirection();
@@ -957,6 +960,10 @@ void display()
               cameraUpDirection.y,
               cameraUpDirection.z);
 
+    // choose wireframe or solid rendering
+    chooseRenderingMethod();
+
+    // draw the world axis
     drawWorldAxis();
 
     // draw cloth
@@ -1064,9 +1071,6 @@ void applyContinuousKeyboardCommands()
                 default:
                     break;
             } // end switch(key)
-
-            showCameraStatus();
-
         } // end if(keyboardStatus[key])
     } // end loop
 }
@@ -1103,24 +1107,30 @@ void specialKeyboard(int key, int x, int y)
             resetCameraPosition();
             break;
         case GLUT_KEY_F3:
-            drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
+            showCameraStatus();
             break;
         case GLUT_KEY_F4:
-            drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
+            showDrawStatus();
             break;
         case GLUT_KEY_F5:
-            drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
+            drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
             break;
         case GLUT_KEY_F6:
-            drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
+            drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
             break;
         case GLUT_KEY_F7:
-            drawNodesEnabled = !drawNodesEnabled;
+            drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
             break;
         case GLUT_KEY_F8:
-            drawWireFrameEnabled = !drawWireFrameEnabled;
+            drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
             break;
         case GLUT_KEY_F9:
+            drawNodesEnabled = !drawNodesEnabled;
+            break;
+        case GLUT_KEY_F10:
+            drawWireFrameEnabled = !drawWireFrameEnabled;
+            break;
+        case GLUT_KEY_F11:
             drawWorldAxisEnabled = !drawWorldAxisEnabled;
             break;
 
@@ -1152,10 +1162,10 @@ int main(int argc, char** argv)
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(400, 400);
 
     // INF3 room
-    glutInitWindowPosition(1070, 655);
+    glutInitWindowPosition(1200, 800);
 
     // normal laptop screen
     // glutInitWindowPosition(100, 100);
