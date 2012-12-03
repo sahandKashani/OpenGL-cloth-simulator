@@ -443,7 +443,6 @@ void Constraint::satisfyConstraint()
 class Cloth
 {
 private:
-    Node nodes[numberNodesWidth][numberNodesHeight];
     std::vector<Constraint> structuralConstraints;
     std::vector<Constraint> shearConstraints;
     std::vector<Constraint> structuralBendConstraints;
@@ -476,6 +475,7 @@ private:
 
 public:
     Cloth();
+    Node nodes[numberNodesWidth][numberNodesHeight];
     void draw();
     void satisfyConstraints();
     void addForce(Vector3 force);
@@ -508,10 +508,6 @@ void Cloth::createNodes()
 
         xPosCentered += 1.0;
     }
-
-    // TODO : fixing top-left and top-right nodes for cape to be held up
-    nodes[0][numberNodesHeight - 1].setMoveable(false);
-    nodes[numberNodesWidth - 1][numberNodesHeight - 1].setMoveable(false);
 }
 
 // moves the nodes depending on the forces that are being applied to them
@@ -1001,12 +997,24 @@ void init()
     // the value of oldTime will be changed through it's pointer
     gettimeofday(&oldTime, NULL);
 
+    // TODO : fixing 3 top-left and 3 top-right nodes for cape to be held up
+    cloth.nodes[0][numberNodesHeight - 2].setMoveable(false);
+    cloth.nodes[0][numberNodesHeight - 1].setMoveable(false);
+    cloth.nodes[1][numberNodesHeight - 1].setMoveable(false);
+    cloth.nodes[numberNodesWidth - 2][numberNodesHeight - 1].setMoveable(false);
+    cloth.nodes[numberNodesWidth - 1][numberNodesHeight - 2].setMoveable(false);
+    cloth.nodes[numberNodesWidth - 1][numberNodesHeight - 1].setMoveable(false);
+
     // TODO : find suitable values
     // gravity
-    cloth.addForce(Vector3(0.0, -0.1, 0.0));
+    Vector3 gravity(0.0, -1.0, 0.0);
 
+    // TODO : find suitable values
     // wind
-    cloth.addForce(Vector3(0.0, 0.0, 0.05));
+    Vector3 wind(0.0, 0.0, 0.5);
+
+    cloth.addForce(gravity);
+    cloth.addForce(wind);
 
     // clear keyboard press status
     initializeKeyboardStatus();
