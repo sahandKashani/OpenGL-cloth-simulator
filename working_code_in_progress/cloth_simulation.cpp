@@ -307,7 +307,10 @@ Node::Node(Vector3 pos) :
 
 void Node::applyForces(float duration)
 {
+    if(moveable)
+    {
 
+    }
 }
 
 void Node::addForce(Vector3 extraForce)

@@ -410,7 +410,7 @@ public:
 
 
 // Just below are three global variables holding the actual animated stuff; Cloth and Ball
-Cloth cloth1(14,14,35,35); // one Cloth object of the Cloth class
+Cloth cloth1(14,14,40,40); // one Cloth object of the Cloth class
 Vec3 ball_pos(7,-5,0); // the center of our one ball
 float ball_radius = 2; // the radius of our one ball
 
@@ -544,10 +544,10 @@ int main ( int argc, char** argv )
 
 	glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );
 
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(400, 400);
 
 	// INF3 room
-    glutInitWindowPosition(1070, 655);
+    glutInitWindowPosition(1200, 800);
 
     // normal laptop screen
     // glutInitWindowPosition(100, 100);
