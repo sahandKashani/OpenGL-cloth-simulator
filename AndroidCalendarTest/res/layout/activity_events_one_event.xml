@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:orientation="vertical"
-    android:layout_marginLeft="20dp"
     android:background="@android:drawable/list_selector_background"
     android:onClick="openDetails">
 
@@ -11,6 +10,7 @@
         android:background="@color/separator"
         android:layout_width="match_parent"
         android:layout_height="1dip"
+        android:layout_marginLeft="20dp"
          />
     
     <TextView
