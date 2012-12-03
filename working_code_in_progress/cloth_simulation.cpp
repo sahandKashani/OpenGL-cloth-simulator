@@ -278,8 +278,10 @@ class Node
 {
 private:
     Vector3 position;
+    Vector3 oldPosition;
     bool moveable;
     Vector3 force;
+    float mass;
 
 public:
     Node();
@@ -295,21 +297,25 @@ public:
 
 Node::Node() :
     position(Vector3(0.0, 0.0, 0.0)),
+    oldPosition(Vector3(0.0, 0.0, 0.0)),
     moveable(true),
-    force(Vector3(0.0, 0.0, 0.0))
+    force(Vector3(0.0, 0.0, 0.0)),
+    mass(1.0)
 {}
 
 Node::Node(Vector3 pos) :
     position(pos),
+    oldPosition(pos),
     moveable(true),
-    force(Vector3(0.0, 0.0, 0.0))
+    force(Vector3(0.0, 0.0, 0.0)),
+    mass(1.0)
 {}
 
 void Node::applyForces(float duration)
 {
     if(moveable)
     {
-
+        // TODO : integration
     }
 }
 
@@ -497,6 +503,11 @@ void Cloth::createNodes()
         }
 
         xPosCentered += 1.0;
+    }
+
+    for(int i = 0; i < numberNodesWidth; i += 1)
+    {
+        nodes[i][numberNodesHeight - 1].setMoveable(false);
     }
 }
 
@@ -881,9 +892,9 @@ std::string isEnabled(bool controlVariableEnabled)
 
 void showHelp()
 {
-    std::cout << "********************************" << std::endl;
-    std::cout << "***           help           ***" << std::endl;
-    std::cout << "********************************" << std::endl;
+    std::cout << "******************************************" << std::endl;
+    std::cout << "********           help           ********" << std::endl;
+    std::cout << "******************************************" << std::endl;
 
     // help controls
     std::cout << "help controls:" << std::endl;
@@ -1188,12 +1199,12 @@ void applyContinuousKeyboardCommands()
                     break;
                 case 'r':
                     // translate camera back
-                    // TODO : gets stuck if advance too much
+                    // TODO : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
                     camera.translate(camera.getViewDirection().normalize() * translationIncrement);
                     break;
                 case 'z':
                     // translate camera front
-                    // TODO : gets stuck if advance too much
+                    // TODO : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
                     camera.translate(-camera.getViewDirection().normalize() * translationIncrement);
                     break;
 
