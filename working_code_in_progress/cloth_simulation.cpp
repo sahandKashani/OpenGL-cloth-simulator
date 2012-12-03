@@ -316,6 +316,10 @@ void Node::applyForces(float duration)
     if(moveable)
     {
         // TODO : integration
+        Vector3 acceleration = force / mass;
+        Vector3 temp = position;
+        position = position + (position - oldPosition) + acceleration * duration;
+        oldPosition = temp;
     }
 }
 
@@ -505,10 +509,9 @@ void Cloth::createNodes()
         xPosCentered += 1.0;
     }
 
-    for(int i = 0; i < numberNodesWidth; i += 1)
-    {
-        nodes[i][numberNodesHeight - 1].setMoveable(false);
-    }
+    // TODO : fixing nodes for top of cape
+    nodes[0][numberNodesHeight - 1].setMoveable(false);
+    // nodes[numberNodesWidth - 1][numberNodesHeight - 1].setMoveable(false);
 }
 
 // moves the nodes depending on the forces that are being applied to them
@@ -999,7 +1002,7 @@ void init()
     gettimeofday(&oldTime, NULL);
 
     // gravity
-    cloth.addForce(Vector3(0.0, -1.0, 0.0));
+    cloth.addForce(Vector3(0.0, -0.1, 0.0));
 
     // clear keyboard press status
     initializeKeyboardStatus();
