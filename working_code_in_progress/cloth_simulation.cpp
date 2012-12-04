@@ -496,6 +496,9 @@ void Triangle::draw()
     Vector3 pos2 = node2->getPosition();
     Vector3 pos3 = node3->getPosition();
 
+    // set color to white
+    glColor3f(1.0, 1.0, 1.0);
+
     glBegin(GL_LINES);
         glVertex3f(pos1.x, pos1.y, pos1.z);
         glVertex3f(pos2.x, pos2.y, pos2.z);
@@ -1001,11 +1004,11 @@ void createScene()
     cloth = new Cloth(11, 11);
     camera = new Camera();
 
-    Node n1 = Node(Vector3(5.0, 0.0, 5.0));
-    Node n2 = Node(Vector3(7.0, 0.0, 5.0));
-    Node n3 = Node(Vector3(4.5, 3.0, 0.0));
     // TODO : remove later, for testing only
-    triangle = new Triangle(&n2, &n1, &n3);
+    Node* n1 = new Node(Vector3(-2.0, 2.0, 1.0));
+    Node* n2 = new Node(Vector3(0.0, 0.0, 2.0));
+    Node* n3 = new Node(Vector3(2.0, 2.0, 1.0));
+    triangle = new Triangle(n2, n1, n3);
 
     resetCameraPosition();
 
@@ -1299,6 +1302,8 @@ void display()
 
     // draw the world axis
     drawWorldAxis();
+
+    triangle->draw();
 
     // draw cloth
     cloth->draw();
