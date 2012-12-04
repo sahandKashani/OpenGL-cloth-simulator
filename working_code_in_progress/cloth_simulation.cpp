@@ -33,7 +33,7 @@ bool drawNodesEnabled                     = false;
 bool drawWorldAxisEnabled                 = true;
 bool drawStructuralConstraintsEnabled     = true;
 bool drawShearConstraintsEnabled          = false;
-bool drawStructuralBendConstraintsEnabled = true;
+bool drawStructuralBendConstraintsEnabled = false;
 bool drawShearBendConstraintsEnabled      = false;
 
 // camera angle increments in radians
@@ -389,7 +389,19 @@ public:
     Node* getSecondNode();
     float getDistanceAtRest();
     void satisfyConstraint();
+    void draw();
 };
+
+void Constraint::draw()
+{
+    Vector3 firstNodePosition = node1->getPosition();
+    Vector3 secondNodePosition = node2->getPosition();
+
+    glBegin(GL_LINES);
+        glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
+        glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
+    glEnd();
+}
 
 Constraint::Constraint(Node* n1, Node* n2) :
     node1(n1),
@@ -475,7 +487,30 @@ private:
 public:
     Triangle(Node* n1, Node* n2, Node* n3);
     void testIntersection(Node* p);
+    void draw();
 };
+
+void Triangle::draw()
+{
+    Vector3 pos1 = node1->getPosition();
+    Vector3 pos2 = node2->getPosition();
+    Vector3 pos3 = node3->getPosition();
+
+    glBegin(GL_LINES);
+        glVertex3f(pos1.x, pos1.y, pos1.z);
+        glVertex3f(pos2.x, pos2.y, pos2.z);
+    glEnd();
+
+    glBegin(GL_LINES);
+        glVertex3f(pos2.x, pos2.y, pos2.z);
+        glVertex3f(pos3.x, pos3.y, pos3.z);
+    glEnd();
+
+    glBegin(GL_LINES);
+        glVertex3f(pos3.x, pos3.y, pos3.z);
+        glVertex3f(pos1.x, pos1.y, pos1.z);
+    glEnd();
+}
 
 bool Triangle::isInsideTriangleVerticalSpace(Node* p)
 {
@@ -887,16 +922,7 @@ void Cloth::drawStructuralConstraints()
         structuralConstraintIterator != structuralConstraints.end();
         ++structuralConstraintIterator)
     {
-        Node* firstNode = structuralConstraintIterator->getFirstNode();
-        Node* secondNode = structuralConstraintIterator->getSecondNode();
-
-        Vector3 firstNodePosition = firstNode->getPosition();
-        Vector3 secondNodePosition = secondNode->getPosition();
-
-        glBegin(GL_LINES);
-            glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
-            glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
-        glEnd();
+        structuralConstraintIterator->draw();
     }
 }
 
@@ -906,16 +932,7 @@ void Cloth::drawShearConstraints()
         shearConstraintIterator != shearConstraints.end();
         ++shearConstraintIterator)
     {
-        Node* firstNode = shearConstraintIterator->getFirstNode();
-        Node* secondNode = shearConstraintIterator->getSecondNode();
-
-        Vector3 firstNodePosition = firstNode->getPosition();
-        Vector3 secondNodePosition = secondNode->getPosition();
-
-        glBegin(GL_LINES);
-            glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
-            glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
-        glEnd();
+        shearConstraintIterator->draw();
     }
 }
 
@@ -925,16 +942,7 @@ void Cloth::drawStructuralBendConstraints()
         structuralBendConstraintIterator != structuralBendConstraints.end();
         ++structuralBendConstraintIterator)
     {
-        Node* firstNode = structuralBendConstraintIterator->getFirstNode();
-        Node* secondNode = structuralBendConstraintIterator->getSecondNode();
-
-        Vector3 firstNodePosition = firstNode->getPosition();
-        Vector3 secondNodePosition = secondNode->getPosition();
-
-        glBegin(GL_LINES);
-            glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
-            glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
-        glEnd();
+        structuralBendConstraintIterator->draw();
     }
 }
 
@@ -944,16 +952,7 @@ void Cloth::drawShearBendConstraints()
         shearBendConstraintIterator != shearBendConstraints.end();
         ++shearBendConstraintIterator)
     {
-        Node* firstNode = shearBendConstraintIterator->getFirstNode();
-        Node* secondNode = shearBendConstraintIterator->getSecondNode();
-
-        Vector3 firstNodePosition = firstNode->getPosition();
-        Vector3 secondNodePosition = secondNode->getPosition();
-
-        glBegin(GL_LINES);
-            glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
-            glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
-        glEnd();
+        shearBendConstraintIterator->draw();
     }
 }
 
@@ -965,6 +964,9 @@ Cloth* cloth = 0;
 
 // Declare a camera at origin
 Camera* camera = 0;
+
+// TODO : remove later, for testing only
+Triangle* triangle = 0;
 
 // array which holds pressed status values of all keyboard keys other than the
 // special ones (arrows + F1..F12 keys + home + end ...)
@@ -993,6 +995,47 @@ void applyChanges();
 void resetCameraPosition();
 void specialKeyboard(int key, int x, int y);
 float getTimeDifference();
+
+void createScene()
+{
+    cloth = new Cloth(11, 11);
+    camera = new Camera();
+
+    Node n1 = Node(Vector3(5.0, 0.0, 5.0));
+    Node n2 = Node(Vector3(7.0, 0.0, 5.0));
+    Node n3 = Node(Vector3(4.5, 3.0, 0.0));
+    // TODO : remove later, for testing only
+    triangle = new Triangle(&n2, &n1, &n3);
+
+    resetCameraPosition();
+
+    // TODO : enable later
+    // show help at program launch
+    // showHelp();
+
+    // initialize the time (needed for future animations)
+    // the value of oldTime will be changed through it's pointer
+    gettimeofday(&oldTime, NULL);
+
+    // TODO : fixing cloth at certain points
+    cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
+    cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
+    cloth->setNodeMoveable(cloth->getNumberNodesWidth() / 2, cloth->getNumberNodesHeight() - 1, false);
+
+    // TODO : find suitable values
+    // gravity
+    Vector3 gravity(0.0, -1.0, 0.0);
+
+    // TODO : find suitable values
+    // wind
+    Vector3 wind(0.0, 0.0, 0.5);
+
+    cloth->addForce(gravity);
+    cloth->addForce(wind);
+
+    // clear keyboard press status
+    initializeKeyboardStatus();
+}
 
 float getTimeDifference()
 {
@@ -1023,6 +1066,15 @@ void applyChanges()
 
     // apply all forces to the cloth
     cloth->applyForces(duration);
+
+    // TODO : remove later, for testing only
+    // for(int x = 0; x < cloth->getNumberNodesWidth(); x += 1)
+    // {
+    //     for(int y = 0; y < cloth->getNumberNodesHeight(); y += 1)
+    //     {
+    //         triangle->testIntersection(cloth->getNode(x, y));
+    //     }
+    // }
 
     // satisfy all constraints of the cloth after forces are applied
     cloth->satisfyConstraints();
@@ -1144,41 +1196,6 @@ void showCameraStatus()
     std::cout << "  roll                 : " << camera->getRoll() << " rad" << std::endl;
 
     std::cout << std::endl;
-}
-
-void createScene()
-{
-    cloth = new Cloth(21, 21);
-    camera = new Camera();
-
-    resetCameraPosition();
-
-    // TODO : enable later
-    // show help at program launch
-    // showHelp();
-
-    // initialize the time (needed for future animations)
-    // the value of oldTime will be changed through it's pointer
-    gettimeofday(&oldTime, NULL);
-
-    // TODO : fixing cloth at certain points
-    cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
-    cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
-    cloth->setNodeMoveable(cloth->getNumberNodesWidth() / 2, cloth->getNumberNodesHeight() - 1, false);
-
-    // TODO : find suitable values
-    // gravity
-    Vector3 gravity(0.0, -1.0, 0.0);
-
-    // TODO : find suitable values
-    // wind
-    Vector3 wind(0.0, 0.0, 0.5);
-
-    cloth->addForce(gravity);
-    cloth->addForce(wind);
-
-    // clear keyboard press status
-    initializeKeyboardStatus();
 }
 
 void resetCameraPosition()
