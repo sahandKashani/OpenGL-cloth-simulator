@@ -294,6 +294,8 @@ public:
     void translate(Vector3 direction);
     void addForce(Vector3 extraForce);
     void applyForces(float duration);
+    void setMass(float m);
+    void setPosition(Vector3 pos);
 };
 
 Node::Node() :
@@ -311,6 +313,16 @@ Node::Node(Vector3 pos) :
     force(Vector3(0.0, 0.0, 0.0)),
     mass(1.0)
 {}
+
+void Node::setPosition(Vector3 pos)
+{
+    position = pos;
+}
+
+void Node::setMass(float m)
+{
+    mass = m;
+}
 
 void Node::applyForces(float duration)
 {
@@ -491,6 +503,8 @@ public:
     int getNumberNodesWidth();
     int getNumberNodesHeight();
     Node* getNode(int x, int y);
+    void setNodeMass(int x, int y, float mass);
+    void setNodePosition(int x, int y, Vector3 pos);
 };
 
 Cloth::Cloth() :
@@ -507,6 +521,16 @@ Cloth::Cloth(int width, int height) :
 {
     createNodes();
     createConstraints();
+}
+
+void Cloth::setNodePosition(int x, int y, Vector3 pos)
+{
+    getNode(x, y)->setPosition(pos);
+}
+
+void Cloth::setNodeMass(int x, int y, float mass)
+{
+    getNode(x, y)->setMass(mass);
 }
 
 Node* Cloth::getNode(int x, int y)
