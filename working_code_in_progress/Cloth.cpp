@@ -1,9 +1,10 @@
-#include "Cloth.h"
-
 // OpenGL imports
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+#include "Cloth.h"
+#include "settings.h"
 
 Cloth::Cloth() :
     numberNodesWidth(10),

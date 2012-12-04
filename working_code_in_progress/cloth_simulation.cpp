@@ -1,8 +1,5 @@
 // compile with the following command:
-//     clear; g++ -o cloth_simulation cloth_simulation.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL; ./cloth_simulation
-
-// Conventions:
-// - When you finish drawing something, always come back to (0.0, 0.0, 0.0)
+//     clear; g++ -o cloth_simulator cloth_simulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL; ./cloth_simulation
 
 // OpenGL imports
 #include <GL/glut.h>
@@ -22,6 +19,9 @@
 // used for animation duration
 #include <sys/time.h>
 
+// global variables and settings
+#include "settings.h"
+
 #include "Node.h"
 #include "Camera.h"
 #include "Constraint.h"
@@ -29,10 +29,10 @@
 #include "Sphere.h"
 #include "Cloth.h"
 
-float nearPlane = 1.0;
-float farPlane = 1000.0;
-
 // Global variables
+float nearPlane = 1.0;
+float farPlane  = 1000.0;
+
 bool drawWireFrameEnabled                 = false;
 bool drawNodesEnabled                     = false;
 bool drawWorldAxisEnabled                 = true;
@@ -41,417 +41,19 @@ bool drawShearConstraintsEnabled          = false;
 bool drawStructuralBendConstraintsEnabled = false;
 bool drawShearBendConstraintsEnabled      = false;
 
-// camera angle increments in radians
-// increment must be power of 2 for precision reasons
 float angleIncrement = 0.03125; // 2^(-5)
-
-// camera translation increments
-// increment must be power of 2 for precision reasons
 float translationIncrement = 1.0;
 
-// class Cloth
-// {
-// private:
-//     // number of nodes in each dimension
-//     int numberNodesWidth;
-//     int numberNodesHeight;
+char keyboardStatus[256];
 
-//     // Nodes
-//     std::vector< std::vector<Node> > nodes;
+struct timeval oldTime;
 
-//     std::vector<Constraint> structuralConstraints;
-//     std::vector<Constraint> shearConstraints;
-//     std::vector<Constraint> structuralBendConstraints;
-//     std::vector<Constraint> shearBendConstraints;
+Cloth* cloth = 0;
 
-//     // node creation method
-//     void createNodes();
-
-//     // constraint creation methods
-//     void createConstraints();
-//     void createStructuralConstraints();
-//     void createShearConstraints();
-//     void createBendConstraints();
-//     void createStructuralBendConstraints();
-//     void createShearBendConstraints();
-
-//     // drawing methods
-//     void drawNodes();
-//     void drawStructuralConstraints();
-//     void drawShearConstraints();
-//     void drawStructuralBendConstraints();
-//     void drawShearBendConstraints();
-
-//     // constraint satisfaction methods
-//     void satisfyStructuralConstraints();
-//     void satisfyShearConstraints();
-//     void satisfyStructuralBendConstraints();
-//     void satisfyShearBendConstraints();
-
-// public:
-//     Cloth();
-//     Cloth(int width, int height);
-
-//     void draw();
-//     void satisfyConstraints();
-//     void addForce(Vector3 force);
-//     void applyForces(float duration);
-//     int getNumberNodesWidth();
-//     int getNumberNodesHeight();
-//     Node* getNode(int x, int y);
-//     void setNodeMass(int x, int y, float mass);
-//     void setNodePosition(int x, int y, Vector3 pos);
-//     void setNodeMoveable(int x, int y, bool moveable);
-// };
-
-// Cloth::Cloth() :
-//     numberNodesWidth(10),
-//     numberNodesHeight(10)
-// {
-//     createNodes();
-//     createConstraints();
-// }
-
-// Cloth::Cloth(int width, int height) :
-//     numberNodesWidth(width),
-//     numberNodesHeight(height)
-// {
-//     createNodes();
-//     createConstraints();
-// }
-
-// void Cloth::setNodeMoveable(int x, int y, bool moveable)
-// {
-//     getNode(x, y)->setMoveable(moveable);
-// }
-
-// void Cloth::setNodePosition(int x, int y, Vector3 pos)
-// {
-//     getNode(x, y)->setPosition(pos);
-// }
-
-// void Cloth::setNodeMass(int x, int y, float mass)
-// {
-//     getNode(x, y)->setMass(mass);
-// }
-
-// Node* Cloth::getNode(int x, int y)
-// {
-//     return &nodes[x][y];
-// }
-
-// int Cloth::getNumberNodesWidth()
-// {
-//     return numberNodesWidth;
-// }
-
-// int Cloth::getNumberNodesHeight()
-// {
-//     return numberNodesHeight;
-// }
-
-// void Cloth::createNodes()
-// {
-//     float xPosCentered = -(numberNodesWidth - 1) / 2.0;
-//     float yPosCenteredInit = -(numberNodesHeight - 1) / 2.0;
-
-//     for(int x = 0; x < numberNodesWidth; x += 1)
-//     {
-//         // start yPosCentered at beginning again
-//         float yPosCentered = yPosCenteredInit;
-//         std::vector<Node> nodeColumn;
-
-//         for(int y = 0; y < numberNodesHeight; y += 1)
-//         {
-//             // put elements in rectangular grid with 0.0 depth
-//             // note that the nodes are centered around (0.0, 0.0, 0.0)
-//             // nodes[x][y] = Vector3(xPosCentered, yPosCentered, 0.0);
-//             nodeColumn.push_back(Node(Vector3(xPosCentered, yPosCentered, 0.0)));
-//             yPosCentered += 1.0;
-//         }
-
-//         nodes.push_back(nodeColumn);
-
-//         xPosCentered += 1.0;
-//     }
-// }
-
-// // moves the nodes depending on the forces that are being applied to them
-// void Cloth::applyForces(float duration)
-// {
-//     for(int x = 0; x < numberNodesWidth; x += 1)
-//     {
-//         for(int y = 0; y < numberNodesHeight; y += 1)
-//         {
-//             nodes[x][y].applyForces(duration);
-//         }
-//     }
-// }
-
-// void Cloth::addForce(Vector3 force)
-// {
-//     for(int x = 0; x < numberNodesWidth; x += 1)
-//     {
-//         for(int y = 0; y < numberNodesHeight; y += 1)
-//         {
-//             nodes[x][y].addForce(force);
-//         }
-//     }
-// }
-
-// void Cloth::createConstraints()
-// {
-//     createStructuralConstraints();
-//     createShearConstraints();
-//     createBendConstraints();
-// }
-
-// void Cloth::createStructuralConstraints()
-// {
-//     for(int x = 0; x < numberNodesWidth; x += 1)
-//     {
-//         for(int y = 0; y < numberNodesHeight; y += 1)
-//         {
-//             if(x < numberNodesWidth - 1)
-//             {
-//                 Node* leftNode = &nodes[x][y];
-//                 Node* rightNode = &nodes[x + 1][y];
-//                 Constraint rightConstraint(leftNode, rightNode);
-//                 structuralConstraints.push_back(rightConstraint);
-//             }
-
-//             if(y < numberNodesHeight - 1)
-//             {
-//                 Node* bottomNode = &nodes[x][y];
-//                 Node* topNode = &nodes[x][y + 1];
-//                 Constraint topConstraint(bottomNode, topNode);
-//                 structuralConstraints.push_back(topConstraint);
-//             }
-//         }
-//     }
-// }
-
-// void Cloth::createShearConstraints()
-// {
-//     for(int x = 0; x < numberNodesWidth - 1; x += 1)
-//     {
-//         for(int y = 0; y < numberNodesHeight - 1; y += 1)
-//         {
-//             Node* lowerLeftNode = &nodes[x][y];
-//             Node* lowerRightNode = &nodes[x + 1][y];
-//             Node* upperLeftNode = &nodes[x][y + 1];
-//             Node* upperRightNode = &nodes[x + 1][y + 1];
-
-//             Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
-//             Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
-
-//             shearConstraints.push_back(diagonalConstraint1);
-//             shearConstraints.push_back(diagonalConstraint2);
-//         }
-//     }
-// }
-
-// void Cloth::createBendConstraints()
-// {
-//     createStructuralBendConstraints();
-//     createShearBendConstraints();
-// }
-
-// void Cloth::createStructuralBendConstraints()
-// {
-//     for(int x = 0; x < numberNodesWidth; x += 1)
-//     {
-//         for(int y = 0; y < numberNodesHeight; y += 1)
-//         {
-//             if(x < numberNodesWidth - 2)
-//             {
-//                 Node* leftNode = &nodes[x][y];
-//                 Node* rightNode = &nodes[x + 2][y];
-//                 Constraint rightConstraint(leftNode, rightNode);
-//                 structuralBendConstraints.push_back(rightConstraint);
-//             }
-
-//             if(y < numberNodesHeight - 2)
-//             {
-//                 Node* bottomNode = &nodes[x][y];
-//                 Node* topNode = &nodes[x][y + 2];
-//                 Constraint topConstraint(bottomNode, topNode);
-//                 structuralBendConstraints.push_back(topConstraint);
-//             }
-//         }
-//     }
-// }
-
-// void Cloth::createShearBendConstraints()
-// {
-//     for(int x = 0; x < numberNodesWidth - 2; x += 1)
-//     {
-//         for(int y = 0; y < numberNodesHeight - 2; y += 1)
-//         {
-//             Node* lowerLeftNode = &nodes[x][y];
-//             Node* lowerRightNode = &nodes[x + 2][y];
-//             Node* upperLeftNode = &nodes[x][y + 2];
-//             Node* upperRightNode = &nodes[x + 2][y + 2];
-
-//             Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
-//             Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
-
-//             shearBendConstraints.push_back(diagonalConstraint1);
-//             shearBendConstraints.push_back(diagonalConstraint2);
-//         }
-//     }
-// }
-
-// void Cloth::draw()
-// {
-//     glColor3f(1.0, 1.0, 1.0);
-
-//     if(drawNodesEnabled)
-//     {
-//         drawNodes();
-//     }
-
-//     if(drawStructuralConstraintsEnabled)
-//     {
-//         drawStructuralConstraints();
-//     }
-
-//     if(drawShearConstraintsEnabled)
-//     {
-//         drawShearConstraints();
-//     }
-
-//     if(drawStructuralBendConstraintsEnabled)
-//     {
-//         drawStructuralBendConstraints();
-//     }
-
-//     if(drawShearBendConstraintsEnabled)
-//     {
-//         drawShearBendConstraints();
-//     }
-// }
-
-// void Cloth::drawNodes()
-// {
-//     // loop over vertices (not edges)
-//     for(int x = 0; x < numberNodesWidth; x += 1)
-//     {
-//         for(int y = 0; y < numberNodesHeight; y += 1)
-//         {
-//             nodes[x][y].draw();
-//         }
-//     }
-// }
-
-// void Cloth::satisfyStructuralConstraints()
-// {
-//     for(std::vector<Constraint>::iterator structuralConstraintIterator = structuralConstraints.begin();
-//         structuralConstraintIterator != structuralConstraints.end();
-//         ++structuralConstraintIterator)
-//     {
-//         structuralConstraintIterator->satisfyConstraint();
-//     }
-// }
-
-// void Cloth::satisfyShearConstraints()
-// {
-//     for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
-//         shearConstraintIterator != shearConstraints.end();
-//         ++shearConstraintIterator)
-//     {
-//         shearConstraintIterator->satisfyConstraint();
-//     }
-// }
-
-// void Cloth::satisfyStructuralBendConstraints()
-// {
-//     for(std::vector<Constraint>::iterator structuralBendConstraintIterator = structuralBendConstraints.begin();
-//         structuralBendConstraintIterator != structuralBendConstraints.end();
-//         ++structuralBendConstraintIterator)
-//     {
-//         structuralBendConstraintIterator->satisfyConstraint();
-//     }
-// }
-
-// void Cloth::satisfyShearBendConstraints()
-// {
-//     for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
-//         shearBendConstraintIterator != shearBendConstraints.end();
-//         ++shearBendConstraintIterator)
-//     {
-//         shearBendConstraintIterator->satisfyConstraint();
-//     }
-// }
-
-// void Cloth::satisfyConstraints()
-// {
-//     satisfyStructuralConstraints();
-//     satisfyShearConstraints();
-//     satisfyStructuralBendConstraints();
-//     satisfyShearBendConstraints();
-// }
-
-// void Cloth::drawStructuralConstraints()
-// {
-//     for(std::vector<Constraint>::iterator structuralConstraintIterator = structuralConstraints.begin();
-//         structuralConstraintIterator != structuralConstraints.end();
-//         ++structuralConstraintIterator)
-//     {
-//         structuralConstraintIterator->draw();
-//     }
-// }
-
-// void Cloth::drawShearConstraints()
-// {
-//     for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
-//         shearConstraintIterator != shearConstraints.end();
-//         ++shearConstraintIterator)
-//     {
-//         shearConstraintIterator->draw();
-//     }
-// }
-
-// void Cloth::drawStructuralBendConstraints()
-// {
-//     for(std::vector<Constraint>::iterator structuralBendConstraintIterator = structuralBendConstraints.begin();
-//         structuralBendConstraintIterator != structuralBendConstraints.end();
-//         ++structuralBendConstraintIterator)
-//     {
-//         structuralBendConstraintIterator->draw();
-//     }
-// }
-
-// void Cloth::drawShearBendConstraints()
-// {
-//     for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
-//         shearBendConstraintIterator != shearBendConstraints.end();
-//         ++shearBendConstraintIterator)
-//     {
-//         shearBendConstraintIterator->draw();
-//     }
-// }
+Camera* camera = 0;
 
 // -----------------------------------------------------------------------------
 // GLUT setup
-
-// Cloth declaration
-Cloth* cloth = 0;
-
-// Declare a camera at origin
-Camera* camera = 0;
-
-// TODO : remove later, for testing only
-// Triangle* triangle = 0;
-
-// array which holds pressed status values of all keyboard keys other than the
-// special ones (arrows + F1..F12 keys + home + end ...)
-char keyboardStatus[256];
-
-// the "timeval" structure contains 2 fields
-//     long int tv_sec = number of whole seconds of elapsed time
-//     long int tv_usec = number of microseconds of elapsed time (always lower than 1 million)
-struct timeval oldTime;
 
 // prototypes
 std::string isEnabled(bool controlVariableEnabled);
@@ -476,12 +78,6 @@ void createScene()
 {
     cloth = new Cloth(21, 21);
     camera = new Camera();
-
-    // TODO : remove later, for testing only
-    // Node* n1 = new Node(Vector3(-2.0, 2.0, 1.0));
-    // Node* n2 = new Node(Vector3(0.0, 0.0, 2.0));
-    // Node* n3 = new Node(Vector3(2.0, 2.0, 1.0));
-    // triangle = new Triangle(n1, n2, n3);
 
     resetCameraPosition();
 
@@ -542,15 +138,6 @@ void applyChanges()
 
     // apply all forces to the cloth
     cloth->applyForces(duration);
-
-    // TODO : remove later, for testing only
-    // for(int x = 0; x < cloth->getNumberNodesWidth(); x += 1)
-    // {
-    //     for(int y = 0; y < cloth->getNumberNodesHeight(); y += 1)
-    //     {
-    //         triangle->testIntersection(cloth->getNode(x, y));
-    //     }
-    // }
 
     // satisfy all constraints of the cloth after forces are applied
     cloth->satisfyConstraints();
@@ -776,9 +363,6 @@ void display()
     // draw the world axis
     drawWorldAxis();
 
-    // TODO : remove later, for testing only
-    // triangle->draw();
-
     // draw cloth
     cloth->draw();
 
@@ -981,14 +565,9 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 
     glutInitWindowSize(400, 400);
-
-    // INF3 room
     glutInitWindowPosition(1200, 800);
 
-    // normal laptop screen
-    // glutInitWindowPosition(100, 100);
-
-    glutCreateWindow("Cloth Simulation");
+    glutCreateWindow("Batman");
 
     createScene();
 

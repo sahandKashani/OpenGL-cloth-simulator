@@ -1,5 +1,5 @@
 // compile with the following command:
-//     g++ -o cloth_tutorial_linux cloth_tutorial_linux.cpp -lglut -lGLU -lGL;
+//     clear; g++ -o cloth_tutorial_linux cloth_tutorial_linux.cpp -lglut -lGLU -lGL; ./cloth_tutorial_linux
 
 #include <GL/gl.h>
 #include <GL/glut.h>
