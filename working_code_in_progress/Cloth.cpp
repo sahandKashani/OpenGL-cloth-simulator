@@ -4,7 +4,7 @@
 #include <GL/glu.h>
 
 #include "Cloth.h"
-#include "settings.h"
+#include "ClothSimulator.h"
 
 Cloth::Cloth() :
     numberNodesWidth(10),
@@ -208,27 +208,29 @@ void Cloth::draw()
 {
     glColor3f(1.0, 1.0, 1.0);
 
-    if(drawNodesEnabled)
+    ClothSimulator* clothSimulator = ClothSimulator::getInstance();
+
+    if(clothSimulator->drawNodesEnabled)
     {
         drawNodes();
     }
 
-    if(drawStructuralConstraintsEnabled)
+    if(clothSimulator->drawStructuralConstraintsEnabled)
     {
         drawStructuralConstraints();
     }
 
-    if(drawShearConstraintsEnabled)
+    if(clothSimulator->drawShearConstraintsEnabled)
     {
         drawShearConstraints();
     }
 
-    if(drawStructuralBendConstraintsEnabled)
+    if(clothSimulator->drawStructuralBendConstraintsEnabled)
     {
         drawStructuralBendConstraints();
     }
 
-    if(drawShearBendConstraintsEnabled)
+    if(clothSimulator->drawShearBendConstraintsEnabled)
     {
         drawShearBendConstraints();
     }
