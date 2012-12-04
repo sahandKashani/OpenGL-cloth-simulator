@@ -459,6 +459,12 @@ private:
     Node* node1;
     Node* node2;
     Node* node3;
+    Vector3 normal;
+    float area;
+
+    Vector3 projectToTrianglePlane(Node* p);
+    float calculateTriangleArea(Vector3 p1, Vector3 p2, Vector3 p3);
+    bool isInsideTriangleVerticalSpace(Node* p);
 
     // IMPORTANT ALGORITHM : to check if a Node has intersected with a triangle, do the following :
     // 1) project point p onto plane formed by triangle.
@@ -468,18 +474,65 @@ private:
     // 5) if dot product < 0, then move node towards surface
 public:
     Triangle(Node* n1, Node* n2, Node* n3);
-    void testImplementation();
+    void testIntersection(Node* p);
 };
 
+bool Triangle::isInsideTriangleVerticalSpace(Node* p)
+{
+    // project point on triangle plane
+    Vector3 pointOnPlane = projectToTrianglePlane(p);
+
+    // calculate barycentric coordinates
+    float s1 = calculateTriangleArea(pointOnPlane, node2->getPosition(), node3->getPosition()) / area;
+    float s2 = calculateTriangleArea(pointOnPlane, node1->getPosition(), node2->getPosition()) / area;
+    float s3 = calculateTriangleArea(pointOnPlane, node1->getPosition(), node3->getPosition()) / area;
+
+    return (0 < s1 && s1 < 1) && (0 < s2 && s2 < 1) && (0 < s3 && s3 < 1);
+}
+
+Vector3 Triangle::projectToTrianglePlane(Node* p)
+{
+    Vector3 vectorFromPlaneToP = p->getPosition() - node1->getPosition();
+    float distance = vectorFromPlaneToP.dot(normal);
+    Vector3 offsetToPlane = normal * distance;
+    Vector3 pointOnPlane = p->getPosition() - offsetToPlane;
+
+    return pointOnPlane;
+}
+
+float Triangle::calculateTriangleArea(Vector3 p1, Vector3 p2, Vector3 p3)
+{
+    return ((p2 - p1).cross(p3 - p1)).length() * 0.5;
+}
+
+// Note that the order of the nodes is VERY important, because the triangle's
+// normal vector will be calculated by the following algorithm.
+// Give the triangles in clock-wise order for simplicity
+// (n2 - n1).cross(n3 - n1);
 Triangle::Triangle(Node* n1, Node* n2, Node* n3) :
     node1(n1),
     node2(n2),
-    node3(n3)
+    node3(n3),
+    normal((n2->getPosition() - n1->getPosition()).cross(n3->getPosition() - n1->getPosition())),
+    area(normal.length() * 0.5)
 {}
 
-void Triangle::testImplementation()
+void Triangle::testIntersection(Node* p)
 {
+    if(isInsideTriangleVerticalSpace(p))
+    {
+        Vector3 vectorFromPlaneToP = p->getPosition() - node1->getPosition();
 
+        // TODO : Potential problem here if there is a closed surface made of triangles
+        // are just at surface, or behind it
+        if(vectorFromPlaneToP.dot(normal) <= 0)
+        {
+            // move the node towards surface (actually, a little bit further
+            // from surface for precision reasons)
+            Vector3 pointProjectedToPlane = projectToTrianglePlane(p);
+            p->translate(pointProjectedToPlane - p->getPosition());
+        }
+    }
 }
 // -----------------------------------------------------------------------------
 
