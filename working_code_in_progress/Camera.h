@@ -1,3 +1,6 @@
+#ifndef CAMERA_H
+#define CAMERA_H
+
 #include "Vector3.h"
 #include "Matrix4.h"
 
@@ -39,3 +42,5 @@ public:
     void rotateAroundYAxisObject(float angleInRadians);
     void rotateAroundZAxisObject(float angleInRadians);
 };
+
+#endif
