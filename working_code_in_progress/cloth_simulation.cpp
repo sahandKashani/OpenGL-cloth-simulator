@@ -1,25 +1,11 @@
 // compile with the following command:
-//     clear; g++ -o cloth_simulator cloth_simulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL; ./cloth_simulation
+//     clear; g++ -o cloth_simulation cloth_simulation.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL; ./cloth_simulation
 
 // OpenGL imports
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-// math imports
-#include "Vector3.h"
-#include "Matrix4.h"
-
-// used for stocking Constraints
-#include <vector>
-
-// used for printing
-#include <string>
-
-// used for animation duration
-#include <sys/time.h>
-
-// global variables and settings
 #include "settings.h"
 
 #include "Node.h"
