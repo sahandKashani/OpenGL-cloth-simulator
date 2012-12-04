@@ -22,8 +22,8 @@
 // used for animation duration
 #include <sys/time.h>
 
-const int numberNodesWidth = 20;
-const int numberNodesHeight = 20;
+// const int numberNodesWidth = 10;
+// const int numberNodesHeight = 20;
 float nearPlane = 1.0;
 float farPlane = 1000.0;
 
@@ -141,6 +141,7 @@ void Camera::setUpDirection(Vector3 direction)
     upDirection = direction;
 }
 
+// FIXME : translation has problem, always translates towards origin
 void Camera::translate(Vector3 direction)
 {
     position += direction;
@@ -443,6 +444,13 @@ void Constraint::satisfyConstraint()
 class Cloth
 {
 private:
+    // number of nodes in each dimension
+    int numberNodesWidth;
+    int numberNodesHeight;
+
+    // Nodes
+    std::vector< std::vector<Node> > nodes;
+
     std::vector<Constraint> structuralConstraints;
     std::vector<Constraint> shearConstraints;
     std::vector<Constraint> structuralBendConstraints;
@@ -472,21 +480,48 @@ private:
     void satisfyStructuralBendConstraints();
     void satisfyShearBendConstraints();
 
-
 public:
     Cloth();
-    // Node nodes[numberNodesWidth][numberNodesHeight];
-    std::vector< std::vector<Node> > nodes;
+    Cloth(int width, int height);
+
     void draw();
     void satisfyConstraints();
     void addForce(Vector3 force);
     void applyForces(float duration);
+    int getNumberNodesWidth();
+    int getNumberNodesHeight();
+    Node* getNode(int x, int y);
 };
 
-Cloth::Cloth()
+Cloth::Cloth() :
+    numberNodesWidth(10),
+    numberNodesHeight(10)
 {
     createNodes();
     createConstraints();
+}
+
+Cloth::Cloth(int width, int height) :
+    numberNodesWidth(width),
+    numberNodesHeight(height)
+{
+    createNodes();
+    createConstraints();
+}
+
+Node* Cloth::getNode(int x, int y)
+{
+    return &nodes[x][y];
+}
+
+int Cloth::getNumberNodesWidth()
+{
+    return numberNodesWidth;
+}
+
+int Cloth::getNumberNodesHeight()
+{
+    return numberNodesHeight;
 }
 
 void Cloth::createNodes()
@@ -1003,20 +1038,16 @@ void init()
     gettimeofday(&oldTime, NULL);
 
     // TODO : fixing 3 top-left and 3 top-right nodes for cape to be held up
-    cloth.nodes[0][numberNodesHeight - 2].setMoveable(false);
-    cloth.nodes[0][numberNodesHeight - 1].setMoveable(false);
-    cloth.nodes[1][numberNodesHeight - 1].setMoveable(false);
-    cloth.nodes[numberNodesWidth - 2][numberNodesHeight - 1].setMoveable(false);
-    cloth.nodes[numberNodesWidth - 1][numberNodesHeight - 2].setMoveable(false);
-    cloth.nodes[numberNodesWidth - 1][numberNodesHeight - 1].setMoveable(false);
+    cloth.getNode(0, cloth.getNumberNodesHeight() - 1)->setMoveable(false);
+    cloth.getNode(cloth.getNumberNodesWidth() - 1, cloth.getNumberNodesHeight() - 1)->setMoveable(false);
 
     // TODO : find suitable values
     // gravity
-    Vector3 gravity(0.0, -1.0, 0.0);
+    Vector3 gravity(0.0, -0.1, 0.0);
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.0, 0.0, 0.5);
+    Vector3 wind(0.0, 0.0, 0.1);
 
     cloth.addForce(gravity);
     cloth.addForce(wind);
@@ -1031,7 +1062,7 @@ void resetCameraPosition()
     camera = Camera();
 
     // move camera back
-    float cameraZ = numberNodesHeight;
+    float cameraZ = 1.75 * std::max(cloth.getNumberNodesWidth(), cloth.getNumberNodesHeight());
     camera.translate(Vector3(0.0, 0.0, cameraZ));
 }
 
