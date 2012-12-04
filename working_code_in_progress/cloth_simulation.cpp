@@ -22,8 +22,9 @@
 // used for animation duration
 #include <sys/time.h>
 
-// const int numberNodesWidth = 10;
-// const int numberNodesHeight = 20;
+#include "Node.h"
+#include "Camera.h"
+
 float nearPlane = 1.0;
 float farPlane = 1000.0;
 
@@ -44,335 +45,241 @@ float angleIncrement = 0.03125; // 2^(-5)
 // increment must be power of 2 for precision reasons
 float translationIncrement = 1.0;
 
-// -----------------------------------------------------------------------------
-// Camera class
-class Camera
-{
-private:
-    Vector3 position;
-    Vector3 viewDirection;
-    Vector3 upDirection;
+// class Camera;
+class Constraint;
+class Arrow;
+class Triangle;
+class Cloth;
+class Sphere;
 
-    // used for getters only, not for computation
-    float yaw;
-    float pitch;
-    float roll;
+// // -----------------------------------------------------------------------------
+// // Camera class
+// class Camera
+// {
+// private:
+//     Vector3 position;
+//     Vector3 viewDirection;
+//     Vector3 upDirection;
 
-    Matrix4 getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection);
+//     // used for getters only, not for computation
+//     float yaw;
+//     float pitch;
+//     float roll;
 
-public:
-    Camera();
-    Vector3 getPosition();
-    Vector3 getViewDirection();
-    Vector3 getUpDirection();
-    float getYaw();
-    float getPitch();
-    float getRoll();
-    void setViewDirection(Vector3 direction);
-    void setUpDirection(Vector3 direction);
+//     Matrix4 getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection);
 
-    // translation
-    void translate(Vector3 direction);
+// public:
+//     Camera();
+//     Vector3 getPosition();
+//     Vector3 getViewDirection();
+//     Vector3 getUpDirection();
+//     float getYaw();
+//     float getPitch();
+//     float getRoll();
+//     void setViewDirection(Vector3 direction);
+//     void setUpDirection(Vector3 direction);
 
-    // rotation around world axis
-    void rotateAroundXAxisWorld(float angleInRadians);
-    void rotateAroundYAxisWorld(float angleInRadians);
-    void rotateAroundZAxisWorld(float angleInRadians);
+//     // translation
+//     void translate(Vector3 direction);
 
-    // rotation around camera axis
-    void rotateAroundXAxisObject(float angleInRadians);
-    void rotateAroundYAxisObject(float angleInRadians);
-    void rotateAroundZAxisObject(float angleInRadians);
-};
+//     // rotation around world axis
+//     void rotateAroundXAxisWorld(float angleInRadians);
+//     void rotateAroundYAxisWorld(float angleInRadians);
+//     void rotateAroundZAxisWorld(float angleInRadians);
 
-// initialize camera with the following properties:
-// position = (0.0, 0.0, 1.0)
-// viewDirection = (0.0, 0.0, 0.0)
-// upDirection = (0.0, 1.0, 0.0)
-// yaw = 0.0
-// pitch = 0.0
-// roll = 0.0
-Camera::Camera() :
-    position(Vector3(0.0, 0.0, 1.0)),
-    viewDirection(Vector3(0.0, 0.0, 0.0)),
-    upDirection(Vector3(0.0, 1.0, 0.0)),
-    yaw(0.0),
-    pitch(0.0),
-    roll(0.0)
-{}
+//     // rotation around camera axis
+//     void rotateAroundXAxisObject(float angleInRadians);
+//     void rotateAroundYAxisObject(float angleInRadians);
+//     void rotateAroundZAxisObject(float angleInRadians);
+// };
 
-Vector3 Camera::getPosition()
-{
-    return position;
-}
+// // initialize camera with the following properties:
+// // position = (0.0, 0.0, 1.0)
+// // viewDirection = (0.0, 0.0, 0.0)
+// // upDirection = (0.0, 1.0, 0.0)
+// // yaw = 0.0
+// // pitch = 0.0
+// // roll = 0.0
+// Camera::Camera() :
+//     position(Vector3(0.0, 0.0, 1.0)),
+//     viewDirection(Vector3(0.0, 0.0, 0.0)),
+//     upDirection(Vector3(0.0, 1.0, 0.0)),
+//     yaw(0.0),
+//     pitch(0.0),
+//     roll(0.0)
+// {}
 
-Vector3 Camera::getViewDirection()
-{
-    return viewDirection;
-}
+// Vector3 Camera::getPosition()
+// {
+//     return position;
+// }
 
-Vector3 Camera::getUpDirection()
-{
-    return upDirection;
-}
+// Vector3 Camera::getViewDirection()
+// {
+//     return viewDirection;
+// }
 
-float Camera::getYaw()
-{
-    return yaw;
-}
+// Vector3 Camera::getUpDirection()
+// {
+//     return upDirection;
+// }
 
-float Camera::getPitch()
-{
-    return pitch;
-}
+// float Camera::getYaw()
+// {
+//     return yaw;
+// }
 
-float Camera::getRoll()
-{
-    return roll;
-}
+// float Camera::getPitch()
+// {
+//     return pitch;
+// }
 
-void Camera::setViewDirection(Vector3 direction)
-{
-    viewDirection = direction;
-}
+// float Camera::getRoll()
+// {
+//     return roll;
+// }
 
-void Camera::setUpDirection(Vector3 direction)
-{
-    upDirection = direction;
-}
+// void Camera::setViewDirection(Vector3 direction)
+// {
+//     viewDirection = direction;
+// }
 
-// FIXME : translation has problem, always translates towards origin
-void Camera::translate(Vector3 direction)
-{
-    position += direction;
-    viewDirection += direction;
-}
+// void Camera::setUpDirection(Vector3 direction)
+// {
+//     upDirection = direction;
+// }
 
-Matrix4 Camera::getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection)
-{
-    // application of Rodriguez' rotation formula (taken from Wikipedia not from
-    // the course, since the course slides were using a left-handed coordinate system,
-    // but we want to use a right-handed one.)
+// // FIXME : translation has problem, always translates towards origin
+// void Camera::translate(Vector3 direction)
+// {
+//     position += direction;
+//     viewDirection += direction;
+// }
 
-    // normalize direction
-    Vector3 unitRotationAxisDirection = rotationAxisDirection.normalize();
+// Matrix4 Camera::getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection)
+// {
+//     // application of Rodriguez' rotation formula (taken from Wikipedia not from
+//     // the course, since the course slides were using a left-handed coordinate system,
+//     // but we want to use a right-handed one.)
 
-    float u_x = unitRotationAxisDirection.x;
-    float u_y = unitRotationAxisDirection.y;
-    float u_z = unitRotationAxisDirection.z;
+//     // normalize direction
+//     Vector3 unitRotationAxisDirection = rotationAxisDirection.normalize();
 
-    float cosa = cos(angleInRadians);
-    float sina = sin(angleInRadians);
+//     float u_x = unitRotationAxisDirection.x;
+//     float u_y = unitRotationAxisDirection.y;
+//     float u_z = unitRotationAxisDirection.z;
 
-    // first column of final rotation matrix
-    Vector3 col1 = Vector3(cosa + u_x * u_x * (1.0 - cosa)      ,
-                           u_y * u_x * (1.0 - cosa) + u_z * sina,
-                           u_z * u_x * (1.0 - cosa) - u_y * sina);
+//     float cosa = cos(angleInRadians);
+//     float sina = sin(angleInRadians);
 
-    // second column of final rotation matrix
-    Vector3 col2 = Vector3(u_x * u_y * (1.0 - cosa) - u_z * sina,
-                           cosa + u_y * u_y * (1.0 - cosa)      ,
-                           u_z * u_y * (1.0 - cosa) + u_x * sina);
+//     // first column of final rotation matrix
+//     Vector3 col1 = Vector3(cosa + u_x * u_x * (1.0 - cosa)      ,
+//                            u_y * u_x * (1.0 - cosa) + u_z * sina,
+//                            u_z * u_x * (1.0 - cosa) - u_y * sina);
 
-    // third column of final rotation matrix
-    Vector3 col3 = Vector3(u_x * u_z * (1.0 - cosa) + u_y * sina,
-                           u_y * u_z * (1.0 - cosa) - u_x * sina,
-                           cosa + u_z * u_z * (1.0 - cosa)      );
+//     // second column of final rotation matrix
+//     Vector3 col2 = Vector3(u_x * u_y * (1.0 - cosa) - u_z * sina,
+//                            cosa + u_y * u_y * (1.0 - cosa)      ,
+//                            u_z * u_y * (1.0 - cosa) + u_x * sina);
 
-    Matrix4 rotationMatrix = Matrix4(col1, col2, col3);
-    return rotationMatrix;
-}
+//     // third column of final rotation matrix
+//     Vector3 col3 = Vector3(u_x * u_z * (1.0 - cosa) + u_y * sina,
+//                            u_y * u_z * (1.0 - cosa) - u_x * sina,
+//                            cosa + u_z * u_z * (1.0 - cosa)      );
 
-void Camera::rotateAroundXAxisObject(float angleInRadians)
-{
-    pitch += angleInRadians;
+//     Matrix4 rotationMatrix = Matrix4(col1, col2, col3);
+//     return rotationMatrix;
+// }
 
-    Vector3 oldPosition = position;
+// void Camera::rotateAroundXAxisObject(float angleInRadians)
+// {
+//     pitch += angleInRadians;
 
-    // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+//     Vector3 oldPosition = position;
 
-    Vector3 rotationAxis = upDirection.cross(viewDirection);
-    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+//     // go to (0.0, 0.0, 0.0)
+//     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
 
-    // position does not change
-    viewDirection = rotationMatrix * viewDirection;
-    upDirection = rotationMatrix * upDirection;
+//     Vector3 rotationAxis = upDirection.cross(viewDirection);
+//     Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
 
-    // go back to the position the camera was previously in
-    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
-}
+//     // position does not change
+//     viewDirection = rotationMatrix * viewDirection;
+//     upDirection = rotationMatrix * upDirection;
 
-void Camera::rotateAroundYAxisObject(float angleInRadians)
-{
-    yaw += angleInRadians;
+//     // go back to the position the camera was previously in
+//     translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+// }
 
-    Vector3 oldPosition = position;
+// void Camera::rotateAroundYAxisObject(float angleInRadians)
+// {
+//     yaw += angleInRadians;
 
-    // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+//     Vector3 oldPosition = position;
 
-    Vector3 rotationAxis = upDirection;
-    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+//     // go to (0.0, 0.0, 0.0)
+//     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
 
-    // position does not change
-    viewDirection = rotationMatrix * viewDirection;
-    upDirection = rotationMatrix * upDirection;
+//     Vector3 rotationAxis = upDirection;
+//     Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
 
-    // go back to the position the camera was previously in
-    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
-}
+//     // position does not change
+//     viewDirection = rotationMatrix * viewDirection;
+//     upDirection = rotationMatrix * upDirection;
 
-void Camera::rotateAroundZAxisObject(float angleInRadians)
-{
-    roll += angleInRadians;
+//     // go back to the position the camera was previously in
+//     translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+// }
 
-    Vector3 oldPosition = position;
+// void Camera::rotateAroundZAxisObject(float angleInRadians)
+// {
+//     roll += angleInRadians;
 
-    // go to (0.0, 0.0, 0.0)
-    translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
+//     Vector3 oldPosition = position;
 
-    Vector3 rotationAxis = viewDirection;
-    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+//     // go to (0.0, 0.0, 0.0)
+//     translate(Vector3(-oldPosition.x, -oldPosition.y, -oldPosition.z));
 
-    // position does not change
-    viewDirection = rotationMatrix * viewDirection;
-    upDirection = rotationMatrix * upDirection;
+//     Vector3 rotationAxis = viewDirection;
+//     Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
 
-    // go back to the position the camera was previously in
-    translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
-}
+//     // position does not change
+//     viewDirection = rotationMatrix * viewDirection;
+//     upDirection = rotationMatrix * upDirection;
 
-void Camera::rotateAroundXAxisWorld(float angleInRadians)
-{
-    Vector3 rotationAxis = Vector3(1.0, 0.0, 0.0);
-    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+//     // go back to the position the camera was previously in
+//     translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
+// }
 
-    position = rotationMatrix * position;
-    upDirection = rotationMatrix * upDirection;
-    viewDirection = rotationMatrix * viewDirection;
-}
+// void Camera::rotateAroundXAxisWorld(float angleInRadians)
+// {
+//     Vector3 rotationAxis = Vector3(1.0, 0.0, 0.0);
+//     Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
 
-void Camera::rotateAroundYAxisWorld(float angleInRadians)
-{
-    Vector3 rotationAxis = Vector3(0.0, 1.0, 0.0);
-    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+//     position = rotationMatrix * position;
+//     upDirection = rotationMatrix * upDirection;
+//     viewDirection = rotationMatrix * viewDirection;
+// }
 
-    position = rotationMatrix * position;
-    viewDirection = rotationMatrix * viewDirection;
-    upDirection = rotationMatrix * upDirection;
-}
+// void Camera::rotateAroundYAxisWorld(float angleInRadians)
+// {
+//     Vector3 rotationAxis = Vector3(0.0, 1.0, 0.0);
+//     Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
 
-void Camera::rotateAroundZAxisWorld(float angleInRadians)
-{
-    Vector3 rotationAxis = Vector3(0.0, 0.0, 1.0);
-    Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
+//     position = rotationMatrix * position;
+//     viewDirection = rotationMatrix * viewDirection;
+//     upDirection = rotationMatrix * upDirection;
+// }
 
-    position = rotationMatrix * position;
-    viewDirection = rotationMatrix * viewDirection;
-    upDirection = rotationMatrix * upDirection;
-}
+// void Camera::rotateAroundZAxisWorld(float angleInRadians)
+// {
+//     Vector3 rotationAxis = Vector3(0.0, 0.0, 1.0);
+//     Matrix4 rotationMatrix = getRotationMatrixAroundArbitraryAxisThroughOrigin(angleInRadians, rotationAxis);
 
-// -----------------------------------------------------------------------------
-// Node class
-class Node
-{
-private:
-    Vector3 position;
-    Vector3 oldPosition;
-    bool moveable;
-    Vector3 force;
-    float mass;
-
-public:
-    Node();
-    Node(Vector3 pos);
-    Vector3 getPosition();
-    void draw();
-    bool isMoveable();
-    void setMoveable(bool isMovePossible);
-    void translate(Vector3 direction);
-    void addForce(Vector3 extraForce);
-    void applyForces(float duration);
-    void setMass(float m);
-    void setPosition(Vector3 pos);
-};
-
-Node::Node() :
-    position(Vector3(0.0, 0.0, 0.0)),
-    oldPosition(Vector3(0.0, 0.0, 0.0)),
-    moveable(true),
-    force(Vector3(0.0, 0.0, 0.0)),
-    mass(1.0)
-{}
-
-Node::Node(Vector3 pos) :
-    position(pos),
-    oldPosition(pos),
-    moveable(true),
-    force(Vector3(0.0, 0.0, 0.0)),
-    mass(1.0)
-{}
-
-void Node::setPosition(Vector3 pos)
-{
-    position = pos;
-}
-
-void Node::setMass(float m)
-{
-    mass = m;
-}
-
-void Node::applyForces(float duration)
-{
-    if(moveable)
-    {
-        // TODO : integration
-        Vector3 acceleration = force / mass;
-        Vector3 temp = position;
-        position = position + (position - oldPosition) + acceleration * duration;
-        oldPosition = temp;
-    }
-}
-
-void Node::addForce(Vector3 extraForce)
-{
-    force += extraForce;
-}
-
-Vector3 Node::getPosition()
-{
-    return position;
-}
-
-void Node::draw()
-{
-    // push matrix so we can come back to the "origin" (on element (0.0, 0.0, 0.0))
-    // for each node to draw.
-    glPushMatrix();
-        glTranslatef(position.x, position.y, position.z);
-
-        glutSolidSphere(0.15, 10, 10);
-    glPopMatrix();
-    // back at "origin" (on element (0.0, 0.0, 0.0)) again.
-}
-
-bool Node::isMoveable()
-{
-    return moveable;
-}
-
-void Node::setMoveable(bool isMovePossible)
-{
-    moveable = isMovePossible;
-}
-
-void Node::translate(Vector3 direction)
-{
-    position += direction;
-}
-// -----------------------------------------------------------------------------
+//     position = rotationMatrix * position;
+//     viewDirection = rotationMatrix * viewDirection;
+//     upDirection = rotationMatrix * upDirection;
+// }
 
 // -----------------------------------------------------------------------------
 // Constraint class
@@ -461,7 +368,68 @@ void Constraint::satisfyConstraint()
         // nothing to do, since none of them can move
     }
 }
+
+// TODO : get cone as direction instead of sphere
 // -----------------------------------------------------------------------------
+// Arrow class
+class Arrow
+{
+private:
+    Vector3 base;
+    Vector3 end;
+
+public:
+    Arrow(Vector3 basePoint, Vector3 endPoint);
+    void draw();
+};
+
+Arrow::Arrow(Vector3 basePoint, Vector3 endPoint) :
+    base(basePoint),
+    end(endPoint)
+{}
+
+void Arrow::draw()
+{
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_LINES);
+        glVertex3f(base.x, base.y, base.z);
+        glVertex3f(end.x, end.y, end.z);
+    glEnd();
+
+    glPushMatrix();
+        glTranslatef(end.x, end.y, end.z);
+        glutSolidSphere(0.15, 10, 10);
+    glPopMatrix();
+}
+
+// -----------------------------------------------------------------------------
+// Sphere class
+class Sphere
+{
+private:
+    Vector3 center;
+    float radius;
+
+public:
+    Sphere(Vector3 c, float r);
+    Vector3 getCenter();
+    float getRadius();
+};
+
+Sphere::Sphere(Vector3 c, float r) :
+    center(c),
+    radius(r)
+{}
+
+Vector3 Sphere::getCenter()
+{
+    return center;
+}
+
+float Sphere::getRadius()
+{
+    return radius;
+}
 
 // -----------------------------------------------------------------------------
 // Triangle class
@@ -513,6 +481,11 @@ void Triangle::draw()
         glVertex3f(pos3.x, pos3.y, pos3.z);
         glVertex3f(pos1.x, pos1.y, pos1.z);
     glEnd();
+
+    // draw normal vector
+    Vector3 center = (pos1 + pos2 + pos3) / 3.0;
+    Arrow normalVector(center, center + normal);
+    normalVector.draw();
 }
 
 bool Triangle::isInsideTriangleVerticalSpace(Node* p)
@@ -551,7 +524,7 @@ Triangle::Triangle(Node* n1, Node* n2, Node* n3) :
     node1(n1),
     node2(n2),
     node3(n3),
-    normal((n2->getPosition() - n1->getPosition()).cross(n3->getPosition() - n1->getPosition())),
+    normal((n2->getPosition() - n1->getPosition()).cross(n3->getPosition() - n1->getPosition()).normalize()),
     area(normal.length() * 0.5)
 {}
 
@@ -559,16 +532,19 @@ void Triangle::testIntersection(Node* p)
 {
     if(isInsideTriangleVerticalSpace(p))
     {
+        std::cout << "inside triangle vertical space" << std::endl;
         Vector3 vectorFromPlaneToP = p->getPosition() - node1->getPosition();
 
         // TODO : Potential problem here if there is a closed surface made of triangles
         // are just at surface, or behind it
-        if(vectorFromPlaneToP.dot(normal) <= 0)
+        if(vectorFromPlaneToP.dot(normal) <= 0.0)
         {
+            std::cout << "you are on the wrong side of the object" << std::endl;
             // move the node towards surface (actually, a little bit further
             // from surface for precision reasons)
             Vector3 pointProjectedToPlane = projectToTrianglePlane(p);
-            p->translate(pointProjectedToPlane - p->getPosition());
+            p->translate(pointProjectedToPlane - p->getPosition() + 0.1);
+            p->setMoveable(false);
         }
     }
 }
@@ -969,7 +945,7 @@ Cloth* cloth = 0;
 Camera* camera = 0;
 
 // TODO : remove later, for testing only
-Triangle* triangle = 0;
+// Triangle* triangle = 0;
 
 // array which holds pressed status values of all keyboard keys other than the
 // special ones (arrows + F1..F12 keys + home + end ...)
@@ -1001,14 +977,14 @@ float getTimeDifference();
 
 void createScene()
 {
-    cloth = new Cloth(11, 11);
+    cloth = new Cloth(21, 21);
     camera = new Camera();
 
     // TODO : remove later, for testing only
-    Node* n1 = new Node(Vector3(-2.0, 2.0, 1.0));
-    Node* n2 = new Node(Vector3(0.0, 0.0, 2.0));
-    Node* n3 = new Node(Vector3(2.0, 2.0, 1.0));
-    triangle = new Triangle(n2, n1, n3);
+    // Node* n1 = new Node(Vector3(-2.0, 2.0, 1.0));
+    // Node* n2 = new Node(Vector3(0.0, 0.0, 2.0));
+    // Node* n3 = new Node(Vector3(2.0, 2.0, 1.0));
+    // triangle = new Triangle(n1, n2, n3);
 
     resetCameraPosition();
 
@@ -1303,7 +1279,8 @@ void display()
     // draw the world axis
     drawWorldAxis();
 
-    triangle->draw();
+    // TODO : remove later, for testing only
+    // triangle->draw();
 
     // draw cloth
     cloth->draw();
