@@ -505,6 +505,7 @@ public:
     Node* getNode(int x, int y);
     void setNodeMass(int x, int y, float mass);
     void setNodePosition(int x, int y, Vector3 pos);
+    void setNodeMoveable(int x, int y, bool moveable);
 };
 
 Cloth::Cloth() :
@@ -521,6 +522,11 @@ Cloth::Cloth(int width, int height) :
 {
     createNodes();
     createConstraints();
+}
+
+void Cloth::setNodeMoveable(int x, int y, bool moveable)
+{
+    getNode(x, y)->setMoveable(moveable);
 }
 
 void Cloth::setNodePosition(int x, int y, Vector3 pos)
@@ -1062,8 +1068,8 @@ void init()
     gettimeofday(&oldTime, NULL);
 
     // TODO : fixing 3 top-left and 3 top-right nodes for cape to be held up
-    cloth.getNode(0, cloth.getNumberNodesHeight() - 1)->setMoveable(false);
-    cloth.getNode(cloth.getNumberNodesWidth() - 1, cloth.getNumberNodesHeight() - 1)->setMoveable(false);
+    cloth.setNodeMoveable(0, cloth.getNumberNodesHeight() - 1, false);
+    cloth.setNodeMoveable(cloth.getNumberNodesWidth() - 1, cloth.getNumberNodesHeight() - 1, false);
 
     // TODO : find suitable values
     // gravity
