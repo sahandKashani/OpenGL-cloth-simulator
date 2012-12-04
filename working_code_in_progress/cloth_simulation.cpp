@@ -1,5 +1,5 @@
 // compile with the following command:
-//     g++ -o cloth_simulation cloth_simulation.cpp Node.cpp Camera.cpp Constraint.cpp -lglut -lGLU -lGL;
+//     clear; g++ -o cloth_simulation cloth_simulation.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL; ./cloth_simulation
 
 // Conventions:
 // - When you finish drawing something, always come back to (0.0, 0.0, 0.0)
@@ -25,6 +25,8 @@
 #include "Node.h"
 #include "Camera.h"
 #include "Constraint.h"
+#include "Arrow.h"
+#include "Sphere.h"
 
 float nearPlane = 1.0;
 float farPlane = 1000.0;
@@ -46,194 +48,6 @@ float angleIncrement = 0.03125; // 2^(-5)
 // increment must be power of 2 for precision reasons
 float translationIncrement = 1.0;
 
-class Arrow;
-class Triangle;
-class Cloth;
-class Sphere;
-
-// TODO : get cone as direction instead of sphere
-// -----------------------------------------------------------------------------
-// Arrow class
-class Arrow
-{
-private:
-    Vector3 base;
-    Vector3 end;
-
-public:
-    Arrow(Vector3 basePoint, Vector3 endPoint);
-    void draw();
-};
-
-Arrow::Arrow(Vector3 basePoint, Vector3 endPoint) :
-    base(basePoint),
-    end(endPoint)
-{}
-
-void Arrow::draw()
-{
-    glColor3f(1.0, 1.0, 1.0);
-    glBegin(GL_LINES);
-        glVertex3f(base.x, base.y, base.z);
-        glVertex3f(end.x, end.y, end.z);
-    glEnd();
-
-    glPushMatrix();
-        glTranslatef(end.x, end.y, end.z);
-        glutSolidSphere(0.15, 10, 10);
-    glPopMatrix();
-}
-
-// -----------------------------------------------------------------------------
-// Sphere class
-class Sphere
-{
-private:
-    Vector3 center;
-    float radius;
-
-public:
-    Sphere(Vector3 c, float r);
-    Vector3 getCenter();
-    float getRadius();
-};
-
-Sphere::Sphere(Vector3 c, float r) :
-    center(c),
-    radius(r)
-{}
-
-Vector3 Sphere::getCenter()
-{
-    return center;
-}
-
-float Sphere::getRadius()
-{
-    return radius;
-}
-
-// -----------------------------------------------------------------------------
-// Triangle class
-class Triangle
-{
-private:
-    Node* node1;
-    Node* node2;
-    Node* node3;
-    Vector3 normal;
-    float area;
-
-    Vector3 projectToTrianglePlane(Node* p);
-    float calculateTriangleArea(Vector3 p1, Vector3 p2, Vector3 p3);
-    bool isInsideTriangleVerticalSpace(Node* p);
-
-    // IMPORTANT ALGORITHM : to check if a Node has intersected with a triangle, do the following :
-    // 1) project point p onto plane formed by triangle.
-    // 2) calculate barycentric coordinates of this point
-    // 3) if 0 < s1, s2, s3 < 1 is FALSE, then the point is not even in the "cyclinder" around the triangle.
-    // 4) if 0 < s1, s2, s3 < 1 is TRUE, then do normal plane intersection with (p - x1).n > 0 or < 0 to see on which side we are on.
-    // 5) if dot product < 0, then move node towards surface
-public:
-    Triangle(Node* n1, Node* n2, Node* n3);
-    void testIntersection(Node* p);
-    void draw();
-};
-
-void Triangle::draw()
-{
-    Vector3 pos1 = node1->getPosition();
-    Vector3 pos2 = node2->getPosition();
-    Vector3 pos3 = node3->getPosition();
-
-    // set color to white
-    glColor3f(1.0, 1.0, 1.0);
-
-    glBegin(GL_LINES);
-        glVertex3f(pos1.x, pos1.y, pos1.z);
-        glVertex3f(pos2.x, pos2.y, pos2.z);
-    glEnd();
-
-    glBegin(GL_LINES);
-        glVertex3f(pos2.x, pos2.y, pos2.z);
-        glVertex3f(pos3.x, pos3.y, pos3.z);
-    glEnd();
-
-    glBegin(GL_LINES);
-        glVertex3f(pos3.x, pos3.y, pos3.z);
-        glVertex3f(pos1.x, pos1.y, pos1.z);
-    glEnd();
-
-    // draw normal vector
-    Vector3 center = (pos1 + pos2 + pos3) / 3.0;
-    Arrow normalVector(center, center + normal);
-    normalVector.draw();
-}
-
-bool Triangle::isInsideTriangleVerticalSpace(Node* p)
-{
-    // project point on triangle plane
-    Vector3 pointOnPlane = projectToTrianglePlane(p);
-
-    // calculate barycentric coordinates
-    float s1 = calculateTriangleArea(pointOnPlane, node2->getPosition(), node3->getPosition()) / area;
-    float s2 = calculateTriangleArea(pointOnPlane, node1->getPosition(), node2->getPosition()) / area;
-    float s3 = calculateTriangleArea(pointOnPlane, node1->getPosition(), node3->getPosition()) / area;
-
-    return (0 < s1 && s1 < 1) && (0 < s2 && s2 < 1) && (0 < s3 && s3 < 1);
-}
-
-Vector3 Triangle::projectToTrianglePlane(Node* p)
-{
-    Vector3 vectorFromPlaneToP = p->getPosition() - node1->getPosition();
-    float distance = vectorFromPlaneToP.dot(normal);
-    Vector3 offsetToPlane = normal * distance;
-    Vector3 pointOnPlane = p->getPosition() - offsetToPlane;
-
-    return pointOnPlane;
-}
-
-float Triangle::calculateTriangleArea(Vector3 p1, Vector3 p2, Vector3 p3)
-{
-    return ((p2 - p1).cross(p3 - p1)).length() * 0.5;
-}
-
-// Note that the order of the nodes is VERY important, because the triangle's
-// normal vector will be calculated by the following algorithm.
-// Give the triangles in clock-wise order for simplicity
-// (n2 - n1).cross(n3 - n1);
-Triangle::Triangle(Node* n1, Node* n2, Node* n3) :
-    node1(n1),
-    node2(n2),
-    node3(n3),
-    normal((n2->getPosition() - n1->getPosition()).cross(n3->getPosition() - n1->getPosition()).normalize()),
-    area(normal.length() * 0.5)
-{}
-
-void Triangle::testIntersection(Node* p)
-{
-    if(isInsideTriangleVerticalSpace(p))
-    {
-        std::cout << "inside triangle vertical space" << std::endl;
-        Vector3 vectorFromPlaneToP = p->getPosition() - node1->getPosition();
-
-        // TODO : Potential problem here if there is a closed surface made of triangles
-        // are just at surface, or behind it
-        if(vectorFromPlaneToP.dot(normal) <= 0.0)
-        {
-            std::cout << "you are on the wrong side of the object" << std::endl;
-            // move the node towards surface (actually, a little bit further
-            // from surface for precision reasons)
-            Vector3 pointProjectedToPlane = projectToTrianglePlane(p);
-            p->translate(pointProjectedToPlane - p->getPosition() + 0.1);
-            p->setMoveable(false);
-        }
-    }
-}
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Cloth class
 class Cloth
 {
 private:
@@ -659,7 +473,7 @@ float getTimeDifference();
 
 void createScene()
 {
-    cloth = new Cloth(41, 41);
+    cloth = new Cloth(20, 20);
     camera = new Camera();
 
     // TODO : remove later, for testing only
