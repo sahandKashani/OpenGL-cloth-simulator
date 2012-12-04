@@ -452,6 +452,38 @@ void Constraint::satisfyConstraint()
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// Triangle class
+class Triangle
+{
+private:
+    Node* node1;
+    Node* node2;
+    Node* node3;
+
+    // IMPORTANT ALGORITHM : to check if a Node has intersected with a triangle, do the following :
+    // 1) project point p onto plane formed by triangle.
+    // 2) calculate barycentric coordinates of this point
+    // 3) if 0 < s1, s2, s3 < 1 is FALSE, then the point is not even in the "cyclinder" around the triangle.
+    // 4) if 0 < s1, s2, s3 < 1 is TRUE, then do normal plane intersection with (p - x1).n > 0 or < 0 to see on which side we are on.
+    // 5) if dot product < 0, then move node towards surface
+public:
+    Triangle(Node* n1, Node* n2, Node* n3);
+    void testImplementation();
+};
+
+Triangle::Triangle(Node* n1, Node* n2, Node* n3) :
+    node1(n1),
+    node2(n2),
+    node3(n3)
+{}
+
+void Triangle::testImplementation()
+{
+
+}
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
 // Cloth class
 class Cloth
 {
