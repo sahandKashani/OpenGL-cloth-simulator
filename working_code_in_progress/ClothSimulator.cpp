@@ -49,7 +49,7 @@ void ClothSimulator::drawSpheres()
 
 void ClothSimulator::createBatmanScene()
 {
-    cloth = new Cloth(10, 10, 20, 20);
+    cloth = new Cloth(10.0, 10.0, 20, 20);
     resetCameraPosition();
 
     // TODO : fixing cloth at certain points

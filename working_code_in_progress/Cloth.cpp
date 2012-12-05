@@ -19,19 +19,16 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
 void Cloth::setNodeMoveable(int x, int y, bool moveable)
 {
     getNode(x, y)->setMoveable(moveable);
-    satisfyConstraints();
 }
 
 void Cloth::setNodePosition(int x, int y, Vector3 pos)
 {
     getNode(x, y)->setPosition(pos);
-    satisfyConstraints();
 }
 
 void Cloth::setNodeMass(int x, int y, float mass)
 {
     getNode(x, y)->setMass(mass);
-    satisfyConstraints();
 }
 
 Node* Cloth::getNode(int x, int y)
