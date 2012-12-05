@@ -56,7 +56,7 @@ public:
     Camera* camera;
 
     // Sphere declaration
-    Sphere* sphere;
+    std::vector<Sphere> spheres;
 
     // methods
     ~ClothSimulator();
@@ -65,11 +65,13 @@ public:
     void showDrawStatus();
     void showCameraStatus();
     void chooseRenderingMethod();
-    void drawWorldAxis();
     void initializeKeyboardStatus();
     void applyContinuousKeyboardCommands();
     void resetCameraPosition();
     float getTimeStep();
+
+    void drawWorldAxis();
+    void drawSpheres();
 
     void createScene();
     void createBatmanScene();

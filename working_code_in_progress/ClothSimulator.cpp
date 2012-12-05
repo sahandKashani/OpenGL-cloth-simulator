@@ -37,6 +37,16 @@ ClothSimulator::~ClothSimulator()
     delete cloth;
 }
 
+void ClothSimulator::drawSpheres()
+{
+    for(std::vector<Sphere>::iterator sphereIterator = spheres.begin();
+        sphereIterator != spheres.end();
+        ++sphereIterator)
+    {
+        sphereIterator->draw();
+    }
+}
+
 void ClothSimulator::createBatmanScene()
 {
     cloth = new Cloth(10, 10, 20, 20);
@@ -44,10 +54,9 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : fixing cloth at certain points
     cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
-
     cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
 
-    sphere = new Sphere(Vector3(15.0, 15.0, 3.0), 3.0);
+    spheres.push_back(Sphere(Vector3(3.0, 3.0, 2.0), 1.5));
 
     // TODO : find suitable values
     // gravity
@@ -55,7 +64,7 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.0, 0.0, 1.2);
+    Vector3 wind(0.0, 0.0, 0.3);
 
     cloth->addForce(gravity);
     cloth->addForce(wind);
