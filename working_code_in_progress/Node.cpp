@@ -48,13 +48,34 @@ void Node::applyForces(float duration)
 
         Vector3 acceleration = force / mass;
         Vector3 newPosition = position + (position - oldPosition) + acceleration * duration;
-        Vector3 direction = newPosition - oldPosition;
+        Vector3 direction = (newPosition - oldPosition).normalize();
 
         for(std::vector<Sphere>::iterator sphereIterator = clothSimulator->spheres.begin();
             sphereIterator != clothSimulator->spheres.end();
             ++sphereIterator)
         {
-            std::cout << sphereIterator->getCenter().toString() << std::endl;
+            Vector3 sphereCenter = sphereIterator->getCenter();
+            float sphereRadius = sphereIterator->getRadius();
+
+            float a = direction.dot(direction);
+            float b = 2 * (oldPosition.dot(direction) - sphereCenter.dot(direction));
+            float c = sphereCenter.dot(sphereCenter) + oldPosition.dot(oldPosition) - (2 * sphereCenter.dot(oldPosition)) - (sphereRadius * sphereRadius);
+
+            float discriminant = (b * b) - (4 * a * c);
+
+            // no intersection with a sphere
+            if(discriminant < 0)
+            {
+                Vector3 temp = position;
+                position = newPosition;
+                oldPosition = temp;
+            }
+            else
+            {
+                moveable = false;
+                // t = (-b + sqrt(discriminant)) / (2 * a)
+                // t = (-b - sqrt(discriminant)) / (2 * a)
+            }
         }
 
         // Resolving the problem algebraically, we get the following coefficients of a quadratic equation in t:
