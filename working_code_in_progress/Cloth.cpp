@@ -320,13 +320,14 @@ void Cloth::drawShearBendConstraints()
     }
 }
 
-void Cloth::handleIntersection(Sphere* s)
-{
-    for(int x = 0; x < numberNodesWidth; x += 1)
-    {
-        for(int y = 0; y < numberNodesHeight; y += 1)
-        {
-            s->handleIntersection(getNode(x, y));
-        }
-    }
-}
+// TODO
+// void Cloth::handleIntersection(Sphere* s)
+// {
+//     for(int x = 0; x < numberNodesWidth; x += 1)
+//     {
+//         for(int y = 0; y < numberNodesHeight; y += 1)
+//         {
+//             s->handleIntersection(getNode(x, y));
+//         }
+//     }
+// }

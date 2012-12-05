@@ -20,17 +20,18 @@ float Sphere::getRadius()
     return radius;
 }
 
-void Sphere::handleIntersection(Node* node)
-{
-    Vector3 centerToNode = node->getPosition() - center;
-    float centerToNodeLength = centerToNode.length();
+// TODO
+// void Sphere::handleIntersection(Node* node)
+// {
+//     Vector3 centerToNode = node->getPosition() - center;
+//     float centerToNodeLength = centerToNode.length();
 
-    if(centerToNodeLength < radius)
-    {
-        Vector3 translationToSurface = centerToNode.normalize() * (radius - centerToNodeLength);
-        node->translate(translationToSurface);
-    }
-}
+//     if(centerToNodeLength < radius)
+//     {
+//         Vector3 translationToSurface = centerToNode.normalize() * (radius - centerToNodeLength);
+//         node->translate(translationToSurface);
+//     }
+// }
 
 void Sphere::draw()
 {

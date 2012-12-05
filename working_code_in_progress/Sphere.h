@@ -14,7 +14,7 @@ public:
     Sphere(Vector3 c, float r);
     Vector3 getCenter();
     float getRadius();
-    void handleIntersection(Node* node);
+    // void handleIntersection(Node* node);
     void draw();
 };
 
