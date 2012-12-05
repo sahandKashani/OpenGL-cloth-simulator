@@ -73,8 +73,6 @@ public:
     void setNodeMass(int x, int y, float mass);
     void setNodePosition(int x, int y, Vector3 pos);
     void setNodeMoveable(int x, int y, bool moveable);
-
-    // void handleIntersection(Sphere* s);
 };
 
 #endif
