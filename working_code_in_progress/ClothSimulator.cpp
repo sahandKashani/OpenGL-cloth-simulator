@@ -39,8 +39,10 @@ ClothSimulator::~ClothSimulator()
 
 void ClothSimulator::createBatmanScene()
 {
-    cloth = new Cloth(41, 41);
+    cloth = new Cloth(21, 21);
     camera = new Camera();
+
+    timeStep = 0.01;
 
     resetCameraPosition();
 
@@ -67,10 +69,6 @@ void ClothSimulator::createBatmanScene()
 
 void ClothSimulator::createScene()
 {
-    // initialize the time (needed for future animations)
-    // the value of oldTime will be changed through it's pointer
-    gettimeofday(&oldTime, NULL);
-
     // clear keyboard press status
     initializeKeyboardStatus();
 
@@ -79,7 +77,7 @@ void ClothSimulator::createScene()
 
 float ClothSimulator::getTimeStep()
 {
-    return 0.01;
+    return timeStep;
 }
 
 // prints "true" if controlVariableEnabled is true, and "false" otherwise

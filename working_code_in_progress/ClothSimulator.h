@@ -7,9 +7,6 @@
 
 class ClothSimulator;
 
-// for time difference calculations
-#include <sys/time.h>
-
 class ClothSimulator
 {
 private:
@@ -36,8 +33,12 @@ public:
     // increments must be power of 2 for precision reasons
     // camera angle increments in radians
     float angleIncrement;
+
     // camera translation increment
     float translationIncrement;
+
+    // Time step between each application of the forces
+    float timeStep;
 
     // array which holds pressed status values of all keyboard keys other than the
     // special ones (arrows + F1..F12 keys + home + end ...)
