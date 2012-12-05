@@ -27,6 +27,7 @@ ClothSimulator::ClothSimulator() :
     drawShearConstraintsEnabled(false),
     drawStructuralBendConstraintsEnabled(false),
     drawShearBendConstraintsEnabled(false),
+    drawSpheresEnabled(true),
     angleIncrement(0.03125),
     translationIncrement(1.0)
 {}
@@ -39,11 +40,14 @@ ClothSimulator::~ClothSimulator()
 
 void ClothSimulator::drawSpheres()
 {
-    for(std::vector<Sphere>::iterator sphereIterator = spheres.begin();
-        sphereIterator != spheres.end();
-        ++sphereIterator)
+    if(drawSpheresEnabled)
     {
-        sphereIterator->draw();
+        for(std::vector<Sphere>::iterator sphereIterator = spheres.begin();
+            sphereIterator != spheres.end();
+            ++sphereIterator)
+        {
+            sphereIterator->draw();
+        }
     }
 }
 
@@ -142,6 +146,7 @@ void ClothSimulator::showHelp()
     std::cout << "  F9 : toggle draw nodes" << std::endl;
     std::cout << "  F10: toggle draw wireframe" << std::endl;
     std::cout << "  F11: toggle draw world axis" << std::endl;
+    std::cout << "  F12: toggle draw spheres" << std::endl;
 
     std::cout << std::endl;
 

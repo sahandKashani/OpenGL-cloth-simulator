@@ -173,6 +173,9 @@ void specialKeyboard(int key, int x, int y)
         case GLUT_KEY_F11:
             clothSimulator->drawWorldAxisEnabled = !clothSimulator->drawWorldAxisEnabled;
             break;
+        case GLUT_KEY_F12:
+            clothSimulator->drawSpheresEnabled = !clothSimulator->drawSpheresEnabled;
+            break;
 
         default:
             break;

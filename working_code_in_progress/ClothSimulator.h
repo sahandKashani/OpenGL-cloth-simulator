@@ -29,6 +29,7 @@ public:
     bool drawShearConstraintsEnabled;
     bool drawStructuralBendConstraintsEnabled;
     bool drawShearBendConstraintsEnabled;
+    bool drawSpheresEnabled;
 
     // increments must be power of 2 for precision reasons
     // camera angle increments in radians
