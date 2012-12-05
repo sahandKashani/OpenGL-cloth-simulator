@@ -72,7 +72,7 @@ void Node::applyForces(float duration)
             }
             else
             {
-                moveable = false;
+                // moveable = false;
                 // t = (-b + sqrt(discriminant)) / (2 * a)
                 // t = (-b - sqrt(discriminant)) / (2 * a)
             }

@@ -56,7 +56,7 @@ void ClothSimulator::createBatmanScene()
     cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
     cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
 
-    spheres.push_back(Sphere(Vector3(3.0, 3.0, 2.0), 1.5));
+    spheres.push_back(Sphere(Vector3(5.0, 5.0, 3.0), 1.5));
 
     // TODO : find suitable values
     // gravity
@@ -64,7 +64,7 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.0, 0.0, 0.3);
+    Vector3 wind(0.0, 0.0, 0.5);
 
     cloth->addForce(gravity);
     cloth->addForce(wind);
@@ -212,8 +212,8 @@ void ClothSimulator::resetCameraPosition()
     delete camera;
     camera = new Camera();
 
-    float cameraX = cloth->getNumberNodesWidth() / 2.0;
-    float cameraY = cloth->getNumberNodesHeight() / 2.0;
+    float cameraX = cloth->getClothWidth() / 2.0;
+    float cameraY = cloth->getClothHeight() / 2.0;
     float cameraZ = 3.0 * std::max(cameraX, cameraY);
 
     camera->translate(Vector3(cameraX, cameraY, cameraZ));

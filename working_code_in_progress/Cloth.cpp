@@ -31,6 +31,16 @@ void Cloth::setNodeMass(int x, int y, float mass)
     getNode(x, y)->setMass(mass);
 }
 
+float Cloth::getClothWidth()
+{
+    return clothWidth;
+}
+
+float Cloth::getClothHeight()
+{
+    return clothHeight;
+}
+
 Node* Cloth::getNode(int x, int y)
 {
     return &nodes[x][y];
@@ -48,14 +58,21 @@ int Cloth::getNumberNodesHeight()
 
 void Cloth::createNodes()
 {
+    float horizontalSpacing = clothWidth / numberNodesWidth;
+    float verticalSpacing = clothHeight / numberNodesHeight;
+
     for(int x = 0; x < numberNodesWidth; x += 1)
     {
+        float xPos = x * horizontalSpacing;
+
         std::vector<Node> nodeColumn;
 
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
+            float yPos = y * verticalSpacing;
+
             // put elements in rectangular grid with 0.0 depth
-            nodeColumn.push_back(Node(Vector3(x, y, 0.0)));
+            nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0)));
         }
 
         nodes.push_back(nodeColumn);

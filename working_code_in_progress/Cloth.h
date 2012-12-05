@@ -65,6 +65,8 @@ public:
     // getters
     int getNumberNodesWidth();
     int getNumberNodesHeight();
+    float getClothWidth();
+    float getClothHeight();
     Node* getNode(int x, int y);
 
     // setters
