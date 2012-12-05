@@ -39,12 +39,23 @@ void Node::applyForces(float duration)
     if(moveable)
     {
         // TODO : integration
-        Vector3 acceleration = force / mass;
-        Vector3 temp = position;
-        position = position + (position - oldPosition) + acceleration * duration;
-        oldPosition = temp;
+        // Vector3 acceleration = force / mass;
+        // Vector3 temp = position;
+        // position = position + (position - oldPosition) + acceleration * duration;
+        // oldPosition = temp;
 
         ClothSimulator* clothSimulator = ClothSimulator::getInstance();
+
+        Vector3 acceleration = force / mass;
+        Vector3 newPosition = position + (position - oldPosition) + acceleration * duration;
+        Vector3 direction = newPosition - oldPosition;
+
+        for(std::vector<Sphere>::iterator sphereIterator = clothSimulator->spheres.begin();
+            sphereIterator != clothSimulator->spheres.end();
+            ++sphereIterator)
+        {
+            std::cout << sphereIterator->getCenter().toString() << std::endl;
+        }
 
         // Resolving the problem algebraically, we get the following coefficients of a quadratic equation in t:
         // double a=ray.direction.dot(ray.direction);
