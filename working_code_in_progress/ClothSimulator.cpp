@@ -40,18 +40,11 @@ ClothSimulator::~ClothSimulator()
 void ClothSimulator::createBatmanScene()
 {
     cloth = new Cloth(21, 21);
-    timeStep = 0.01;
     resetCameraPosition();
-
-    // TODO : enable later
-    // show help at program launch
-    // showHelp();
 
     // TODO : fixing cloth at certain points
     cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
-    // cloth->setNodePosition(0, cloth->getNumberNodesHeight() - 1, Vector3());
 
-    // cloth->setNodeMoveable(cloth->getNumberNodesWidth() / 2, cloth->getNumberNodesHeight() - 1, false);
     cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
 
     // TODO : find suitable values
@@ -69,6 +62,12 @@ void ClothSimulator::createBatmanScene()
 void ClothSimulator::createScene()
 {
     camera = new Camera();
+
+    // simulation timestep
+    timeStep = 0.01;
+
+    // TODO : enable later
+    // showHelp();
 
     // clear keyboard press status
     initializeKeyboardStatus();
