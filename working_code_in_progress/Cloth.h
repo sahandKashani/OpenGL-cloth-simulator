@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "Node.h"
 #include "Constraint.h"
+#include "Sphere.h"
 
 class Cloth
 {
@@ -12,6 +13,9 @@ private:
     // number of nodes in each dimension
     int numberNodesWidth;
     int numberNodesHeight;
+
+    float clothWidth;
+    float clothHeight;
 
     // Nodes
     std::vector< std::vector<Node> > nodes;
@@ -46,8 +50,7 @@ private:
     void satisfyShearBendConstraints();
 
 public:
-    Cloth();
-    Cloth(int width, int height);
+    Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
 
     // general drawing method
     void draw();
@@ -68,6 +71,8 @@ public:
     void setNodeMass(int x, int y, float mass);
     void setNodePosition(int x, int y, Vector3 pos);
     void setNodeMoveable(int x, int y, bool moveable);
+
+    void handleIntersection(Sphere* s);
 };
 
 #endif

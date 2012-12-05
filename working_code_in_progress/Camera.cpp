@@ -16,6 +16,11 @@ Camera::Camera() :
     roll(0.0)
 {}
 
+void Camera::setPosition(Vector3 pos)
+{
+    position = pos;
+}
+
 Vector3 Camera::getPosition()
 {
     return position;

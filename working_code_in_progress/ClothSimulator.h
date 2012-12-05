@@ -55,6 +55,9 @@ public:
     // camera declaration
     Camera* camera;
 
+    // Sphere declaration
+    Sphere* sphere;
+
     // methods
     ~ClothSimulator();
     std::string isEnabled(bool controlVariableEnabled);

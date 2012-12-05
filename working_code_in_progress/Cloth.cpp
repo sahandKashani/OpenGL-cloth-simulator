@@ -6,17 +6,11 @@
 #include "Cloth.h"
 #include "ClothSimulator.h"
 
-Cloth::Cloth() :
-    numberNodesWidth(10),
-    numberNodesHeight(10)
-{
-    createNodes();
-    createConstraints();
-}
-
-Cloth::Cloth(int width, int height) :
-    numberNodesWidth(width),
-    numberNodesHeight(height)
+Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight) :
+    clothWidth(clothTotalWidth),
+    clothHeight(clothTotalHeight),
+    numberNodesWidth(nodesWidth),
+    numberNodesHeight(nodesHeight)
 {
     createNodes();
     createConstraints();
@@ -326,5 +320,16 @@ void Cloth::drawShearBendConstraints()
         ++shearBendConstraintIterator)
     {
         shearBendConstraintIterator->draw();
+    }
+}
+
+void Cloth::handleIntersection(Sphere* s)
+{
+    for(int x = 0; x < numberNodesWidth; x += 1)
+    {
+        for(int y = 0; y < numberNodesHeight; y += 1)
+        {
+            s->handleIntersection(getNode(x, y));
+        }
     }
 }

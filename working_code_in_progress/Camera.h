@@ -20,12 +20,16 @@ private:
 
 public:
     Camera();
+
     Vector3 getPosition();
     Vector3 getViewDirection();
     Vector3 getUpDirection();
+
     float getYaw();
     float getPitch();
     float getRoll();
+
+    void setPosition(Vector3 pos);
     void setViewDirection(Vector3 direction);
     void setUpDirection(Vector3 direction);
 

@@ -58,6 +58,8 @@ void applyChanges()
     // apply all forces to the cloth
     clothSimulator->cloth->applyForces(duration);
 
+    clothSimulator->cloth->handleIntersection(clothSimulator->sphere);
+
     // satisfy all constraints of the cloth after forces are applied
     clothSimulator->cloth->satisfyConstraints();
 
@@ -101,6 +103,9 @@ void display()
 
     // draw the world axis
     clothSimulator->drawWorldAxis();
+
+    // draw sphere
+    clothSimulator->sphere->draw();
 
     // draw cloth
     clothSimulator->cloth->draw();

@@ -76,6 +76,7 @@ Triangle::Triangle(Node* n1, Node* n2, Node* n3) :
     area(normal.length() * 0.5)
 {}
 
+// FIXME : doesn't work
 void Triangle::testIntersection(Node* p)
 {
     if(isInsideTriangleVerticalSpace(p))
