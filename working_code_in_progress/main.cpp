@@ -1,5 +1,5 @@
 // compile with the following command:
-//     clear; g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL; ./simulation
+//     g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL;
 
 #include "ClothSimulator.h"
 
@@ -16,6 +16,34 @@ void specialKeyboard(int key, int x, int y);
 void applyChanges();
 
 ClothSimulator* clothSimulator = 0;
+
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
+
+    glutInitWindowSize(400, 400);
+    glutInitWindowPosition(1200, 800);
+
+    clothSimulator = ClothSimulator::getInstance();
+
+    glutCreateWindow("Cloth Simulator");
+    clothSimulator->createScene();
+
+    glutDisplayFunc(display);
+    glutIdleFunc(applyChanges);
+    glutReshapeFunc(reshape);
+
+    // disable keyboard repeat, because we will use variables for continuous animation
+    glutIgnoreKeyRepeat(1);
+
+    glutKeyboardFunc(normalKeyboard);
+    glutKeyboardUpFunc(normalKeyboardRelease);
+    glutSpecialFunc(specialKeyboard);
+
+    glutMainLoop();
+    return 0;
+}
 
 // used for idle callback.
 // Will process all changes that occur, such as keyboard commands, new forces, ...
@@ -163,32 +191,4 @@ void reshape(int w, int h)
 
     // go back to modelview matrix (for other functions)
     glMatrixMode(GL_MODELVIEW);
-}
-
-int main(int argc, char** argv)
-{
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
-
-    glutInitWindowSize(400, 400);
-    glutInitWindowPosition(1200, 800);
-
-    clothSimulator = ClothSimulator::getInstance();
-
-    glutCreateWindow("Batman");
-    clothSimulator->createScene();
-
-    glutDisplayFunc(display);
-    glutIdleFunc(applyChanges);
-    glutReshapeFunc(reshape);
-
-    // disable keyboard repeat, because we will use variables for continuous animation
-    glutIgnoreKeyRepeat(1);
-
-    glutKeyboardFunc(normalKeyboard);
-    glutKeyboardUpFunc(normalKeyboardRelease);
-    glutSpecialFunc(specialKeyboard);
-
-    glutMainLoop();
-    return 0;
 }

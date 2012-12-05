@@ -60,13 +60,15 @@ public:
     void showHelp();
     void showDrawStatus();
     void showCameraStatus();
-    void createScene();
     void chooseRenderingMethod();
     void drawWorldAxis();
     void initializeKeyboardStatus();
     void applyContinuousKeyboardCommands();
     void resetCameraPosition();
     float getTimeDifference();
+
+    void createScene();
+    void createBatmanScene();
 };
 
 #endif

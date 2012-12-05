@@ -37,7 +37,7 @@ ClothSimulator::~ClothSimulator()
     delete cloth;
 }
 
-void ClothSimulator::createScene()
+void ClothSimulator::createBatmanScene()
 {
     cloth = new Cloth(21, 21);
     camera = new Camera();
@@ -47,10 +47,6 @@ void ClothSimulator::createScene()
     // TODO : enable later
     // show help at program launch
     // showHelp();
-
-    // initialize the time (needed for future animations)
-    // the value of oldTime will be changed through it's pointer
-    gettimeofday(&oldTime, NULL);
 
     // TODO : fixing cloth at certain points
     cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
@@ -67,9 +63,18 @@ void ClothSimulator::createScene()
 
     cloth->addForce(gravity);
     cloth->addForce(wind);
+}
+
+void ClothSimulator::createScene()
+{
+    // initialize the time (needed for future animations)
+    // the value of oldTime will be changed through it's pointer
+    gettimeofday(&oldTime, NULL);
 
     // clear keyboard press status
     initializeKeyboardStatus();
+
+    createBatmanScene();
 }
 
 float ClothSimulator::getTimeDifference()
