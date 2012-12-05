@@ -25,16 +25,19 @@ Cloth::Cloth(int width, int height) :
 void Cloth::setNodeMoveable(int x, int y, bool moveable)
 {
     getNode(x, y)->setMoveable(moveable);
+    satisfyConstraints();
 }
 
 void Cloth::setNodePosition(int x, int y, Vector3 pos)
 {
     getNode(x, y)->setPosition(pos);
+    satisfyConstraints();
 }
 
 void Cloth::setNodeMass(int x, int y, float mass)
 {
     getNode(x, y)->setMass(mass);
+    satisfyConstraints();
 }
 
 Node* Cloth::getNode(int x, int y)
@@ -54,27 +57,17 @@ int Cloth::getNumberNodesHeight()
 
 void Cloth::createNodes()
 {
-    float xPosCentered = -(numberNodesWidth - 1) / 2.0;
-    float yPosCenteredInit = -(numberNodesHeight - 1) / 2.0;
-
     for(int x = 0; x < numberNodesWidth; x += 1)
     {
-        // start yPosCentered at beginning again
-        float yPosCentered = yPosCenteredInit;
         std::vector<Node> nodeColumn;
 
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
             // put elements in rectangular grid with 0.0 depth
-            // note that the nodes are centered around (0.0, 0.0, 0.0)
-            // nodes[x][y] = Vector3(xPosCentered, yPosCentered, 0.0);
-            nodeColumn.push_back(Node(Vector3(xPosCentered, yPosCentered, 0.0)));
-            yPosCentered += 1.0;
+            nodeColumn.push_back(Node(Vector3(x, y, 0.0)));
         }
 
         nodes.push_back(nodeColumn);
-
-        xPosCentered += 1.0;
     }
 }
 

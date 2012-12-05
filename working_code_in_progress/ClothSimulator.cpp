@@ -40,10 +40,7 @@ ClothSimulator::~ClothSimulator()
 void ClothSimulator::createBatmanScene()
 {
     cloth = new Cloth(21, 21);
-    camera = new Camera();
-
     timeStep = 0.01;
-
     resetCameraPosition();
 
     // TODO : enable later
@@ -52,7 +49,9 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : fixing cloth at certain points
     cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
-    cloth->setNodeMoveable(cloth->getNumberNodesWidth() / 2, cloth->getNumberNodesHeight() - 1, false);
+    // cloth->setNodePosition(0, cloth->getNumberNodesHeight() - 1, Vector3());
+
+    // cloth->setNodeMoveable(cloth->getNumberNodesWidth() / 2, cloth->getNumberNodesHeight() - 1, false);
     cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
 
     // TODO : find suitable values
@@ -69,6 +68,8 @@ void ClothSimulator::createBatmanScene()
 
 void ClothSimulator::createScene()
 {
+    camera = new Camera();
+
     // clear keyboard press status
     initializeKeyboardStatus();
 
@@ -201,9 +202,11 @@ void ClothSimulator::resetCameraPosition()
     delete camera;
     camera = new Camera();
 
-    // move camera back
-    float cameraZ = 1.75 * std::max(cloth->getNumberNodesWidth(), cloth->getNumberNodesHeight());
-    camera->translate(Vector3(0.0, 0.0, cameraZ));
+    float cameraX = cloth->getNumberNodesWidth() / 2.0;
+    float cameraY = cloth->getNumberNodesHeight() / 2.0;
+    float cameraZ = 3.0 * std::max(cameraX, cameraY);
+
+    camera->translate(Vector3(cameraX, cameraY, cameraZ));
 }
 
 // determines if a wireframe is to be drawn, or a textured version
