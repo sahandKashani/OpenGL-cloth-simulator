@@ -65,7 +65,7 @@ public:
     void initializeKeyboardStatus();
     void applyContinuousKeyboardCommands();
     void resetCameraPosition();
-    float getTimeDifference();
+    float getTimeStep();
 
     void createScene();
     void createBatmanScene();

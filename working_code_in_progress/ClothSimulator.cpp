@@ -39,7 +39,7 @@ ClothSimulator::~ClothSimulator()
 
 void ClothSimulator::createBatmanScene()
 {
-    cloth = new Cloth(21, 21);
+    cloth = new Cloth(41, 41);
     camera = new Camera();
 
     resetCameraPosition();
@@ -77,21 +77,9 @@ void ClothSimulator::createScene()
     createBatmanScene();
 }
 
-float ClothSimulator::getTimeDifference()
+float ClothSimulator::getTimeStep()
 {
-    struct timeval currentTime;
-    gettimeofday(&currentTime, NULL);
-
-    struct timeval timeDifference;
-    timeDifference.tv_sec = currentTime.tv_sec - oldTime.tv_sec;
-    timeDifference.tv_usec = currentTime.tv_usec - oldTime.tv_usec;
-
-    float duration = timeDifference.tv_sec + timeDifference.tv_usec / 1000000.0;
-
-    // update oldTime for future time checks
-    oldTime = currentTime;
-
-    return duration;
+    return 0.01;
 }
 
 // prints "true" if controlVariableEnabled is true, and "false" otherwise

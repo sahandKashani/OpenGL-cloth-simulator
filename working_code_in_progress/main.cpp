@@ -53,7 +53,7 @@ void applyChanges()
     clothSimulator->applyContinuousKeyboardCommands();
 
     // calculate time difference from last call to applyChanges()
-    float duration = clothSimulator->getTimeDifference();
+    float duration = clothSimulator->getTimeStep();
 
     // apply all forces to the cloth
     clothSimulator->cloth->applyForces(duration);
