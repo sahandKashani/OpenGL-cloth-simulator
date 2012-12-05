@@ -53,7 +53,7 @@ void ClothSimulator::drawSpheres()
 
 void ClothSimulator::createBatmanScene()
 {
-    cloth = new Cloth(10.0, 10.0, 20, 20);
+    cloth = new Cloth(10.0, 10.0, 30, 30);
     resetCameraPosition();
 
     // TODO : fixing cloth at certain points
@@ -68,7 +68,7 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.0, 0.0, 0.5);
+    Vector3 wind(0.0, 0.0, 1.0);
 
     cloth->addForce(gravity);
     cloth->addForce(wind);

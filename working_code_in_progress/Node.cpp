@@ -70,11 +70,42 @@ void Node::applyForces(float duration)
                 position = newPosition;
                 oldPosition = temp;
             }
+            else if (discriminant > 0)
+            {
+                float t1 = (-b - sqrt(discriminant)) / (2 * a);
+                float t2 = (-b + sqrt(discriminant)) / (2 * a);
+
+                // oldPosition + t * direction = newPosition;
+                // t * direction = newPosition - oldPosition;
+                // t * direction.x = newPosition.x - oldPosition.x;
+                // t = (newPosition.x - oldPosition.x) / direction.x;
+                float tNewPosition = (newPosition.x - oldPosition.x) / direction.x;
+
+                if(tNewPosition < t1)
+                {
+                    // trajectory of node will eventually hit the sphere, but
+                    // has not reached there yet, so we can move it.
+                    oldPosition = position;
+                    position = newPosition;
+                }
+                else if(t1 < tNewPosition && t2 < tNewPosition)
+                {
+                    // will enter the sphere, so have to find it's appropriate
+                    // position on the surface
+                    // std::cout << "in between somewhere" << std::endl;
+                }
+                else if(t2 < tNewPosition)
+                {
+                    // will completely pass the sphere, so have to find it's
+                    // appropriate position on the surface
+                    // std::cout << "got through somewhere" << std::endl;
+                    moveable = false;
+                }
+            }
             else
             {
-                // moveable = false;
-                // t = (-b + sqrt(discriminant)) / (2 * a)
-                // t = (-b - sqrt(discriminant)) / (2 * a)
+                // node future position will be at the surface of the sphere,
+                // so there is nothing to do.
             }
         }
 

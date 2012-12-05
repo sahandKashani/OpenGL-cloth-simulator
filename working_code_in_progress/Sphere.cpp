@@ -26,6 +26,6 @@ void Sphere::draw()
 
     glPushMatrix();
         glTranslatef(center.x, center.y, center.z);
-        glutSolidSphere(radius - 0.1, 20, 20);
+        glutSolidSphere(radius, 20, 20);
     glPopMatrix();
 }
