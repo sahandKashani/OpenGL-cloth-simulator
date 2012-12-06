@@ -26,6 +26,7 @@ public:
     void setPosition(Vector3 pos);
     void intersectWithSpheres(Vector3 newPosition);
     void intersectWithTriangles(Vector3 newPosition);
+    float triangleArea(Vector3 p1, Vector3 p2, Vector3 p3);
 };
 
 #endif

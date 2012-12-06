@@ -104,16 +104,43 @@ void Node::intersectWithSpheres(Vector3 newPosition)
     }
 }
 
+float Node::triangleArea(Vector3 p1, Vector3 p2, Vector3 p3)
+{
+    return ((p2 - p1).cross(p3 - p1)).length() * 0.5;
+}
+
 void Node::intersectWithTriangles(Vector3 newPosition)
 {
     ClothSimulator* clothSimulator = ClothSimulator::getInstance();
     Vector3 direction = (newPosition - oldPosition).normalize();
 
+    Vector3 o = oldPosition;
+    Vector3 d = direction;
+
     for(std::vector<Triangle>::iterator triangleIterator = clothSimulator->triangles.begin();
         triangleIterator != clothSimulator->triangles.end();
         ++triangleIterator)
     {
+        Vector3 n = triangleIterator->normal;
+        Vector3 p1 = triangleIterator->p1;
+        Vector3 p2 = triangleIterator->p2;
+        Vector3 p3 = triangleIterator->p3;
+        float area = triangleIterator->area;
 
+        // value of "t" in "o + t*d" which intersects the plane
+        float t = -((o - p1).dot(n) / d.dot(n));
+
+        Vector3 x = o + t * d;
+
+        // barycentric coordinates
+        float s1 = triangleArea(x, p2, p3) / area;
+        float s2 = triangleArea(x, p1, p2) / area;
+        float s3 = triangleArea(x, p1, p3) / area;
+
+        float barycentricSum = s1 + s2 + s3;
+
+        float epsilon = 0.1;
+        bool barycentricSumCorrect = (1.0 - epsilon < barycentricSum && barycentricSum < 1.0 + epsilon);
     }
 }
 
@@ -124,10 +151,13 @@ void Node::applyForces(float duration)
         // TODO : integration
         Vector3 acceleration = force / mass;
         Vector3 temp = position;
-        position = position + (position - oldPosition) + acceleration * duration;
-        oldPosition = temp;
+        // position = position + (position - oldPosition) + acceleration * duration;
+        // oldPosition = temp;
+
+        Vector3 newPosition = position + (position - oldPosition) + acceleration * duration;
 
         // intersectWithSpheres(newPosition);
+        intersectWithTriangles(newPosition);
     }
 }
 

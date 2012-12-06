@@ -7,12 +7,6 @@
 class Triangle
 {
 private:
-    Vector3 p1;
-    Vector3 p2;
-    Vector3 p3;
-
-    Vector3 normal;
-    float area;
 
     // Vector3 projectToTrianglePlane(Node* p);
     // float calculateTriangleArea(Vector3 p1, Vector3 p2, Vector3 p3);
@@ -25,6 +19,13 @@ private:
     // 4) if 0 < s1, s2, s3 < 1 is TRUE, then do normal plane intersection with (p - x1).n > 0 or < 0 to see on which side we are on.
     // 5) if dot product < 0, then move node towards surface
 public:
+    Vector3 p1;
+    Vector3 p2;
+    Vector3 p3;
+
+    Vector3 normal;
+    float area;
+
     Triangle(Vector3 n1, Vector3 n2, Vector3 n3);
     // void testIntersection(Node* p);
     void draw();
