@@ -4,6 +4,7 @@
 #include "Cloth.h"
 #include "Camera.h"
 #include <string>
+#include "Triangle.h"
 
 class ClothSimulator;
 
@@ -58,6 +59,7 @@ public:
 
     // Sphere declaration
     std::vector<Sphere> spheres;
+    std::vector<Triangle> triangles;
 
     // methods
     ~ClothSimulator();
@@ -73,6 +75,7 @@ public:
 
     void drawWorldAxis();
     void drawSpheres();
+    void drawTriangles();
 
     void createScene();
     void createBatmanScene();

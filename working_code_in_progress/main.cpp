@@ -102,9 +102,11 @@ void display()
     // draw the world axis
     clothSimulator->drawWorldAxis();
 
-    // draw sphere
-    // clothSimulator->sphere->draw();
+    // draw spheres
     clothSimulator->drawSpheres();
+
+    // draw triangles
+    clothSimulator->drawTriangles();
 
     // draw cloth
     clothSimulator->cloth->draw();

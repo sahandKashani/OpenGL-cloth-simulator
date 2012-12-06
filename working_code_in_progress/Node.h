@@ -24,6 +24,8 @@ public:
     void applyForces(float duration);
     void setMass(float m);
     void setPosition(Vector3 pos);
+    void intersectWithSpheres(Vector3 newPosition);
+    void intersectWithTriangles(Vector3 newPosition);
 };
 
 #endif
