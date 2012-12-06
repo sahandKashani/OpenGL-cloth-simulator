@@ -83,17 +83,16 @@ void Node::intersectWithSpheres(Vector3 newPosition)
                 // position on the surface
                 // std::cout << "in between somewhere" << std::endl;
                 // TODO
-                // Vector3 temp = position;
-                // position = oldPosition + t1 * direction;
-                // oldPosition = temp;
-                force = 0;
+                Vector3 temp = position;
+                position = oldPosition + t1 * direction;
+                oldPosition = temp;
+                // moveable = false;
             }
             else if(t2 < tNewPosition)
             {
                 // will completely pass the sphere, so have to find it's
                 // appropriate position on the surface
                 // std::cout << "got through somewhere" << std::endl;
-                moveable = false;
             }
         }
         else
@@ -130,7 +129,7 @@ void Node::intersectWithTriangles(Vector3 newPosition)
         // value of "t" in "o + t*d" which intersects the plane
         float t = -((o - p1).dot(n) / d.dot(n));
 
-        Vector3 x = o + t * d;
+        Vector3 x = o + (d * t);
 
         // barycentric coordinates
         float s1 = triangleArea(x, p2, p3) / area;
@@ -140,7 +139,22 @@ void Node::intersectWithTriangles(Vector3 newPosition)
         float barycentricSum = s1 + s2 + s3;
 
         float epsilon = 0.1;
-        bool barycentricSumCorrect = (1.0 - epsilon < barycentricSum && barycentricSum < 1.0 + epsilon);
+        bool barycentricSumCorrect = (1.0 - epsilon < barycentricSum) && (barycentricSum < 1.0 + epsilon);
+        bool s1Valid = (0.0 - epsilon < s1) && (s1 < 1.0 + epsilon);
+        bool s2Valid = (0.0 - epsilon < s2) && (s2 < 1.0 + epsilon);
+        bool s3Valid = (0.0 - epsilon < s3) && (s3 < 1.0 + epsilon);
+
+        if(barycentricSumCorrect && s1Valid && s2Valid && s3Valid)
+        {
+            // oldPosition = position;
+            // position = p1 * s1 + p2 * s2 + p3 * s3;
+            moveable = false;
+        }
+        else
+        {
+            oldPosition = position;
+            position = newPosition;
+        }
     }
 }
 
@@ -151,13 +165,13 @@ void Node::applyForces(float duration)
         // TODO : integration
         Vector3 acceleration = force / mass;
         Vector3 temp = position;
-        // position = position + (position - oldPosition) + acceleration * duration;
-        // oldPosition = temp;
+        position = position + (position - oldPosition) + acceleration * duration;
+        oldPosition = temp;
 
-        Vector3 newPosition = position + (position - oldPosition) + acceleration * duration;
 
+        // Vector3 newPosition = position + (position - oldPosition) + acceleration * duration;
         // intersectWithSpheres(newPosition);
-        intersectWithTriangles(newPosition);
+        // intersectWithTriangles(newPosition);
     }
 }
 
