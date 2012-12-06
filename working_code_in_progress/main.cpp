@@ -61,6 +61,9 @@ void applyChanges()
     // satisfy all constraints of the cloth after forces are applied
     clothSimulator->cloth->satisfyConstraints();
 
+    // handle all collisions with the spheres in the scene
+    clothSimulator->cloth->handleSphereIntersections();
+
     // redraw the screen
     glutPostRedisplay();
 }

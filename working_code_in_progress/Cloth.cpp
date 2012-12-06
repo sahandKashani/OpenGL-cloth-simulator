@@ -16,19 +16,39 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
     createConstraints();
 }
 
+void Cloth::handleSphereIntersections()
+{
+    ClothSimulator* clothSimulator = ClothSimulator::getInstance();
+    for(std::vector<Sphere>::iterator sphereIterator = clothSimulator->spheres.begin();
+        sphereIterator != clothSimulator->spheres.end();
+        ++sphereIterator)
+    {
+        for(int x = 0; x < numberNodesWidth; x += 1)
+        {
+            for(int y = 0; y < numberNodesHeight; y += 1)
+            {
+                sphereIterator->handleNodeIntersection(getNode(x, y));
+            }
+        }
+    }
+}
+
 void Cloth::setNodeMoveable(int x, int y, bool moveable)
 {
     getNode(x, y)->setMoveable(moveable);
+    satisfyConstraints();
 }
 
 void Cloth::setNodePosition(int x, int y, Vector3 pos)
 {
     getNode(x, y)->setPosition(pos);
+    satisfyConstraints();
 }
 
 void Cloth::setNodeMass(int x, int y, float mass)
 {
     getNode(x, y)->setMass(mass);
+    satisfyConstraints();
 }
 
 float Cloth::getClothWidth()

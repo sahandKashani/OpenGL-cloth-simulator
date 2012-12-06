@@ -15,18 +15,26 @@ private:
 public:
     Node();
     Node(Vector3 pos);
+
     Vector3 getPosition();
-    void draw();
-    bool isMoveable();
+    Vector3 getForce();
+
     void setMoveable(bool isMovePossible);
-    void translate(Vector3 direction);
-    void addForce(Vector3 extraForce);
-    void applyForces(float duration);
     void setMass(float m);
     void setPosition(Vector3 pos);
-    void intersectWithSpheres(Vector3 newPosition, float duration);
-    void intersectWithTriangles(Vector3 newPosition);
-    float triangleArea(Vector3 p1, Vector3 p2, Vector3 p3);
+    void setForce(Vector3 f);
+
+    bool isMoveable();
+    void translate(Vector3 direction);
+
+    void draw();
+
+    void addForce(Vector3 extraForce);
+    void applyForces(float duration);
+
+    // void intersectWithSpheres(Vector3 newPosition);
+    // void intersectWithTriangles(Vector3 newPosition);
+    // float triangleArea(Vector3 p1, Vector3 p2, Vector3 p3);
 };
 
 #endif

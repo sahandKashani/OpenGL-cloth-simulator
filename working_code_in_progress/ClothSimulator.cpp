@@ -24,9 +24,9 @@ ClothSimulator::ClothSimulator() :
     drawNodesEnabled(false),
     drawWorldAxisEnabled(true),
     drawStructuralConstraintsEnabled(true),
-    drawShearConstraintsEnabled(false),
-    drawStructuralBendConstraintsEnabled(false),
-    drawShearBendConstraintsEnabled(false),
+    drawShearConstraintsEnabled(true),
+    drawStructuralBendConstraintsEnabled(true),
+    drawShearBendConstraintsEnabled(true),
     drawSpheresEnabled(true),
     angleIncrement(0.03125),
     translationIncrement(1.0)
@@ -63,17 +63,20 @@ void ClothSimulator::drawSpheres()
 
 void ClothSimulator::createBatmanScene()
 {
+    // simulation time step
+    timeStep = 0.0001;
+
+    // cloth instantiation
     cloth = new Cloth(10.0, 10.0, 20, 20);
+
+    // reset camera to center of cloth
     resetCameraPosition();
 
     // TODO : fixing cloth at certain points
     cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
     cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
 
-    spheres.push_back(Sphere(Vector3(5.0, 5.0, 3.0), 1.5));
-    // triangles.push_back(Triangle(Vector3(3.0, 3.0, 1.0),
-    //                              Vector3(6.0, 3.0, 1.0),
-    //                              Vector3(4.5, 6.0, 3.0)));
+    spheres.push_back(Sphere(Vector3(5.0, 5.0, 5.0), 1.5));
 
     // TODO : find suitable values
     // gravity
@@ -81,7 +84,7 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.0, 0.0, 1.0);
+    Vector3 wind(0.0, 0.0, 4.0);
 
     cloth->addForce(gravity);
     cloth->addForce(wind);
@@ -90,9 +93,6 @@ void ClothSimulator::createBatmanScene()
 void ClothSimulator::createScene()
 {
     camera = new Camera();
-
-    // simulation timestep
-    timeStep = 0.01;
 
     // TODO : enable later
     // showHelp();
