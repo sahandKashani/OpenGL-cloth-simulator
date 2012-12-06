@@ -18,11 +18,9 @@ void Constraint::draw()
 
 Constraint::Constraint(Node* n1, Node* n2) :
     node1(n1),
-    node2(n2)
-{
-    Vector3 vectorBetween2Nodes = n1->getPosition() - n2->getPosition();
-    distanceAtRest = vectorBetween2Nodes.length();
-}
+    node2(n2),
+    distanceAtRest((n1->getPosition() - n2->getPosition()).length())
+{}
 
 Node* Constraint::getFirstNode()
 {
@@ -68,9 +66,5 @@ void Constraint::satisfyConstraint()
         // move node2 towards node1 by -1.0 * correctionVectorFromNode1ToNode2
         // (negative sign, because the correction vector is pointing towards node2)
         node2->translate(-correctionVectorFromNode1ToNode2);
-    }
-    else
-    {
-        // nothing to do, since none of them can move
     }
 }
