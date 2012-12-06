@@ -9,6 +9,7 @@ private:
     Vector3 position;
     Vector3 oldPosition;
     bool moveable;
+    Vector3 originalForce;
     Vector3 force;
     float mass;
 
@@ -31,6 +32,8 @@ public:
 
     void addForce(Vector3 extraForce);
     void applyForces(float duration);
+
+    void resetToOriginalForce();
 
     // void intersectWithSpheres(Vector3 newPosition);
     // void intersectWithTriangles(Vector3 newPosition);

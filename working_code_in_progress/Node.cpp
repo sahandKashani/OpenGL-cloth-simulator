@@ -174,11 +174,17 @@ void Node::applyForces(float duration)
 void Node::addForce(Vector3 extraForce)
 {
     force += extraForce;
+    originalForce = force;
 }
 
 Vector3 Node::getPosition()
 {
     return position;
+}
+
+void Node::resetToOriginalForce()
+{
+    force = originalForce;
 }
 
 void Node::draw()

@@ -49,6 +49,10 @@ void Sphere::handleNodeIntersection(Node* node)
 
         node->setForce(tangentForce);
     }
+    else
+    {
+        node->resetToOriginalForce();
+    }
 
 //         Vector3 sphereCenter = sphereIterator->getCenter();
 //         float sphereRadius = sphereIterator->getRadius();
