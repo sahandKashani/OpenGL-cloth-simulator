@@ -12,7 +12,7 @@ Arrow::Arrow(Vector3 basePoint, Vector3 endPoint) :
 
 void Arrow::draw()
 {
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.0, 1.0, 0.0);
     glBegin(GL_LINES);
         glVertex3f(base.x, base.y, base.z);
         glVertex3f(end.x, end.y, end.z);

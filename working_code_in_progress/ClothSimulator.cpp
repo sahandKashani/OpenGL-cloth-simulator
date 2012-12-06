@@ -63,14 +63,14 @@ void ClothSimulator::drawSpheres()
 
 void ClothSimulator::createBatmanScene()
 {
-    cloth = new Cloth(10.0, 10.0, 30, 30);
+    cloth = new Cloth(10.0, 10.0, 20, 20);
     resetCameraPosition();
 
     // TODO : fixing cloth at certain points
     cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
     cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
 
-    // spheres.push_back(Sphere(Vector3(5.0, 5.0, 3.0), 1.5));
+    spheres.push_back(Sphere(Vector3(5.0, 5.0, 3.0), 1.5));
     // triangles.push_back(Triangle(Vector3(3.0, 3.0, 1.0),
     //                              Vector3(6.0, 3.0, 1.0),
     //                              Vector3(4.5, 6.0, 3.0)));

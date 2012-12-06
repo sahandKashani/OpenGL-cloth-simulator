@@ -24,7 +24,7 @@ public:
     void applyForces(float duration);
     void setMass(float m);
     void setPosition(Vector3 pos);
-    void intersectWithSpheres(Vector3 newPosition);
+    void intersectWithSpheres(Vector3 newPosition, float duration);
     void intersectWithTriangles(Vector3 newPosition);
     float triangleArea(Vector3 p1, Vector3 p2, Vector3 p3);
 };

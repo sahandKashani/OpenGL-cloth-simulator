@@ -6,6 +6,7 @@
 #include <GL/glu.h>
 
 #include "ClothSimulator.h"
+#include "Arrow.h"
 #include <vector>
 
 Node::Node() :
@@ -34,7 +35,7 @@ void Node::setMass(float m)
     mass = m;
 }
 
-void Node::intersectWithSpheres(Vector3 newPosition)
+void Node::intersectWithSpheres(Vector3 newPosition, float duration)
 {
     ClothSimulator* clothSimulator = ClothSimulator::getInstance();
     Vector3 direction = (newPosition - oldPosition).normalize();
@@ -69,6 +70,10 @@ void Node::intersectWithSpheres(Vector3 newPosition)
             // t * direction.x = newPosition.x - oldPosition.x;
             // t = (newPosition.x - oldPosition.x) / direction.x;
             float tNewPosition = (newPosition.x - oldPosition.x) / direction.x;
+            std::cout << "duration     = " << duration << std::endl;
+            std::cout << "tNewPosition = " << tNewPosition << std::endl;
+            std::cout << "t1           = " << t1 << std::endl;
+            std::cout << "t2           = " << t2 << std::endl;
 
             if(tNewPosition < t1)
             {
@@ -77,16 +82,29 @@ void Node::intersectWithSpheres(Vector3 newPosition)
                 oldPosition = position;
                 position = newPosition;
             }
-            else if(t1 < tNewPosition && t2 < tNewPosition)
+            else if(t1 < tNewPosition && tNewPosition < t2)
             {
+                std::cout << "between t1 and t2" << std::endl;
                 // will enter the sphere, so have to find it's appropriate
                 // position on the surface
                 // std::cout << "in between somewhere" << std::endl;
                 // TODO
+
+                Vector3 sphereNormal = (oldPosition + t1 * direction) - sphereCenter;
+                force = force.dot(direction - direction.dot(sphereNormal) * sphereNormal);
+                Arrow arrow(newPosition, newPosition + force);
+                arrow.draw();
+
                 Vector3 temp = position;
-                position = oldPosition + t1 * direction;
-                oldPosition = temp;
-                // moveable = false;
+                position = (oldPosition + t1 * direction) - 0.1 * sphereNormal;
+                // oldPosition = temp;
+                // for(int x = 0; x < clothSimulator->cloth->getNumberNodesWidth(); x += 1)
+                // {
+                //     for(int y = 0; y < clothSimulator->cloth->getNumberNodesHeight(); y += 1)
+                //     {
+                //         clothSimulator->cloth->getNode(x, y)->setMoveable(false);
+                //     }
+                // }
             }
             else if(t2 < tNewPosition)
             {
@@ -164,13 +182,12 @@ void Node::applyForces(float duration)
     {
         // TODO : integration
         Vector3 acceleration = force / mass;
-        Vector3 temp = position;
-        position = position + (position - oldPosition) + acceleration * duration;
-        oldPosition = temp;
+        // Vector3 temp = position;
+        // position = position + (position - oldPosition) + acceleration * duration;
+        // oldPosition = temp;
 
-
-        // Vector3 newPosition = position + (position - oldPosition) + acceleration * duration;
-        // intersectWithSpheres(newPosition);
+        Vector3 newPosition = position + (position - oldPosition) + acceleration * duration;
+        intersectWithSpheres(newPosition, duration);
         // intersectWithTriangles(newPosition);
     }
 }
@@ -187,6 +204,8 @@ Vector3 Node::getPosition()
 
 void Node::draw()
 {
+    glColor3f(1.0, 1.0, 1.0);
+
     // push matrix so we can come back to the "origin" (on element (0.0, 0.0, 0.0))
     // for each node to draw.
     glPushMatrix();
@@ -194,6 +213,9 @@ void Node::draw()
 
         glutSolidSphere(0.15, 10, 10);
     glPopMatrix();
+
+    Arrow direction(position, position + force);
+    direction.draw();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
 }
 
