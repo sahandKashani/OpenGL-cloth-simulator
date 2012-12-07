@@ -29,7 +29,7 @@ ClothSimulator::ClothSimulator() :
     drawShearBendConstraintsEnabled(true),
     drawSpheresEnabled(true),
     angleIncrement(0.03125),
-    translationIncrement(1.0)
+    translationIncrement(0.125)
 {}
 
 ClothSimulator::~ClothSimulator()
@@ -69,10 +69,10 @@ void ClothSimulator::drawSpheres()
 void ClothSimulator::createBatmanScene()
 {
     // simulation time step
-    timeStep = 0.001;
+    timeStep = 0.005;
 
     // cloth instantiation
-    cloth = new Cloth(10.0, 10.0, 15, 15);
+    cloth = new Cloth(10.0, 10.0, 10, 10);
 
     // reset camera to center of cloth
     resetCameraPosition();
