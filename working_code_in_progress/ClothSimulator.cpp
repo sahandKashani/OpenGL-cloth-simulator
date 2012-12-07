@@ -83,10 +83,10 @@ void ClothSimulator::createBatmanScene()
     translationIncrement = 0.125;
 
     // simulation time step
-    timeStep = 0.005;
+    timeStep = 0.001;
 
     // cloth instantiation
-    cloth = new Cloth(10.0, 10.0, 20, 20);
+    cloth = new Cloth(10.0, 12.5, 20, 25);
 
     // reset camera to center of cloth
     resetCameraPosition();
@@ -105,7 +105,7 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.0, 0.0, 4.0);
+    Vector3 wind(0.0, -0.5, 4.0);
 
     cloth->addForce(gravity);
     cloth->addForce(wind);
