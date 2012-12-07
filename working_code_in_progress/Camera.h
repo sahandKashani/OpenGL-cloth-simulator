@@ -10,6 +10,7 @@ private:
     Vector3 position;
     Vector3 viewDirection;
     Vector3 upDirection;
+    Vector3 rightDirection;
 
     // used for getters only, not for computation
     float yaw;
@@ -24,6 +25,7 @@ public:
     Vector3 getPosition();
     Vector3 getViewDirection();
     Vector3 getUpDirection();
+    Vector3 getRightDirection();
 
     float getYaw();
     float getPitch();

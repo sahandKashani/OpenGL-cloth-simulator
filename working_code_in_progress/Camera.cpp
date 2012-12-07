@@ -4,6 +4,7 @@
 // position = (0.0, 0.0, 1.0)
 // viewDirection = (0.0, 0.0, 0.0)
 // upDirection = (0.0, 1.0, 0.0)
+// rightDirection = (1.0, 0.0, 0.0)
 // yaw = 0.0
 // pitch = 0.0
 // roll = 0.0
@@ -11,6 +12,7 @@ Camera::Camera() :
     position(Vector3(0.0, 0.0, 1.0)),
     viewDirection(Vector3(0.0, 0.0, 0.0)),
     upDirection(Vector3(0.0, 1.0, 0.0)),
+    rightDirection(Vector3(1.0, 0.0, 0.0)),
     yaw(0.0),
     pitch(0.0),
     roll(0.0)
@@ -34,6 +36,11 @@ Vector3 Camera::getViewDirection()
 Vector3 Camera::getUpDirection()
 {
     return upDirection;
+}
+
+Vector3 Camera::getRightDirection()
+{
+    return rightDirection;
 }
 
 float Camera::getYaw()
