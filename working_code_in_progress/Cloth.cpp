@@ -33,6 +33,26 @@ void Cloth::handleSphereIntersections()
     }
 }
 
+void Cloth::setBottomLeftMoveable(bool moveable)
+{
+    getBottomLeft()->setMoveable(moveable);
+}
+
+void Cloth::setBottomRightMoveable(bool moveable)
+{
+    getBottomRight()->setMoveable(moveable);
+}
+
+void Cloth::setTopLeftMoveable(bool moveable)
+{
+    getTopLeft()->setMoveable(moveable);
+}
+
+void Cloth::setTopRightMoveable(bool moveable)
+{
+    getTopRight()->setMoveable(moveable);
+}
+
 void Cloth::setBottomLeft(Vector3 pos)
 {
     getBottomLeft()->setPosition(pos);

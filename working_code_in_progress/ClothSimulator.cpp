@@ -92,11 +92,15 @@ void ClothSimulator::createBatmanScene()
     resetCameraPosition();
 
     // TODO : fixing cloth at certain points
-    cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
-    cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
+    // cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
+    // cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
+    cloth->setTopLeft(Vector3(0.0, 10.0, 0.0));
+    cloth->setTopRight(Vector3(10.0, 10.0, 0.0));
+    cloth->setBottomLeft(Vector3(0.0, 10.0, 10.0));
+    cloth->setBottomRight(Vector3(10.0, 10.0, 10.0));
 
 
-    spheres.push_back(Sphere(Vector3(2.0, 3.0, 6.0), 1.5));
+    spheres.push_back(Sphere(Vector3(5.0, 5.0, 5.0), 1.5));
     // spheres.push_back(Sphere(Vector3(8.0, 3.0, 6.0), 1.5));
     // spheres.push_back(Sphere(Vector3(5.0, 8.0, 6.0), 1.5));
 

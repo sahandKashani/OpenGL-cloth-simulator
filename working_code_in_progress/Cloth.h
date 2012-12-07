@@ -85,6 +85,11 @@ public:
     void setBottomRight(Vector3 pos);
     void setTopLeft(Vector3 pos);
     void setTopRight(Vector3 pos);
+
+    void setBottomLeftMoveable(bool moveable);
+    void setBottomRightMoveable(bool moveable);
+    void setTopLeftMoveable(bool moveable);
+    void setTopRightMoveable(bool moveable);
 };
 
 #endif
