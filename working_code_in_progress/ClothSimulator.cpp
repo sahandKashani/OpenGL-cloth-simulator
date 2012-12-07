@@ -20,7 +20,7 @@ ClothSimulator* ClothSimulator::getInstance()
 ClothSimulator::ClothSimulator() :
     nearPlane(1.0),
     farPlane(1000.0),
-    drawWireFrameEnabled(false),
+    drawWireFrameEnabled(true),
     drawNodesEnabled(true),
     drawWorldAxisEnabled(true),
     drawStructuralConstraintsEnabled(true),
@@ -68,11 +68,25 @@ void ClothSimulator::drawSpheres()
 
 void ClothSimulator::createBatmanScene()
 {
+    drawWireFrameEnabled                 = false;
+    drawNodesEnabled                     = false;
+    drawWorldAxisEnabled                 = true;
+    drawStructuralConstraintsEnabled     = true;
+    drawShearConstraintsEnabled          = true;
+    drawStructuralBendConstraintsEnabled = true;
+    drawShearBendConstraintsEnabled      = true;
+    drawSpheresEnabled                   = true;
+
+    nearPlane = 1.0;
+    farPlane  = 1000.0;
+    angleIncrement = 0.03125;
+    translationIncrement = 0.125;
+
     // simulation time step
     timeStep = 0.005;
 
     // cloth instantiation
-    cloth = new Cloth(10.0, 10.0, 10, 10);
+    cloth = new Cloth(10.0, 10.0, 20, 20);
 
     // reset camera to center of cloth
     resetCameraPosition();
