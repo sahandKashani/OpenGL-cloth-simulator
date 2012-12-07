@@ -239,7 +239,7 @@ void ClothSimulator::resetCameraPosition()
 
     float cameraX = cloth->getClothWidth() / 2.0;
     float cameraY = cloth->getClothHeight() / 2.0;
-    float cameraZ = 3.0 * std::max(cameraX, cameraY);
+    float cameraZ = 4.0 * std::max(cameraX, cameraY);
 
     camera->translate(Vector3(cameraX, cameraY, cameraZ));
 }
@@ -380,13 +380,11 @@ void ClothSimulator::applyContinuousKeyboardCommands()
                     break;
                 case 'r':
                     // translate camera back
-                    // FIXME : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
-                    camera->translate(camera->getViewDirection().normalize() * translationIncrement);
+                    camera->translate(-camera->getViewDirection().normalize() * translationIncrement);
                     break;
                 case 'z':
                     // translate camera front
-                    // FIXME : gets stuck if advance too much, since the vector's length becomes 0.0, and normalize throws assertion error
-                    camera->translate(-camera->getViewDirection().normalize() * translationIncrement);
+                    camera->translate(camera->getViewDirection().normalize() * translationIncrement);
                     break;
 
                 default:
