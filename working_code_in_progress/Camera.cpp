@@ -58,11 +58,9 @@ float Camera::getRoll()
     return roll;
 }
 
-// FIXME : translation has problem, always translates towards origin when translating in viewdirection
 void Camera::translate(Vector3 direction)
 {
     position += direction;
-    viewDirection += direction;
 }
 
 Matrix4 Camera::getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection)

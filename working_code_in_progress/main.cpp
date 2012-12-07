@@ -92,9 +92,9 @@ void display()
     gluLookAt(cameraPosition.x,
               cameraPosition.y,
               cameraPosition.z,
-              cameraViewDirection.x,
-              cameraViewDirection.y,
-              cameraViewDirection.z,
+              cameraPosition.x + cameraViewDirection.x,
+              cameraPosition.y + cameraViewDirection.y,
+              cameraPosition.z + cameraViewDirection.z,
               cameraUpDirection.x,
               cameraUpDirection.y,
               cameraUpDirection.z);
