@@ -367,14 +367,16 @@ void ClothSimulator::applyContinuousKeyboardCommands()
                     // calculate "x" axis of camera with a cross product between
                     // it's upDirection and viewDirection
                     // FIXME : translates in wrong direction
-                    camera->translate(camera->getUpDirection().cross(camera->getViewDirection()).normalize() * translationIncrement);
+                    // camera->translate(camera->getUpDirection().cross(camera->getViewDirection()).normalize() * translationIncrement);
+                    camera->translate(-camera->getRightDirection().normalize() * translationIncrement);
                     break;
                 case 'h':
                     // translate camera right
                     // calculate "x" axis of camera with a cross product between
                     // it's upDirection and viewDirection
                     // FIXME : translates in wrong direction
-                    camera->translate(camera->getViewDirection().cross(camera->getUpDirection()).normalize() * translationIncrement);
+                    // camera->translate(camera->getViewDirection().cross(camera->getUpDirection()).normalize() * translationIncrement);
+                    camera->translate(camera->getRightDirection().normalize() * translationIncrement);
                     break;
                 case 't':
                     // translate camera up

@@ -32,8 +32,6 @@ public:
     float getRoll();
 
     void setPosition(Vector3 pos);
-    void setViewDirection(Vector3 direction);
-    void setUpDirection(Vector3 direction);
 
     // translation
     void translate(Vector3 direction);

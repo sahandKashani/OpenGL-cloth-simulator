@@ -58,21 +58,12 @@ float Camera::getRoll()
     return roll;
 }
 
-void Camera::setViewDirection(Vector3 direction)
-{
-    viewDirection = direction;
-}
-
-void Camera::setUpDirection(Vector3 direction)
-{
-    upDirection = direction;
-}
-
 // FIXME : translation has problem, always translates towards origin
 void Camera::translate(Vector3 direction)
 {
     position += direction;
     viewDirection += direction;
+    // rightDirection += direction;
 }
 
 Matrix4 Camera::getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection)
@@ -125,6 +116,7 @@ void Camera::rotateAroundXAxisObject(float angleInRadians)
     // position does not change
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
+    rightDirection = rotationMatrix * rightDirection;
 
     // go back to the position the camera was previously in
     translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
@@ -145,6 +137,7 @@ void Camera::rotateAroundYAxisObject(float angleInRadians)
     // position does not change
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
+    rightDirection = rotationMatrix * rightDirection;
 
     // go back to the position the camera was previously in
     translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
@@ -165,6 +158,7 @@ void Camera::rotateAroundZAxisObject(float angleInRadians)
     // position does not change
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
+    rightDirection = rotationMatrix * rightDirection;
 
     // go back to the position the camera was previously in
     translate(Vector3(oldPosition.x, oldPosition.y, oldPosition.z));
@@ -178,6 +172,7 @@ void Camera::rotateAroundXAxisWorld(float angleInRadians)
     position = rotationMatrix * position;
     upDirection = rotationMatrix * upDirection;
     viewDirection = rotationMatrix * viewDirection;
+    rightDirection = rotationMatrix * rightDirection;
 }
 
 void Camera::rotateAroundYAxisWorld(float angleInRadians)
@@ -188,6 +183,7 @@ void Camera::rotateAroundYAxisWorld(float angleInRadians)
     position = rotationMatrix * position;
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
+    rightDirection = rotationMatrix * rightDirection;
 }
 
 void Camera::rotateAroundZAxisWorld(float angleInRadians)
@@ -198,4 +194,5 @@ void Camera::rotateAroundZAxisWorld(float angleInRadians)
     position = rotationMatrix * position;
     viewDirection = rotationMatrix * viewDirection;
     upDirection = rotationMatrix * upDirection;
+    rightDirection = rotationMatrix * rightDirection;
 }
