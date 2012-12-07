@@ -81,7 +81,7 @@ void Node::draw()
     // for each node to draw.
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
-        glutSolidSphere(0.15, 10, 10);
+        glutSolidSphere(0.1, 10, 10);
     glPopMatrix();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
 

@@ -1,16 +1,16 @@
 #include "Camera.h"
 
 // initialize camera with the following properties:
-// position = (0.0, 0.0, 1.0)
-// viewDirection = (0.0, 0.0, 0.0)
+// position = (0.0, 0.0, 0.0)
+// viewDirection = (0.0, 0.0, -1.0)
 // upDirection = (0.0, 1.0, 0.0)
 // rightDirection = (1.0, 0.0, 0.0)
 // yaw = 0.0
 // pitch = 0.0
 // roll = 0.0
 Camera::Camera() :
-    position(Vector3(0.0, 0.0, 1.0)),
-    viewDirection(Vector3(0.0, 0.0, 0.0)),
+    position(Vector3(0.0, 0.0, 0.0)),
+    viewDirection(Vector3(0.0, 0.0, -1.0)),
     upDirection(Vector3(0.0, 1.0, 0.0)),
     rightDirection(Vector3(1.0, 0.0, 0.0)),
     yaw(0.0),
@@ -58,12 +58,11 @@ float Camera::getRoll()
     return roll;
 }
 
-// FIXME : translation has problem, always translates towards origin
+// FIXME : translation has problem, always translates towards origin when translating in viewdirection
 void Camera::translate(Vector3 direction)
 {
     position += direction;
     viewDirection += direction;
-    // rightDirection += direction;
 }
 
 Matrix4 Camera::getRotationMatrixAroundArbitraryAxisThroughOrigin(float angleInRadians, Vector3 rotationAxisDirection)

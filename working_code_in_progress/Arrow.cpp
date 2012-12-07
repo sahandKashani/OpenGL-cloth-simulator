@@ -20,6 +20,6 @@ void Arrow::draw()
 
     glPushMatrix();
         glTranslatef(end.x, end.y, end.z);
-        glutSolidSphere(0.15, 10, 10);
+        glutSolidSphere(0.1, 10, 10);
     glPopMatrix();
 }
