@@ -75,6 +75,16 @@ public:
     void setNodeMoveable(int x, int y, bool moveable);
 
     void handleSphereIntersections();
+
+    Node* getBottomLeft();
+    Node* getBottomRight();
+    Node* getTopLeft();
+    Node* getTopRight();
+
+    void setBottomLeft(Vector3 pos);
+    void setBottomRight(Vector3 pos);
+    void setTopLeft(Vector3 pos);
+    void setTopRight(Vector3 pos);
 };
 
 #endif

@@ -33,6 +33,46 @@ void Cloth::handleSphereIntersections()
     }
 }
 
+void Cloth::setBottomLeft(Vector3 pos)
+{
+    getBottomLeft()->setPosition(pos);
+}
+
+Node* Cloth::getBottomLeft()
+{
+    return getNode(0, 0);
+}
+
+void Cloth::setBottomRight(Vector3 pos)
+{
+    getBottomRight()->setPosition(pos);
+}
+
+Node* Cloth::getBottomRight()
+{
+    return getNode(numberNodesWidth - 1, 0);
+}
+
+void Cloth::setTopLeft(Vector3 pos)
+{
+    getTopLeft()->setPosition(pos);
+}
+
+Node* Cloth::getTopLeft()
+{
+    return getNode(0, numberNodesHeight - 1);
+}
+
+void Cloth::setTopRight(Vector3 pos)
+{
+    getTopRight()->setPosition(pos);
+}
+
+Node* Cloth::getTopRight()
+{
+    return getNode(numberNodesWidth - 1, numberNodesHeight - 1);
+}
+
 void Cloth::setNodeMoveable(int x, int y, bool moveable)
 {
     getNode(x, y)->setMoveable(moveable);
