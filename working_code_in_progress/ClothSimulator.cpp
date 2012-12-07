@@ -38,6 +38,11 @@ ClothSimulator::~ClothSimulator()
     delete cloth;
 }
 
+void ClothSimulator::drawCloth()
+{
+    cloth->draw();
+}
+
 void ClothSimulator::drawTriangles()
 {
     for(std::vector<Triangle>::iterator triangleIterator = triangles.begin();
@@ -64,7 +69,7 @@ void ClothSimulator::drawSpheres()
 void ClothSimulator::createBatmanScene()
 {
     // simulation time step
-    timeStep = 0.00001;
+    timeStep = 0.001;
 
     // cloth instantiation
     cloth = new Cloth(10.0, 10.0, 15, 15);

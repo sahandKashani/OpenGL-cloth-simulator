@@ -76,6 +76,7 @@ public:
     void drawWorldAxis();
     void drawSpheres();
     void drawTriangles();
+    void drawCloth();
 
     void createScene();
     void createBatmanScene();

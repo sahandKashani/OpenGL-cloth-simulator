@@ -112,7 +112,7 @@ void display()
     clothSimulator->drawTriangles();
 
     // draw cloth
-    clothSimulator->cloth->draw();
+    clothSimulator->drawCloth();
 
     // swap buffers needed for double buffering
     glutSwapBuffers();
