@@ -32,6 +32,7 @@ void Cloth::handleSphereIntersections()
                 {
                     // tearing here
                     removeRightStructuralConstraint(x, y);
+                    removeTopStructuralConstraint(x, y);
                 }
             }
         }
@@ -46,6 +47,8 @@ void Cloth::removeRightStructuralConstraint(int x, int y)
 
 void Cloth::removeTopStructuralConstraint(int x, int y)
 {
+    int position = x * (numberNodesWidth - 1) + y;
+    topStructuralConstraints[position].disable();
 }
 
 void removeRightStructuralBendConstraint(int x, int y)
