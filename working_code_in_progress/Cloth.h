@@ -27,6 +27,8 @@ private:
 
     // node creation method
     void createNodes();
+    void createNodes(Vector3 topLeftPosition, Vector3 topRightPosition,
+                    Vector3 bottomLeftPosition, Vector3 bottomRightPosition);
 
     // constraint creation methods
     void createConstraints();
@@ -51,6 +53,9 @@ private:
 
 public:
     Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
+    Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth,
+         int nodesHeight, Vector3 topLeftPosition, Vector3 topRightPosition,
+         Vector3 bottomLeftPosition, Vector3 bottomRightPosition);
 
     // general drawing method
     void draw();

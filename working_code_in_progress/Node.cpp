@@ -33,6 +33,7 @@ Vector3 Node::getForce()
 void Node::setPosition(Vector3 pos)
 {
     position = pos;
+    oldPosition = pos;
 }
 
 void Node::setMass(float m)
