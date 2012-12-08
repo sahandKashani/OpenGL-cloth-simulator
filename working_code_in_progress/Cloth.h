@@ -49,6 +49,9 @@ private:
     void satisfyStructuralBendConstraints();
     void satisfyShearBendConstraints();
 
+    // tearing method
+    void removeConstraintsOnNode(int x, int y);
+
 public:
     Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
 

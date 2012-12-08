@@ -27,9 +27,23 @@ void Cloth::handleSphereIntersections()
         {
             for(int y = 0; y < numberNodesHeight; y += 1)
             {
-                sphereIterator->handleNodeIntersection(getNode(x, y));
+                bool hitSphere = sphereIterator->handleNodeIntersection(getNode(x, y));
+                if(hitSphere)
+                {
+                    std::cout << "tear" << std::endl;
+
+                    removeConstraintsOnNode(x, y);
+                }
             }
         }
+    }
+}
+
+void Cloth::removeConstraintsOnNode(int x, int y)
+{
+    if(0 < x && x < numberNodesWidth - 1)
+    {
+        // remove all constraints
     }
 }
 

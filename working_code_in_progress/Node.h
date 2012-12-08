@@ -18,6 +18,7 @@ public:
     Node(Vector3 pos);
 
     Vector3 getPosition();
+    Vector3 getOldPosition();
     Vector3 getForce();
 
     void setMoveable(bool isMovePossible);

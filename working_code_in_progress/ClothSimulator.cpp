@@ -86,7 +86,7 @@ void ClothSimulator::createBatmanScene()
     timeStep = 0.0005;
 
     // cloth instantiation
-    cloth = new Cloth(10.0, 10.0, 50, 50);
+    cloth = new Cloth(10.0, 10.0, 20, 20);
 
     // reset camera to center of cloth
     resetCameraPosition();
@@ -100,7 +100,7 @@ void ClothSimulator::createBatmanScene()
     cloth->getNode(0, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
     cloth->getNode(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
 
-    spheres.push_back(Sphere(Vector3(5.0, 5.0, 5.0), 2.0, true));
+    spheres.push_back(Sphere(Vector3(5.0, 7.0, 5.0), 2.0, false));
 
     // TODO : find suitable values
     // gravity

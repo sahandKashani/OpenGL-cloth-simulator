@@ -70,6 +70,11 @@ Vector3 Node::getPosition()
     return position;
 }
 
+Vector3 Node::getOldPosition()
+{
+    return oldPosition;
+}
+
 void Node::resetToOriginalForce()
 {
     force = originalForce;

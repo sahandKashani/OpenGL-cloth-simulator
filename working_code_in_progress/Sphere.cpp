@@ -39,13 +39,17 @@ void Sphere::draw()
     glPopMatrix();
 }
 
-void Sphere::handleNodeIntersection(Node* node)
+bool Sphere::handleNodeIntersection(Node* node)
 {
+    bool hitsSphere = false;
+
     Vector3 currentPositionToCenter = node->getPosition() - center;
     float length = currentPositionToCenter.length();
 
     if(length < radius)
     {
+        hitsSphere = true;
+
         node->translate(currentPositionToCenter.normalize() * (radius - length));
 
         Vector3 t1Pos = node->getPosition();
@@ -68,4 +72,6 @@ void Sphere::handleNodeIntersection(Node* node)
         // no longer in collision with the sphere, so put the original force back
         node->resetToOriginalForce();
     }
+
+    return hitsSphere;
 }
