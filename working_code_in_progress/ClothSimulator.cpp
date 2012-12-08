@@ -95,7 +95,8 @@ void ClothSimulator::createBatmanScene()
     cloth->getNode(0, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
     cloth->getNode(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
 
-    spheres.push_back(Sphere(Vector3(5.0, 7.0, 5.0), 2.0, false));
+    spheres.push_back(Sphere(Vector3(2.5, 5.0, 5.0), 1.0, false));
+    spheres.push_back(Sphere(Vector3(7.5, 5.0, 5.0), 1.0, false));
 
     // TODO : find suitable values
     // gravity
@@ -103,7 +104,7 @@ void ClothSimulator::createBatmanScene()
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.5, 0.0, 0.5);
+    Vector3 wind(0.0, 0.0, 4.0);
 
     cloth->addForce(gravity);
     cloth->addForce(wind);

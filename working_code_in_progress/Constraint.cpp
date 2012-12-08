@@ -7,8 +7,8 @@
 
 void Constraint::draw()
 {
-    // if(enabled)
-    // {
+    if(enabled)
+    {
         Vector3 firstNodePosition = node1->getPosition();
         Vector3 secondNodePosition = node2->getPosition();
 
@@ -16,7 +16,7 @@ void Constraint::draw()
             glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
             glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
         glEnd();
-    // }
+    }
 }
 
 Constraint::Constraint(Node* n1, Node* n2) :

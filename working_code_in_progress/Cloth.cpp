@@ -38,6 +38,7 @@ void Cloth::handleSphereIntersections()
     }
 }
 
+// TODO : doesn't work
 void Cloth::removeRightStructuralConstraint(int x, int y)
 {
     int position = y * (numberNodesHeight - 1) + x;
@@ -45,17 +46,12 @@ void Cloth::removeRightStructuralConstraint(int x, int y)
     rightStructuralConstraints[position].disable();
 }
 
+// TODO : works, but not perfectly
 void Cloth::removeTopStructuralConstraint(int x, int y)
 {
     int position = x * (numberNodesWidth - 1) + y;
     topStructuralConstraints[position].disable();
 }
-
-void removeRightStructuralBendConstraint(int x, int y)
-{}
-
-void removeTopStructuralBendConstraint(int x, int y)
-{}
 
 float Cloth::getClothWidth()
 {
@@ -213,8 +209,8 @@ void Cloth::createStructuralBendConstraints()
         }
     }
 
-    structuralBendConstraints.push_back(rightStructuralBendConstraints);
-    structuralBendConstraints.push_back(topStructuralBendConstraints);
+    structuralBendConstraints.push_back(&rightStructuralBendConstraints);
+    structuralBendConstraints.push_back(&topStructuralBendConstraints);
 }
 
 void Cloth::createShearBendConstraints()
@@ -308,12 +304,12 @@ void Cloth::satisfyShearConstraints()
 
 void Cloth::satisfyStructuralBendConstraints()
 {
-    for(std::vector< std::vector<Constraint> >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
+    for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
         directionalStructuralBendConstraintIterator != structuralBendConstraints.end();
         ++directionalStructuralBendConstraintIterator)
     {
-        for(std::vector<Constraint>::iterator structuralBendConstraintIterator = directionalStructuralBendConstraintIterator->begin();
-            structuralBendConstraintIterator != directionalStructuralBendConstraintIterator->end();
+        for(std::vector<Constraint>::iterator structuralBendConstraintIterator = (*directionalStructuralBendConstraintIterator)->begin();
+            structuralBendConstraintIterator != (*directionalStructuralBendConstraintIterator)->end();
             ++structuralBendConstraintIterator)
         {
             structuralBendConstraintIterator->satisfyConstraint();
@@ -366,12 +362,12 @@ void Cloth::drawShearConstraints()
 
 void Cloth::drawStructuralBendConstraints()
 {
-    for(std::vector< std::vector<Constraint> >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
+    for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
         directionalStructuralBendConstraintIterator != structuralBendConstraints.end();
         ++directionalStructuralBendConstraintIterator)
     {
-        for(std::vector<Constraint>::iterator structuralBendConstraintIterator = directionalStructuralBendConstraintIterator->begin();
-            structuralBendConstraintIterator != directionalStructuralBendConstraintIterator->end();
+        for(std::vector<Constraint>::iterator structuralBendConstraintIterator = (*directionalStructuralBendConstraintIterator)->begin();
+            structuralBendConstraintIterator != (*directionalStructuralBendConstraintIterator)->end();
             ++structuralBendConstraintIterator)
         {
             structuralBendConstraintIterator->draw();

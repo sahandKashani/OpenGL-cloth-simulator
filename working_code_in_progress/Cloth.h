@@ -27,7 +27,7 @@ private:
 
     std::vector<Constraint> shearConstraints;
 
-    std::vector< std::vector<Constraint> > structuralBendConstraints;
+    std::vector< std::vector<Constraint>* > structuralBendConstraints;
     std::vector<Constraint> rightStructuralBendConstraints;
     std::vector<Constraint> topStructuralBendConstraints;
 
@@ -58,12 +58,9 @@ private:
     void satisfyStructuralBendConstraints();
     void satisfyShearBendConstraints();
 
-    // tearing method
+    // tearing methods
     void removeRightStructuralConstraint(int x, int y);
     void removeTopStructuralConstraint(int x, int y);
-
-    void removeRightStructuralBendConstraint(int x, int y);
-    void removeTopStructuralBendConstraint(int x, int y);
 
 public:
     Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);

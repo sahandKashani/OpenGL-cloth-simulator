@@ -46,11 +46,11 @@ bool Sphere::willHitSphere(Node* node)
 
 void Sphere::handleNodeIntersection(Node* node)
 {
-    Vector3 currentPositionToCenter = node->getPosition() - center;
-    float length = currentPositionToCenter.length();
-
-    if(length < radius)
+    if(willHitSphere(node))
     {
+        Vector3 currentPositionToCenter = node->getPosition() - center;
+        float length = currentPositionToCenter.length();
+
         node->translate(currentPositionToCenter.normalize() * (radius - length));
 
         Vector3 t1Pos = node->getPosition();
