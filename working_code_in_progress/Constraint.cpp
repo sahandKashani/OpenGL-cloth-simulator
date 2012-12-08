@@ -16,6 +16,9 @@ void Constraint::draw()
     glEnd();
 }
 
+Constraint::Constraint()
+{}
+
 Constraint::Constraint(Node* n1, Node* n2) :
     node1(n1),
     node2(n2),

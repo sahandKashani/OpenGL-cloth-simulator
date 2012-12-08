@@ -11,6 +11,7 @@ private:
     float distanceAtRest;
 
 public:
+    Constraint();
     Constraint(Node* n1, Node* n2);
     Node* getFirstNode();
     Node* getSecondNode();

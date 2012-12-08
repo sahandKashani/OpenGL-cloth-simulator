@@ -21,12 +21,13 @@ private:
     std::vector< std::vector<Node> > nodes;
 
     // constraints
-    std::vector<Constraint> structuralConstraints;
+    std::vector< std::vector<Constraint> > structuralConstraints;
+    std::vector<Constraint> rightStructuralConstraints;
+    std::vector<Constraint> topStructuralConstraints;
+
     std::vector<Constraint> shearConstraints;
     std::vector<Constraint> structuralBendConstraints;
     std::vector<Constraint> shearBendConstraints;
-
-    // constraints
 
 
     // node creation method
@@ -54,7 +55,8 @@ private:
     void satisfyShearBendConstraints();
 
     // tearing method
-    void removeConstraintsOnNode(int x, int y);
+    void removeRightStructuralConstraint(int x, int y);
+    void removeTopStructuralConstraint(int x, int y);
 
 public:
     Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
