@@ -83,7 +83,7 @@ void ClothSimulator::createBatmanScene()
     translationIncrement = 0.125;
 
     // simulation time step
-    timeStep = 0.0000005;
+    timeStep = 0.0005;
 
     // cloth instantiation
     cloth = new Cloth(10.0, 10.0, 30, 30);
@@ -91,22 +91,16 @@ void ClothSimulator::createBatmanScene()
     // reset camera to center of cloth
     resetCameraPosition();
 
+    Vector3 topLeft(0.0, 10.0, 0.0);
+    Vector3 topRight(10.0, 10.0, 0.0);
+    Vector3 bottomLeft(0.0, 10.0, 10.0);
+    Vector3 bottomRight(10.0, 10.0, 10.0);
+
     // TODO : fixing cloth at certain points
-    // cloth->setNodeMoveable(0, cloth->getNumberNodesHeight() - 1, false);
-    // cloth->setNodeMoveable(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1, false);
-    cloth->setTopLeft(Vector3(0.0, 10.0, 0.0));
-    cloth->setTopLeftMoveable(false);
+    cloth->getNode(0, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
+    cloth->getNode(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
 
-    cloth->setTopRight(Vector3(10.0, 10.0, 0.0));
-    cloth->setTopRightMoveable(false);
-
-    cloth->setBottomLeft(Vector3(0.0, 10.0, 10.0));
-    cloth->setBottomLeftMoveable(false);
-
-    cloth->setBottomRight(Vector3(10.0, 10.0, 10.0));
-    cloth->setBottomRightMoveable(false);
-
-    spheres.push_back(Sphere(Vector3(5.0, 7.0, 5.0), 1.5));
+    spheres.push_back(Sphere(Vector3(5.0, 7.0, 5.0), 2.0));
     // spheres.push_back(Sphere(Vector3(8.0, 3.0, 6.0), 1.5));
     // spheres.push_back(Sphere(Vector3(5.0, 8.0, 6.0), 1.5));
 
@@ -120,8 +114,6 @@ void ClothSimulator::createBatmanScene()
 
     cloth->addForce(gravity);
     cloth->addForce(wind);
-
-    cloth->satisfyConstraints();
 }
 
 void ClothSimulator::createScene()

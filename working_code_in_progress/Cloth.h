@@ -27,8 +27,8 @@ private:
 
     // node creation method
     void createNodes();
-    void createNodes(Vector3 topLeftPosition, Vector3 topRightPosition,
-                    Vector3 bottomLeftPosition, Vector3 bottomRightPosition);
+    // void createNodes(Vector3 topLeftPosition, Vector3 topRightPosition,
+    //                 Vector3 bottomLeftPosition, Vector3 bottomRightPosition);
 
     // constraint creation methods
     void createConstraints();
@@ -53,9 +53,9 @@ private:
 
 public:
     Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
-    Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth,
-         int nodesHeight, Vector3 topLeftPosition, Vector3 topRightPosition,
-         Vector3 bottomLeftPosition, Vector3 bottomRightPosition);
+    // Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth,
+    //      int nodesHeight, Vector3 topLeftPosition, Vector3 topRightPosition,
+    //      Vector3 bottomLeftPosition, Vector3 bottomRightPosition);
 
     // general drawing method
     void draw();
@@ -74,27 +74,7 @@ public:
     float getClothHeight();
     Node* getNode(int x, int y);
 
-    // setters
-    void setNodeMass(int x, int y, float mass);
-    void setNodePosition(int x, int y, Vector3 pos);
-    void setNodeMoveable(int x, int y, bool moveable);
-
     void handleSphereIntersections();
-
-    Node* getBottomLeft();
-    Node* getBottomRight();
-    Node* getTopLeft();
-    Node* getTopRight();
-
-    void setBottomLeft(Vector3 pos);
-    void setBottomRight(Vector3 pos);
-    void setTopLeft(Vector3 pos);
-    void setTopRight(Vector3 pos);
-
-    void setBottomLeftMoveable(bool moveable);
-    void setBottomRightMoveable(bool moveable);
-    void setTopLeftMoveable(bool moveable);
-    void setTopRightMoveable(bool moveable);
 };
 
 #endif

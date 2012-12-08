@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 
     glutInitWindowSize(400, 400);
-    glutInitWindowPosition(1200, 800);
+    glutInitWindowPosition(1520, 800);
 
     clothSimulator = ClothSimulator::getInstance();
 

@@ -16,17 +16,17 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
     createConstraints();
 }
 
-Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth,
-             int nodesHeight, Vector3 topLeftPosition, Vector3 topRightPosition,
-             Vector3 bottomLeftPosition, Vector3 bottomRightPosition) :
-    clothWidth(clothTotalWidth),
-    clothHeight(clothTotalHeight),
-    numberNodesWidth(nodesWidth),
-    numberNodesHeight(nodesHeight)
-{
-    createNodes(topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition);
-    createConstraints();
-}
+// Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth,
+//              int nodesHeight, Vector3 topLeftPosition, Vector3 topRightPosition,
+//              Vector3 bottomLeftPosition, Vector3 bottomRightPosition) :
+//     clothWidth(clothTotalWidth),
+//     clothHeight(clothTotalHeight),
+//     numberNodesWidth(nodesWidth),
+//     numberNodesHeight(nodesHeight)
+// {
+//     createNodes(topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition);
+//     createConstraints();
+// }
 
 void Cloth::handleSphereIntersections()
 {
@@ -43,84 +43,6 @@ void Cloth::handleSphereIntersections()
             }
         }
     }
-}
-
-void Cloth::setBottomLeftMoveable(bool moveable)
-{
-    getBottomLeft()->setMoveable(moveable);
-}
-
-void Cloth::setBottomRightMoveable(bool moveable)
-{
-    getBottomRight()->setMoveable(moveable);
-}
-
-void Cloth::setTopLeftMoveable(bool moveable)
-{
-    getTopLeft()->setMoveable(moveable);
-}
-
-void Cloth::setTopRightMoveable(bool moveable)
-{
-    getTopRight()->setMoveable(moveable);
-}
-
-void Cloth::setBottomLeft(Vector3 pos)
-{
-    getBottomLeft()->setPosition(pos);
-}
-
-Node* Cloth::getBottomLeft()
-{
-    return getNode(0, 0);
-}
-
-void Cloth::setBottomRight(Vector3 pos)
-{
-    getBottomRight()->setPosition(pos);
-}
-
-Node* Cloth::getBottomRight()
-{
-    return getNode(numberNodesWidth - 1, 0);
-}
-
-void Cloth::setTopLeft(Vector3 pos)
-{
-    getTopLeft()->setPosition(pos);
-}
-
-Node* Cloth::getTopLeft()
-{
-    return getNode(0, numberNodesHeight - 1);
-}
-
-void Cloth::setTopRight(Vector3 pos)
-{
-    getTopRight()->setPosition(pos);
-}
-
-Node* Cloth::getTopRight()
-{
-    return getNode(numberNodesWidth - 1, numberNodesHeight - 1);
-}
-
-void Cloth::setNodeMoveable(int x, int y, bool moveable)
-{
-    getNode(x, y)->setMoveable(moveable);
-    satisfyConstraints();
-}
-
-void Cloth::setNodePosition(int x, int y, Vector3 pos)
-{
-    getNode(x, y)->setPosition(pos);
-    satisfyConstraints();
-}
-
-void Cloth::setNodeMass(int x, int y, float mass)
-{
-    getNode(x, y)->setMass(mass);
-    satisfyConstraints();
 }
 
 float Cloth::getClothWidth()
@@ -148,11 +70,27 @@ int Cloth::getNumberNodesHeight()
     return numberNodesHeight;
 }
 
-void Cloth::createNodes(Vector3 topLeftPosition, Vector3 topRightPosition,
-                        Vector3 bottomLeftPosition, Vector3 bottomRightPosition)
-{
+// void Cloth::createNodes(Vector3 topLeftPosition, Vector3 topRightPosition,
+//                         Vector3 bottomLeftPosition, Vector3 bottomRightPosition)
+// {
+//     float horizontalSpacing = clothWidth / numberNodesWidth;
+//     float verticalSpacing = clothHeight / numberNodesHeight;
 
-}
+//     Vector3 horizontalDirection = topRightPosition - topLeftPosition;
+//     Vector3 verticalDirection = topRightPosition - bottomRightPosition;
+
+//     for(int x = 0; x < numberNodesWidth; x += 1)
+//     {
+//         float xPos = x * horizontalSpacing;
+
+//         std::vector<Node> nodeColumn;
+
+//         for(int y = 0; y < numberNodesHeight; y += 1)
+//         {
+
+//         }
+//     }
+// }
 
 void Cloth::createNodes()
 {
