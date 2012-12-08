@@ -30,8 +30,6 @@ void Cloth::handleSphereIntersections()
                 bool hitSphere = sphereIterator->handleNodeIntersection(getNode(x, y));
                 if(hitSphere)
                 {
-                    std::cout << "tear" << std::endl;
-
                     removeConstraintsOnNode(x, y);
                 }
             }
@@ -102,7 +100,7 @@ void Cloth::applyForces(float duration)
     {
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
-            nodes[x][y].applyForces(duration);
+            getNode(x, y)->applyForces(duration);
         }
     }
 }
@@ -113,7 +111,7 @@ void Cloth::addForce(Vector3 force)
     {
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
-            nodes[x][y].addForce(force);
+            getNode(x, y)->addForce(force);
         }
     }
 }
@@ -133,16 +131,16 @@ void Cloth::createStructuralConstraints()
         {
             if(x < numberNodesWidth - 1)
             {
-                Node* leftNode = &nodes[x][y];
-                Node* rightNode = &nodes[x + 1][y];
+                Node* leftNode = getNode(x, y);
+                Node* rightNode = getNode(x + 1, y);
                 Constraint rightConstraint(leftNode, rightNode);
                 structuralConstraints.push_back(rightConstraint);
             }
 
             if(y < numberNodesHeight - 1)
             {
-                Node* bottomNode = &nodes[x][y];
-                Node* topNode = &nodes[x][y + 1];
+                Node* bottomNode = getNode(x, y);;
+                Node* topNode = getNode(x, y + 1);
                 Constraint topConstraint(bottomNode, topNode);
                 structuralConstraints.push_back(topConstraint);
             }
@@ -156,10 +154,10 @@ void Cloth::createShearConstraints()
     {
         for(int y = 0; y < numberNodesHeight - 1; y += 1)
         {
-            Node* lowerLeftNode = &nodes[x][y];
-            Node* lowerRightNode = &nodes[x + 1][y];
-            Node* upperLeftNode = &nodes[x][y + 1];
-            Node* upperRightNode = &nodes[x + 1][y + 1];
+            Node* lowerLeftNode = getNode(x, y);
+            Node* lowerRightNode = getNode(x + 1, y);
+            Node* upperLeftNode = getNode(x, y + 1);
+            Node* upperRightNode = getNode(x + 1, y + 1);
 
             Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
             Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
@@ -184,16 +182,16 @@ void Cloth::createStructuralBendConstraints()
         {
             if(x < numberNodesWidth - 2)
             {
-                Node* leftNode = &nodes[x][y];
-                Node* rightNode = &nodes[x + 2][y];
+                Node* leftNode = getNode(x, y);
+                Node* rightNode = getNode(x + 2, y);
                 Constraint rightConstraint(leftNode, rightNode);
                 structuralBendConstraints.push_back(rightConstraint);
             }
 
             if(y < numberNodesHeight - 2)
             {
-                Node* bottomNode = &nodes[x][y];
-                Node* topNode = &nodes[x][y + 2];
+                Node* bottomNode = getNode(x, y);
+                Node* topNode = getNode(x, y + 2);
                 Constraint topConstraint(bottomNode, topNode);
                 structuralBendConstraints.push_back(topConstraint);
             }
@@ -207,10 +205,10 @@ void Cloth::createShearBendConstraints()
     {
         for(int y = 0; y < numberNodesHeight - 2; y += 1)
         {
-            Node* lowerLeftNode = &nodes[x][y];
-            Node* lowerRightNode = &nodes[x + 2][y];
-            Node* upperLeftNode = &nodes[x][y + 2];
-            Node* upperRightNode = &nodes[x + 2][y + 2];
+            Node* lowerLeftNode = getNode(x, y);
+            Node* lowerRightNode = getNode(x + 2, y);
+            Node* upperLeftNode = getNode(x, y + 2);
+            Node* upperRightNode = getNode(x + 2, y + 2);
 
             Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
             Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
@@ -260,7 +258,7 @@ void Cloth::drawNodes()
     {
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
-            nodes[x][y].draw();
+            getNode(x, y)->draw();
         }
     }
 }

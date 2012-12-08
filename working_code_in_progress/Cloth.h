@@ -20,10 +20,14 @@ private:
     // Nodes
     std::vector< std::vector<Node> > nodes;
 
+    // constraints
     std::vector<Constraint> structuralConstraints;
     std::vector<Constraint> shearConstraints;
     std::vector<Constraint> structuralBendConstraints;
     std::vector<Constraint> shearBendConstraints;
+
+    // constraints
+
 
     // node creation method
     void createNodes();
