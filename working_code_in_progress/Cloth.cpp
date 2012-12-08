@@ -31,6 +31,8 @@ void Cloth::handleSphereIntersections()
                 if(hitSphere)
                 {
                     // tearing here
+                    removeRightStructuralConstraint(x, y);
+                    // removeTopStructuralConstraint(x, y);
                 }
             }
         }
@@ -38,10 +40,20 @@ void Cloth::handleSphereIntersections()
 }
 
 void Cloth::removeRightStructuralConstraint(int x, int y)
-{}
+{
+    // std::vector<Constraint>::iterator position = rightStructuralConstraints.begin() + x * (numberNodesWidth - 1) + y;
+    // rightStructuralConstraints.erase(position);
+    rightStructuralConstraints.clear();
+    std::cout << "-----------" << std::endl;
+    std::cout << "size  = " << rightStructuralConstraints.size() << std::endl;
+    std::cout << "size2 = " << structuralConstraints[0].size() << std::endl;
+    std::cout << "-----------" << std::endl;
+}
 
 void Cloth::removeTopStructuralConstraint(int x, int y)
-{}
+{
+    topStructuralConstraints.clear();
+}
 
 void removeRightStructuralBendConstraint(int x, int y)
 {}
