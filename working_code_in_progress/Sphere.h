@@ -17,7 +17,8 @@ public:
     Vector3 getCenter();
     float getRadius();
     void draw();
-    bool handleNodeIntersection(Node* node);
+    void handleNodeIntersection(Node* node);
+    bool willHitSphere(Node* node);
 };
 
 #endif
