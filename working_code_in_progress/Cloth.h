@@ -21,13 +21,13 @@ private:
     std::vector< std::vector<Node> > nodes;
 
     // constraints
-    std::vector< std::vector<Constraint> > structuralConstraints;
+    std::vector< std::vector<Constraint>* > structuralConstraints;
     std::vector<Constraint> rightStructuralConstraints;
     std::vector<Constraint> topStructuralConstraints;
 
     std::vector<Constraint> shearConstraints;
 
-    std::vector< std::vector<Constraint> > structuralBendConstraints;
+    std::vector< std::vector<Constraint>* > structuralBendConstraints;
     std::vector<Constraint> rightStructuralBendConstraints;
     std::vector<Constraint> topStructuralBendConstraints;
 
