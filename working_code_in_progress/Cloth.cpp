@@ -43,6 +43,12 @@ void Cloth::removeRightStructuralConstraint(int x, int y)
 void Cloth::removeTopStructuralConstraint(int x, int y)
 {}
 
+void removeRightStructuralBendConstraint(int x, int y)
+{}
+
+void removeTopStructuralBendConstraint(int x, int y)
+{}
+
 float Cloth::getClothWidth()
 {
     return clothWidth;

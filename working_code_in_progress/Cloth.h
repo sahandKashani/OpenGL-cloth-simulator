@@ -62,6 +62,9 @@ private:
     void removeRightStructuralConstraint(int x, int y);
     void removeTopStructuralConstraint(int x, int y);
 
+    void removeRightStructuralBendConstraint(int x, int y);
+    void removeTopStructuralBendConstraint(int x, int y);
+
 public:
     Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
 

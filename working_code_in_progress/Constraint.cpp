@@ -16,14 +16,17 @@ void Constraint::draw()
     glEnd();
 }
 
-Constraint::Constraint()
-{}
-
 Constraint::Constraint(Node* n1, Node* n2) :
     node1(n1),
     node2(n2),
-    distanceAtRest((n1->getPosition() - n2->getPosition()).length())
+    distanceAtRest((n1->getPosition() - n2->getPosition()).length()),
+    enabled(true)
 {}
+
+void Constraint::disable()
+{
+    enabled = false;
+}
 
 Node* Constraint::getFirstNode()
 {
