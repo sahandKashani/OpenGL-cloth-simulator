@@ -212,6 +212,9 @@ void Cloth::createStructuralBendConstraints()
             }
         }
     }
+
+    structuralBendConstraints.push_back(rightStructuralBendConstraints);
+    structuralBendConstraints.push_back(topStructuralBendConstraints);
 }
 
 void Cloth::createShearBendConstraints()
