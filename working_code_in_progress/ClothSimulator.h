@@ -46,11 +46,6 @@ public:
     // special ones (arrows + F1..F12 keys + home + end ...)
     char keyboardStatus[256];
 
-    // the "timeval" structure contains 2 fields
-    //     long int tv_sec = number of whole seconds of elapsed time
-    //     long int tv_usec = number of microseconds of elapsed time (always lower than 1 million)
-    struct timeval oldTime;
-
     // cloth declaration
     Cloth* cloth;
 
@@ -80,6 +75,9 @@ public:
 
     void createScene();
     void createBatmanScene();
+
+    bool leftFootUp;
+    void swingLeftFoot();
 };
 
 #endif

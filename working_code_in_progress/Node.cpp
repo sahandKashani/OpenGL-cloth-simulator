@@ -92,8 +92,8 @@ void Node::draw()
     glPopMatrix();
     // back at "origin" (on element (0.0, 0.0, 0.0)) again.
 
-    Arrow appliedForce(position, position + force);
-    appliedForce.draw();
+    // Arrow appliedForce(position, position + force);
+    // appliedForce.draw();
 }
 
 bool Node::isMoveable()

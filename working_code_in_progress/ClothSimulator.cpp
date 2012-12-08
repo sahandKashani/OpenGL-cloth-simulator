@@ -66,27 +66,50 @@ void ClothSimulator::drawSpheres()
     }
 }
 
+void ClothSimulator::swingLeftFoot()
+{
+    Sphere* s = &spheres[0];
+    Vector3 center = s->getCenter();
+
+    if(center.z > 2.0){
+        leftFootUp = true;
+    }
+
+    if(leftFootUp)
+    {
+        s->setCenter(center + Vector3(0.0, -0.01, -0.05));
+        if(center.z <= 0.0)
+        {
+            leftFootUp = false;
+        }
+    }
+    else
+    {
+        s->setCenter(center + Vector3(0.0, 0.01, 0.05));
+    }
+}
+
 void ClothSimulator::createBatmanScene()
 {
     drawWireFrameEnabled                 = false;
-    drawNodesEnabled                     = false;
+    drawNodesEnabled                     = true;
     drawWorldAxisEnabled                 = true;
-    drawStructuralConstraintsEnabled     = true;
-    drawShearConstraintsEnabled          = true;
-    drawStructuralBendConstraintsEnabled = true;
-    drawShearBendConstraintsEnabled      = true;
+    drawStructuralConstraintsEnabled     = false;
+    drawShearConstraintsEnabled          = false;
+    drawStructuralBendConstraintsEnabled = false;
+    drawShearBendConstraintsEnabled      = false;
     drawSpheresEnabled                   = true;
 
     nearPlane = 1.0;
-    farPlane  = 1000.0;
+    farPlane  = 200.0;
     angleIncrement = 0.03125;
     translationIncrement = 0.125;
 
     // simulation time step
-    timeStep = 0.0005;
+    timeStep = 0.001;
 
     // cloth instantiation
-    cloth = new Cloth(10.0, 10.0, 20, 20);
+    cloth = new Cloth(10.0, 15.0, 20, 30);
 
     // reset camera to center of cloth
     resetCameraPosition();
@@ -94,17 +117,30 @@ void ClothSimulator::createBatmanScene()
     // TODO : fixing cloth at certain points
     cloth->getNode(0, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
     cloth->getNode(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
+    for(int x = 0; x < cloth->getNumberNodesWidth() - 1; x += 1)
+    {
+        cloth->getNode(x, 0)->setMass(40.0);
+        cloth->getNode(x, 1)->setMass(40.0);
+        cloth->getNode(x, 2)->setMass(40.0);
+        cloth->getNode(x, 3)->setMass(40.0);
+        cloth->getNode(x, 4)->setMass(40.0);
+    }
 
-    spheres.push_back(Sphere(Vector3(2.5, 5.0, 5.0), 1.0, false));
-    spheres.push_back(Sphere(Vector3(7.5, 5.0, 5.0), 1.0, false));
+    Vector3 center(5.0, 2.0, -1.0);
+    // left foot
+    leftFootUp = false;
+    spheres.push_back(Sphere(center + Vector3(-2.0, 0.0, 0.0 ), 1.2, false));
+
+    // right foot
+    spheres.push_back(Sphere(center + Vector3( 2.0, 0.0, 0.0 ), 1.2, false));
 
     // TODO : find suitable values
     // gravity
-    Vector3 gravity(0.0, -1.0, 0.0);
+    Vector3 gravity(0.0, -10.0, 0.0);
 
     // TODO : find suitable values
     // wind
-    Vector3 wind(0.0, 0.0, 4.0);
+    Vector3 wind(0.0, 0.0, -0.2);
 
     cloth->addForce(gravity);
     cloth->addForce(wind);

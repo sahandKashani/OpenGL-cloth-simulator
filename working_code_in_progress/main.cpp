@@ -52,6 +52,8 @@ void applyChanges()
     // find out what commands the keyboard is sending and apply them
     clothSimulator->applyContinuousKeyboardCommands();
 
+    clothSimulator->swingLeftFoot();
+
     // calculate time difference from last call to applyChanges()
     float duration = clothSimulator->getTimeStep();
 

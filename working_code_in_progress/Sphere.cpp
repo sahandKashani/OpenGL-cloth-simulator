@@ -27,6 +27,11 @@ float Sphere::getRadius()
     return radius;
 }
 
+void Sphere::setCenter(Vector3 c)
+{
+    center = c;
+}
+
 void Sphere::draw()
 {
     // glColor3f(1.0, 1.0, 1.0);

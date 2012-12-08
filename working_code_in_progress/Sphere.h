@@ -19,6 +19,7 @@ public:
     void draw();
     void handleNodeIntersection(Node* node);
     bool willHitSphere(Node* node);
+    void setCenter(Vector3 c);
 };
 
 #endif
