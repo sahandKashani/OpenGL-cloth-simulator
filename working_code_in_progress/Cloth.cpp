@@ -30,8 +30,8 @@ void Cloth::handleSphereIntersections()
                 if(sphereIterator->willHitSphere(getNode(x, y)))
                 {
                     // removeRightStructuralConstraint(x, y);
-                    removeTopStructuralConstraint(x, y);
-                    // sphereIterator->handleNodeIntersection(getNode(x, y));
+                    // removeTopStructuralConstraint(x, y);
+                    sphereIterator->handleNodeIntersection(getNode(x, y));
                 }
             }
         }

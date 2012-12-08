@@ -72,9 +72,9 @@ void ClothSimulator::createBatmanScene()
     drawNodesEnabled                     = false;
     drawWorldAxisEnabled                 = true;
     drawStructuralConstraintsEnabled     = true;
-    drawShearConstraintsEnabled          = false;
-    drawStructuralBendConstraintsEnabled = false;
-    drawShearBendConstraintsEnabled      = false;
+    drawShearConstraintsEnabled          = true;
+    drawStructuralBendConstraintsEnabled = true;
+    drawShearBendConstraintsEnabled      = true;
     drawSpheresEnabled                   = true;
 
     nearPlane = 1.0;
