@@ -119,11 +119,10 @@ void ClothSimulator::createBatmanScene()
     cloth->getNode(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
     for(int x = 0; x < cloth->getNumberNodesWidth() - 1; x += 1)
     {
-        cloth->getNode(x, 0)->setMass(40.0);
-        cloth->getNode(x, 1)->setMass(40.0);
-        cloth->getNode(x, 2)->setMass(40.0);
-        cloth->getNode(x, 3)->setMass(40.0);
-        cloth->getNode(x, 4)->setMass(40.0);
+        for(int y = 0; y < cloth->getNumberNodesHeight() - 1; y += 1)
+        {
+            cloth->getNode(x, y)->setMass(0.5);
+        }
     }
 
     Vector3 center(5.0, 2.0, -1.0);
