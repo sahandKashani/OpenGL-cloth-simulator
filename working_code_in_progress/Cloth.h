@@ -27,7 +27,7 @@ private:
 
     std::vector<Constraint> shearConstraints;
 
-    std::vector< std::vector<Constraint>* > structuralBendConstraints;
+    std::vector< std::vector<Constraint> > structuralBendConstraints;
     std::vector<Constraint> rightStructuralBendConstraints;
     std::vector<Constraint> topStructuralBendConstraints;
 
