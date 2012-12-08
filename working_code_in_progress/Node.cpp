@@ -33,7 +33,6 @@ Vector3 Node::getForce()
 void Node::setPosition(Vector3 pos)
 {
     position = pos;
-    oldPosition = pos;
 }
 
 void Node::setMass(float m)
@@ -50,11 +49,13 @@ void Node::applyForces(float duration)
 {
     if(moveable)
     {
-        // TODO : integration
+        // verlet integration
         Vector3 acceleration = force / mass;
         Vector3 temp = position;
         position = position + (position - oldPosition) + acceleration * duration;
         oldPosition = temp;
+
+        // TODO : Runge-Kutta 4 intergration (RK4)
     }
 }
 

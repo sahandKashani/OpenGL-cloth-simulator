@@ -16,18 +16,6 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
     createConstraints();
 }
 
-// Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth,
-//              int nodesHeight, Vector3 topLeftPosition, Vector3 topRightPosition,
-//              Vector3 bottomLeftPosition, Vector3 bottomRightPosition) :
-//     clothWidth(clothTotalWidth),
-//     clothHeight(clothTotalHeight),
-//     numberNodesWidth(nodesWidth),
-//     numberNodesHeight(nodesHeight)
-// {
-//     createNodes(topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition);
-//     createConstraints();
-// }
-
 void Cloth::handleSphereIntersections()
 {
     ClothSimulator* clothSimulator = ClothSimulator::getInstance();
@@ -69,28 +57,6 @@ int Cloth::getNumberNodesHeight()
 {
     return numberNodesHeight;
 }
-
-// void Cloth::createNodes(Vector3 topLeftPosition, Vector3 topRightPosition,
-//                         Vector3 bottomLeftPosition, Vector3 bottomRightPosition)
-// {
-//     float horizontalSpacing = clothWidth / numberNodesWidth;
-//     float verticalSpacing = clothHeight / numberNodesHeight;
-
-//     Vector3 horizontalDirection = topRightPosition - topLeftPosition;
-//     Vector3 verticalDirection = topRightPosition - bottomRightPosition;
-
-//     for(int x = 0; x < numberNodesWidth; x += 1)
-//     {
-//         float xPos = x * horizontalSpacing;
-
-//         std::vector<Node> nodeColumn;
-
-//         for(int y = 0; y < numberNodesHeight; y += 1)
-//         {
-
-//         }
-//     }
-// }
 
 void Cloth::createNodes()
 {
