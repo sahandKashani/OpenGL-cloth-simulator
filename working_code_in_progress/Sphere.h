@@ -9,9 +9,11 @@ class Sphere
 private:
     Vector3 center;
     float radius;
+    bool sticky;
 
 public:
     Sphere(Vector3 c, float r);
+    Sphere(Vector3 c, float r, bool stick);
     Vector3 getCenter();
     float getRadius();
     void draw();
