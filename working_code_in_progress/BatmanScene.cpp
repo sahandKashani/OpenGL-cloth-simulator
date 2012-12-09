@@ -1,5 +1,10 @@
 #include "BatmanScene.h"
 
+// OpenGL imports
+#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
 BatmanScene::BatmanScene() :
     Scene()
 {
@@ -19,42 +24,54 @@ void BatmanScene::createScene()
                       Vector3(10.0, 0.0, 10.0),
                       Vector3(10.0, 0.0, 0.0));
 
+    // camera setup
     camera.setPosition(Vector3(-10.0, 5.0, -10.0));
     camera.setViewDirection(Vector3(5.0, 5.0, 0.0));
     camera.setUpDirection(Vector3(0.0, 1.0, 0.0));
 
-    // // reset camera to center of cloth
-    // resetCameraPosition();
+    // fixing cape at certain points
+    cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    cape->getNode(cape->getNumberNodesWidth() - 1      , cape->getNumberNodesHeight() - 1)->setMoveable(false);
 
-    // // TODO : fixing cloth at certain points
-    // cloth->getNode(0, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
-    // cloth->getNode((cloth->getNumberNodesWidth() - 1) / 2, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
-    // cloth->getNode(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
-    // for(int x = 0; x < cloth->getNumberNodesWidth() - 1; x += 1)
-    // {
-    //     for(int y = 0; y < cloth->getNumberNodesHeight() - 1; y += 1)
-    //     {
-    //         cloth->getNode(x, y)->setMass(4.0);
-    //     }
-    // }
+    // setting cape node mass
+    for(int x = 0; x < cape->getNumberNodesWidth() - 1; x += 1)
+    {
+        for(int y = 0; y < cape->getNumberNodesHeight() - 1; y += 1)
+        {
+            cape->getNode(x, y)->setMass(4.0);
+        }
+    }
 
-    // Vector3 center(5.0, 2.0, -1.0);
-    // // left foot
-    // leftFootUp = false;
-    // spheres.push_back(Sphere(center + Vector3(-2.0, 0.0, 0.0 ), 1.2, false));
+    Vector3 centerBetweenFeet(5.0, 2.0, -1.0);
+    // left foot
+    leftFoot.push_back(Sphere(centerBetweenFeet + Vector3(-2.0, 0.0, 0.0 ), 1.2, false));
 
-    // // right foot
-    // rightFootUp = false;
-    // spheres.push_back(Sphere(center + Vector3( 2.0, 0.0, 0.0 ), 1.2, false));
+    // right foot
+    rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2, false));
 
-    // // TODO : find suitable values
-    // // gravity
-    // Vector3 gravity(0.0, -10.0, 0.0);
+    // forces
+    // gravity
+    Vector3 gravity(0.0, -10.0, 0.0);
+    // wind
+    Vector3 wind(0.0, 0.0, -0.2);
 
-    // // TODO : find suitable values
-    // // wind
-    // Vector3 wind(0.0, 0.0, -0.2);
+    // add forces to cape
+    cape->addForce(gravity);
+    cape->addForce(wind);
+}
 
-    // cloth->addForce(gravity);
-    // cloth->addForce(wind);
+void BatmanScene::draw()
+{
+    cape->draw();
+}
+
+void BatmanScene::drawLeftFoot()
+{
+
+}
+
+void BatmanScene::drawRightFoot()
+{
+
 }

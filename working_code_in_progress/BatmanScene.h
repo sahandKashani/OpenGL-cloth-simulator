@@ -14,11 +14,14 @@ private:
     Cloth* cape;
     Floor* floor;
 
-    std::vector<Sphere> spheres;
+    std::vector<Sphere> leftFoot;
+    std::vector<Sphere> rightFoot;
 
 public:
     BatmanScene();
     void draw();
+    void drawLeftFoot();
+    void drawRightFoot();
 };
 
 #endif
