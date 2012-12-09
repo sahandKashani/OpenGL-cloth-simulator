@@ -102,7 +102,7 @@ void normalKeyboard(unsigned char key, int x, int y)
 
 void normalKeyboardRelease(unsigned char key, int x, int y)
 {
-    clothSimulator->keyboardStatus[key] = false;
+    clothSimulator->handleNormalKeyboardRelease(key, x, y);
 }
 
 void specialKeyboard(int key, int x, int y)

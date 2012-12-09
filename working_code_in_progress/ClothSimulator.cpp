@@ -529,3 +529,8 @@ void ClothSimulator::handleNormalKeyboardInput(unsigned char key, int x, int y)
             keyboardStatus[key] = true;
     }
 }
+
+void ClothSimulator::handleNormalKeyboardRelease(unsigned char key, int x, int y)
+{
+    keyboardStatus[key] = false;
+}
