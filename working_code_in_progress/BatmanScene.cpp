@@ -39,7 +39,6 @@ void BatmanScene::createScene()
         }
     }
 
-
     // floor setup
     floor = new Floor(Vector3(0.0, 0.0, 0.0),
                       Vector3(0.0, 0.0, 10.0),
@@ -52,6 +51,8 @@ void BatmanScene::createScene()
     leftFoot.push_back(Sphere(centerBetweenFeet + Vector3(-2.0, 0.0, 0.0 ), 1.2, false));
     // right foot
     rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2, false));
+
+    rightFoot.push_back(Sphere(Vector3(5.0, 7.5, 7.5), 1.2, false));
 
     // forces
     // gravity
