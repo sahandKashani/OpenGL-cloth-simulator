@@ -1,4 +1,5 @@
 #include "Sphere.h"
+#include "DrawingSettings.h"
 
 // OpenGL imports
 #include <GL/glut.h>
@@ -34,14 +35,17 @@ void Sphere::setCenter(Vector3 c)
 
 void Sphere::draw()
 {
-    // glColor3f(1.0, 1.0, 1.0);
+    if(DrawingSettings::getInstance()->isDrawSpheresEnabled())
+    {
+        glColor3f(1.0, 1.0, 1.0);
 
-    glPushMatrix();
-        glTranslatef(center.x, center.y, center.z);
+        glPushMatrix();
+            glTranslatef(center.x, center.y, center.z);
 
-        // draw the sphere a little smaller for collision problems
-        glutSolidSphere(radius - 0.1, 20, 20);
-    glPopMatrix();
+            // draw the sphere a little smaller for collision problems
+            glutSolidSphere(radius - 0.1, 20, 20);
+        glPopMatrix();
+    }
 }
 
 bool Sphere::willHitSphere(Node* node)

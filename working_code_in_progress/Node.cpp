@@ -7,6 +7,7 @@
 
 #include "ClothSimulator.h"
 #include "Arrow.h"
+#include "DrawingSettings.h"
 #include <vector>
 
 Node::Node() :
@@ -82,18 +83,29 @@ void Node::resetToOriginalForce()
 
 void Node::draw()
 {
-    glColor3f(1.0, 1.0, 1.0);
+    if(DrawingSettings::getInstance()->isDrawNodesEnabled())
+    {
+        // draw solid spheres only for nodes
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    // push matrix so we can come back to the "origin" (on element (0.0, 0.0, 0.0))
-    // for each node to draw.
-    glPushMatrix();
-        glTranslatef(position.x, position.y, position.z);
-        glutSolidSphere(0.1, 10, 10);
-    glPopMatrix();
-    // back at "origin" (on element (0.0, 0.0, 0.0)) again.
+        glColor3f(1.0, 1.0, 1.0);
+        // push matrix so we can come back to the "origin" (on element (0.0, 0.0, 0.0))
+        // for each node to draw.
+        glPushMatrix();
+            glTranslatef(position.x, position.y, position.z);
+            glutSolidSphere(0.1, 10, 10);
+        glPopMatrix();
+        // back at "origin" (on element (0.0, 0.0, 0.0)) again.
 
-    // Arrow appliedForce(position, position + force);
-    // appliedForce.draw();
+        // restore current drawing setting
+        if(DrawingSettings::getInstance()->isDrawWireFrameEnabled())
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
+        Arrow appliedForce(position, position + force);
+        appliedForce.draw();
+    }
 }
 
 bool Node::isMoveable()

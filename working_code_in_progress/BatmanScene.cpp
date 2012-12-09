@@ -1,4 +1,5 @@
 #include "BatmanScene.h"
+#include "DrawingSettings.h"
 
 // OpenGL imports
 #include <GL/glut.h>
@@ -75,6 +76,8 @@ void BatmanScene::simulate()
 
 void BatmanScene::draw()
 {
+    DrawingSettings::getInstance()->chooseRenderingMethod();
+
     drawWorldAxis();
 
     // draw cape

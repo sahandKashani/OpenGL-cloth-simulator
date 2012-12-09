@@ -1,6 +1,11 @@
 #include "DrawingSettings.h"
 #include <iostream>
 
+// OpenGL imports
+#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
 DrawingSettings* DrawingSettings::instance = 0;
 
 DrawingSettings* DrawingSettings::getInstance()
@@ -21,7 +26,10 @@ DrawingSettings::DrawingSettings() :
     drawShearConstraintsEnabled(true),
     drawStructuralBendConstraintsEnabled(true),
     drawShearBendConstraintsEnabled(true),
-    drawSpheresEnabled(true)
+    drawSpheresEnabled(true),
+    drawTrianglesEnabled(true),
+    drawFloorEnabled(true),
+    drawArrowsEnabled(true)
 {}
 
 bool DrawingSettings::isDrawWireFrameEnabled()
@@ -64,6 +72,21 @@ bool DrawingSettings::isDrawSpheresEnabled()
     return drawSpheresEnabled;
 }
 
+bool DrawingSettings::isDrawTrianglesEnabled()
+{
+    return drawTrianglesEnabled;
+}
+
+bool DrawingSettings::isDrawFloorEnabled()
+{
+    return drawFloorEnabled;
+}
+
+bool DrawingSettings::isDrawArrowsEnabled()
+{
+    return drawArrowsEnabled;
+}
+
 void DrawingSettings::toggleDrawWireFrameEnabled()
 {
     drawWireFrameEnabled = !drawWireFrameEnabled;
@@ -104,6 +127,21 @@ void DrawingSettings::toggleDrawSpheresEnabled()
     drawSpheresEnabled = !drawSpheresEnabled;
 }
 
+void DrawingSettings::toggleDrawTrianglesEnabled()
+{
+    drawTrianglesEnabled = !drawTrianglesEnabled;
+}
+
+void DrawingSettings::toggleDrawFloorEnabled()
+{
+    drawFloorEnabled = !drawFloorEnabled;
+}
+
+void DrawingSettings::toggleDrawArrowsEnabled()
+{
+    drawArrowsEnabled = !drawArrowsEnabled;
+}
+
 void DrawingSettings::showDrawStatus()
 {
     std::cout << "draw status:" << std::endl;
@@ -114,6 +152,9 @@ void DrawingSettings::showDrawStatus()
     std::cout << "  draw shear bend constraints     : " << isEnabled(drawShearBendConstraintsEnabled) << std::endl;
     std::cout << "  draw wireframe                  : " << isEnabled(drawWireFrameEnabled) << std::endl;
     std::cout << "  draw world axis                 : " << isEnabled(drawWorldAxisEnabled) << std::endl;
+    std::cout << "  draw spheres                    : " << isEnabled(drawSpheresEnabled) << std::endl;
+    std::cout << "  draw triangles                  : " << isEnabled(drawTrianglesEnabled) << std::endl;
+    std::cout << "  draw arrows                     : " << isEnabled(drawArrowsEnabled) << std::endl;
 
     std::cout << std::endl;
 }

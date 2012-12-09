@@ -228,10 +228,7 @@ void Cloth::draw()
 
     DrawingSettings* drawingSettings = DrawingSettings::getInstance();
 
-    if(drawingSettings->isDrawNodesEnabled())
-    {
-        drawNodes();
-    }
+    drawNodes();
 
     if(drawingSettings->isDrawStructuralConstraintsEnabled())
     {

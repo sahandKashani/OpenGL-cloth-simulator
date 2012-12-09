@@ -16,6 +16,9 @@ private:
     bool drawStructuralBendConstraintsEnabled;
     bool drawShearBendConstraintsEnabled;
     bool drawSpheresEnabled;
+    bool drawTrianglesEnabled;
+    bool drawFloorEnabled;
+    bool drawArrowsEnabled;
 
 protected:
     DrawingSettings();
@@ -31,6 +34,9 @@ public:
     bool isDrawStructuralBendConstraintsEnabled();
     bool isDrawShearBendConstraintsEnabled();
     bool isDrawSpheresEnabled();
+    bool isDrawTrianglesEnabled();
+    bool isDrawFloorEnabled();
+    bool isDrawArrowsEnabled();
 
     void toggleDrawWireFrameEnabled();
     void toggleDrawNodesEnabled();
@@ -40,6 +46,9 @@ public:
     void toggleDrawStructuralBendConstraintsEnabled();
     void toggleDrawShearBendConstraintsEnabled();
     void toggleDrawSpheresEnabled();
+    void toggleDrawTrianglesEnabled();
+    void toggleDrawFloorEnabled();
+    void toggleDrawArrowsEnabled();
 
     void showDrawStatus();
     std::string isEnabled(bool controlVariableEnabled);

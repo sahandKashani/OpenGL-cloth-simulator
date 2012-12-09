@@ -28,6 +28,8 @@ void Scene::drawWorldAxis()
 {
     if(DrawingSettings::getInstance()->isDrawWorldAxisEnabled())
     {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
         glColor3f(1.0, 0.0, 0.0);
         // x-axis in red
         glBegin(GL_LINES);
@@ -62,5 +64,10 @@ void Scene::drawWorldAxis()
             glTranslatef(0.0, 0.0, 1.0);
             glutSolidCone(0.15, 0.30, 10, 10);
         glPopMatrix();
+
+        if(DrawingSettings::getInstance()->isDrawWireFrameEnabled())
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
     }
 }
