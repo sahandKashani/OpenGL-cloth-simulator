@@ -1,4 +1,5 @@
 #include "ClothSimulator.h"
+#include "Keyboard.h"
 
 // OpenGL imports
 #include <GL/glut.h>
@@ -60,6 +61,7 @@ void ClothSimulator::simulate()
 
 //     // handle all collisions with the spheres in the scene
 //     cloth->handleSphereIntersections();
+    Keyboard::getInstance()->applyNormalKeyboardActions();
     scene->simulate();
 }
 
@@ -169,6 +171,7 @@ void ClothSimulator::createScene()
 
     // clear keyboard press status
     // initializeKeyboardStatus();
+    Keyboard::getInstance()->resetKeyboardStatus();
 
     // createBatmanScene();
 

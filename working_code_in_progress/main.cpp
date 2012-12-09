@@ -54,7 +54,6 @@ int main(int argc, char** argv)
 // Will process all changes that occur, such as keyboard commands, new forces, ...
 void applyChanges()
 {
-
     clothSimulator->simulate();
 
     // redraw the screen
