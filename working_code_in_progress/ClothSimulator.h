@@ -3,8 +3,9 @@
 
 #include "Cloth.h"
 #include "Camera.h"
-#include <string>
+#include "Floor.h"
 #include "Triangle.h"
+#include <string>
 
 class ClothSimulator;
 
@@ -12,6 +13,13 @@ class ClothSimulator
 {
 private:
     static ClothSimulator* instance;
+
+    void chooseRenderingMethod();
+    void drawWorldAxis();
+    void drawSpheres();
+    void drawTriangles();
+    void drawCloth();
+    void drawFloor();
 
 protected:
     ClothSimulator();
@@ -52,8 +60,13 @@ public:
     // camera declaration
     Camera* camera;
 
+    // floor declaration
+    Floor* floor;
+
     // Sphere declaration
     std::vector<Sphere> spheres;
+
+    // Triangle declaration
     std::vector<Triangle> triangles;
 
     // methods
@@ -62,22 +75,26 @@ public:
     void showHelp();
     void showDrawStatus();
     void showCameraStatus();
-    void chooseRenderingMethod();
     void initializeKeyboardStatus();
     void applyContinuousKeyboardCommands();
     void resetCameraPosition();
     float getTimeStep();
 
-    void drawWorldAxis();
-    void drawSpheres();
-    void drawTriangles();
-    void drawCloth();
+    void draw();
 
     void createScene();
     void createBatmanScene();
 
+    bool leftFootGoingUp;
+    bool leftFootGoingDown;
+    bool rightFootGoingUp;
+    bool rightFootGoingDown;
     bool leftFootUp;
+    bool rightFootUp;
     void swingLeftFoot();
+    void swingRightFoot();
+
+    void simulate();
 };
 
 #endif

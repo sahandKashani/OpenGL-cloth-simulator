@@ -38,9 +38,56 @@ ClothSimulator::~ClothSimulator()
     delete cloth;
 }
 
+void ClothSimulator::simulate()
+{
+    // find out what commands the keyboard is sending and apply them
+    applyContinuousKeyboardCommands();
+
+    if(leftFootUp)
+    {
+        swingRightFoot();
+    } else
+    {
+        swingLeftFoot();
+    }
+
+    // apply all forces to the cloth
+    cloth->applyForces(getTimeStep());
+
+    // satisfy all constraints of the cloth after forces are applied
+    cloth->satisfyConstraints();
+
+    // handle all collisions with the spheres in the scene
+    cloth->handleSphereIntersections();
+}
+
 void ClothSimulator::drawCloth()
 {
     cloth->draw();
+}
+
+void ClothSimulator::drawFloor()
+{
+    floor->draw();
+}
+
+void ClothSimulator::draw()
+{
+    chooseRenderingMethod();
+
+    drawCloth();
+    drawTriangles();
+    drawFloor();
+
+    if(drawSpheresEnabled)
+    {
+        drawSpheres();
+    }
+
+    if(drawWorldAxisEnabled)
+    {
+        drawWorldAxis();
+    }
 }
 
 void ClothSimulator::drawTriangles()
@@ -55,14 +102,11 @@ void ClothSimulator::drawTriangles()
 
 void ClothSimulator::drawSpheres()
 {
-    if(drawSpheresEnabled)
+    for(std::vector<Sphere>::iterator sphereIterator = spheres.begin();
+        sphereIterator != spheres.end();
+        ++sphereIterator)
     {
-        for(std::vector<Sphere>::iterator sphereIterator = spheres.begin();
-            sphereIterator != spheres.end();
-            ++sphereIterator)
-        {
-            sphereIterator->draw();
-        }
+        sphereIterator->draw();
     }
 }
 
@@ -89,15 +133,38 @@ void ClothSimulator::swingLeftFoot()
     }
 }
 
+void ClothSimulator::swingRightFoot()
+{
+    Sphere* s = &spheres[1];
+    Vector3 center = s->getCenter();
+
+    if(center.z > 2.0){
+        rightFootUp = true;
+    }
+
+    if(rightFootUp)
+    {
+        s->setCenter(center + Vector3(0.0, -0.01, -0.05));
+        if(center.z <= 0.0)
+        {
+            rightFootUp = false;
+        }
+    }
+    else
+    {
+        s->setCenter(center + Vector3(0.0, 0.01, 0.05));
+    }
+}
+
 void ClothSimulator::createBatmanScene()
 {
     drawWireFrameEnabled                 = false;
-    drawNodesEnabled                     = true;
+    drawNodesEnabled                     = false;
     drawWorldAxisEnabled                 = true;
-    drawStructuralConstraintsEnabled     = false;
-    drawShearConstraintsEnabled          = false;
-    drawStructuralBendConstraintsEnabled = false;
-    drawShearBendConstraintsEnabled      = false;
+    drawStructuralConstraintsEnabled     = true;
+    drawShearConstraintsEnabled          = true;
+    drawStructuralBendConstraintsEnabled = true;
+    drawShearBendConstraintsEnabled      = true;
     drawSpheresEnabled                   = true;
 
     nearPlane = 1.0;
@@ -110,18 +177,23 @@ void ClothSimulator::createBatmanScene()
 
     // cloth instantiation
     cloth = new Cloth(10.0, 15.0, 20, 30);
+    floor = new Floor(Vector3(0.0, 0.0, 0.0),
+                      Vector3(0.0, 0.0, 10.0),
+                      Vector3(10.0, 0.0, 10.0),
+                      Vector3(10.0, 0.0, 0.0));
 
     // reset camera to center of cloth
     resetCameraPosition();
 
     // TODO : fixing cloth at certain points
     cloth->getNode(0, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
+    cloth->getNode((cloth->getNumberNodesWidth() - 1) / 2, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
     cloth->getNode(cloth->getNumberNodesWidth() - 1, cloth->getNumberNodesHeight() - 1)->setMoveable(false);
     for(int x = 0; x < cloth->getNumberNodesWidth() - 1; x += 1)
     {
         for(int y = 0; y < cloth->getNumberNodesHeight() - 1; y += 1)
         {
-            cloth->getNode(x, y)->setMass(0.5);
+            cloth->getNode(x, y)->setMass(4.0);
         }
     }
 
@@ -131,6 +203,7 @@ void ClothSimulator::createBatmanScene()
     spheres.push_back(Sphere(center + Vector3(-2.0, 0.0, 0.0 ), 1.2, false));
 
     // right foot
+    rightFootUp = false;
     spheres.push_back(Sphere(center + Vector3( 2.0, 0.0, 0.0 ), 1.2, false));
 
     // TODO : find suitable values
@@ -307,43 +380,40 @@ void ClothSimulator::chooseRenderingMethod()
 
 void ClothSimulator::drawWorldAxis()
 {
-    if(drawWorldAxisEnabled)
-    {
-        glColor3f(1.0, 0.0, 0.0);
-        // x-axis in red
-        glBegin(GL_LINES);
-            glVertex3f(0.0, 0.0, 0.0);
-            glVertex3f(1.0, 0.0, 0.0);
-        glEnd();
-        glPushMatrix();
-            glRotatef(90, 0.0, 1.0, 0.0);
-            glTranslatef(0.0, 0.0, 1.0);
-            glutSolidCone(0.15, 0.30, 10, 10);
-        glPopMatrix();
+    glColor3f(1.0, 0.0, 0.0);
+    // x-axis in red
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(1.0, 0.0, 0.0);
+    glEnd();
+    glPushMatrix();
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glTranslatef(0.0, 0.0, 1.0);
+        glutSolidCone(0.15, 0.30, 10, 10);
+    glPopMatrix();
 
-        // y-axis in green
-        glColor3f(0.0, 1.0, 0.0);
-        glBegin(GL_LINES);
-            glVertex3f(0.0, 0.0, 0.0);
-            glVertex3f(0.0, 1.0, 0.0);
-        glEnd();
-        glPushMatrix();
-            glRotatef(-90, 1.0, 0.0, 0.0);
-            glTranslatef(0.0, 0.0, 1.0);
-            glutSolidCone(0.15, 0.30, 10, 10);
-        glPopMatrix();
+    // y-axis in green
+    glColor3f(0.0, 1.0, 0.0);
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, 1.0, 0.0);
+    glEnd();
+    glPushMatrix();
+        glRotatef(-90, 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 0.0, 1.0);
+        glutSolidCone(0.15, 0.30, 10, 10);
+    glPopMatrix();
 
-        // z-axis in blue
-        glColor3f(0.0, 0.0, 1.0);
-        glBegin(GL_LINES);
-            glVertex3f(0.0, 0.0, 0.0);
-            glVertex3f(0.0, 0.0, 1.0);
-        glEnd();
-        glPushMatrix();
-            glTranslatef(0.0, 0.0, 1.0);
-            glutSolidCone(0.15, 0.30, 10, 10);
-        glPopMatrix();
-    }
+    // z-axis in blue
+    glColor3f(0.0, 0.0, 1.0);
+    glBegin(GL_LINES);
+        glVertex3f(0.0, 0.0, 0.0);
+        glVertex3f(0.0, 0.0, 1.0);
+    glEnd();
+    glPushMatrix();
+        glTranslatef(0.0, 0.0, 1.0);
+        glutSolidCone(0.15, 0.30, 10, 10);
+    glPopMatrix();
 }
 
 void ClothSimulator::initializeKeyboardStatus()

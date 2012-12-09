@@ -1,5 +1,5 @@
 // compile with the following command:
-//     g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp -lglut -lGLU -lGL;
+//     g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp Floor.cpp -lglut -lGLU -lGL;
 
 #include "ClothSimulator.h"
 
@@ -49,22 +49,8 @@ int main(int argc, char** argv)
 // Will process all changes that occur, such as keyboard commands, new forces, ...
 void applyChanges()
 {
-    // find out what commands the keyboard is sending and apply them
-    clothSimulator->applyContinuousKeyboardCommands();
 
-    clothSimulator->swingLeftFoot();
-
-    // calculate time difference from last call to applyChanges()
-    float duration = clothSimulator->getTimeStep();
-
-    // apply all forces to the cloth
-    clothSimulator->cloth->applyForces(duration);
-
-    // satisfy all constraints of the cloth after forces are applied
-    clothSimulator->cloth->satisfyConstraints();
-
-    // handle all collisions with the spheres in the scene
-    clothSimulator->cloth->handleSphereIntersections();
+    clothSimulator->simulate();
 
     // redraw the screen
     glutPostRedisplay();
@@ -101,20 +87,7 @@ void display()
               cameraUpDirection.y,
               cameraUpDirection.z);
 
-    // choose wireframe or solid rendering
-    clothSimulator->chooseRenderingMethod();
-
-    // draw the world axis
-    clothSimulator->drawWorldAxis();
-
-    // draw spheres
-    clothSimulator->drawSpheres();
-
-    // draw triangles
-    clothSimulator->drawTriangles();
-
-    // draw cloth
-    clothSimulator->drawCloth();
+    clothSimulator->draw();
 
     // swap buffers needed for double buffering
     glutSwapBuffers();
