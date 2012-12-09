@@ -28,6 +28,8 @@ int main(int argc, char** argv)
     clothSimulator = ClothSimulator::getInstance();
 
     glutCreateWindow("Cloth Simulator");
+
+    // create the scene
     clothSimulator->createScene();
 
     glutDisplayFunc(display);
@@ -95,20 +97,7 @@ void display()
 
 void normalKeyboard(unsigned char key, int x, int y)
 {
-    switch(key)
-    {
-        // ESC control
-        case 27:
-            // clean up the clothSimulator before exiting
-            delete clothSimulator;
-            exit(0);
-            break;
-
-        // toggle enable state for other keyboard buttons which are to be
-        // continuously applied (like rotations, translations, ...)
-        default:
-            clothSimulator->keyboardStatus[key] = true;
-    }
+    clothSimulator->handleNormalKeyboardInput(key, x, y);
 }
 
 void normalKeyboardRelease(unsigned char key, int x, int y)

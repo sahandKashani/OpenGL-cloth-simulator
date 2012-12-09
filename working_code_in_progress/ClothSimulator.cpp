@@ -511,3 +511,21 @@ void ClothSimulator::applyContinuousKeyboardCommands()
         } // end if(keyboardStatus[key])
     } // end loop
 }
+
+void ClothSimulator::handleNormalKeyboardInput(unsigned char key, int x, int y)
+{
+    switch(key)
+    {
+        // ESC control
+        case 27:
+            // clean up the clothSimulator before exiting
+            // delete clothSimulator;
+            exit(0);
+            break;
+
+        // toggle enable state for other keyboard buttons which are to be
+        // continuously applied (like rotations, translations, ...)
+        default:
+            keyboardStatus[key] = true;
+    }
+}
