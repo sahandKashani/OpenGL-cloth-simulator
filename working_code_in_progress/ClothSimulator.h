@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "Floor.h"
 #include "Triangle.h"
+#include "Scene.h"
+#include "BatmanScene.h"
 #include <string>
 
 class ClothSimulator;
@@ -103,6 +105,8 @@ public:
     Vector3 getCameraPosition();
     Vector3 getCameraViewDirection();
     Vector3 getCameraUpDirection();
+
+    Scene* scene;
 };
 
 #endif

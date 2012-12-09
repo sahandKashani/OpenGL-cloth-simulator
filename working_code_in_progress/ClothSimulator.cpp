@@ -88,6 +88,8 @@ void ClothSimulator::draw()
     {
         drawWorldAxis();
     }
+
+    scene->draw();
 }
 
 void ClothSimulator::drawTriangles()
@@ -216,6 +218,8 @@ void ClothSimulator::createBatmanScene()
 
     cloth->addForce(gravity);
     cloth->addForce(wind);
+
+    scene = new BatmanScene();
 }
 
 void ClothSimulator::createScene()

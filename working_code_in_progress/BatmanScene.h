@@ -10,18 +10,18 @@
 class BatmanScene : public Scene
 {
 private:
-    void createScene();
     Cloth* cape;
     Floor* floor;
 
     std::vector<Sphere> leftFoot;
     std::vector<Sphere> rightFoot;
 
+    void createScene();
+    void drawBodyElement(std::vector<Sphere>* elements);
+
 public:
     BatmanScene();
     void draw();
-    void drawLeftFoot();
-    void drawRightFoot();
 };
 
 #endif

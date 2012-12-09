@@ -63,15 +63,20 @@ void BatmanScene::createScene()
 
 void BatmanScene::draw()
 {
-    cape->draw();
+    // draw cape
+    // cape->draw();
+
+    // draw feet
+    // drawBodyElement(&leftFoot);
+    // drawBodyElement(&rightFoot);
 }
 
-void BatmanScene::drawLeftFoot()
+void BatmanScene::drawBodyElement(std::vector<Sphere>* elements)
 {
-
-}
-
-void BatmanScene::drawRightFoot()
-{
-
+    for(std::vector<Sphere>::iterator sphereIterator = elements->begin();
+        sphereIterator != elements->end();
+        ++sphereIterator)
+    {
+        sphereIterator->draw();
+    }
 }
