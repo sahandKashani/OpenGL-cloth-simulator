@@ -18,6 +18,16 @@ Camera::Camera() :
     roll(0.0)
 {}
 
+void Camera::setViewDirection(Vector3 direction)
+{
+    viewDirection = direction;
+}
+
+void Camera::setUpDirection(Vector3 direction)
+{
+    upDirection = direction;
+}
+
 void Camera::setPosition(Vector3 pos)
 {
     position = pos;

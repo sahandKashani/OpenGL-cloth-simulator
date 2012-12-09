@@ -5,7 +5,7 @@
 
 class Scene
 {
-private:
+protected:
     float nearPlane;
     float farPlane;
     Camera camera;

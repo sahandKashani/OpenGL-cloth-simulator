@@ -1,5 +1,8 @@
 #include "Scene.h"
 
+Scene::Scene()
+{}
+
 float Scene::getNearPlane()
 {
     return nearPlane;

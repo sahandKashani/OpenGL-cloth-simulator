@@ -1,6 +1,7 @@
 #include "BatmanScene.h"
 
-BatmanScene::BatmanScene()
+BatmanScene::BatmanScene() :
+    Scene()
 {
     createScene();
 }
@@ -8,29 +9,19 @@ BatmanScene::BatmanScene()
 void BatmanScene::createScene()
 {
     // create the scene here, along with all objects necessary
-    // drawWireFrameEnabled                 = false;
-    // drawNodesEnabled                     = false;
-    // drawWorldAxisEnabled                 = true;
-    // drawStructuralConstraintsEnabled     = true;
-    // drawShearConstraintsEnabled          = true;
-    // drawStructuralBendConstraintsEnabled = true;
-    // drawShearBendConstraintsEnabled      = true;
-    // drawSpheresEnabled                   = true;
-
     nearPlane = 1.0;
     farPlane  = 200.0;
-    // angleIncrement = 0.03125;
-    // translationIncrement = 0.125;
 
-    // // simulation time step
-    // timeStep = 0.001;
+    // cloth instantiation
+    cape = new Cloth(10.0, 15.0, 20, 30);
+    floor = new Floor(Vector3(0.0, 0.0, 0.0),
+                      Vector3(0.0, 0.0, 10.0),
+                      Vector3(10.0, 0.0, 10.0),
+                      Vector3(10.0, 0.0, 0.0));
 
-    // // cloth instantiation
-    // cloth = new Cloth(10.0, 15.0, 20, 30);
-    // floor = new Floor(Vector3(0.0, 0.0, 0.0),
-    //                   Vector3(0.0, 0.0, 10.0),
-    //                   Vector3(10.0, 0.0, 10.0),
-    //                   Vector3(10.0, 0.0, 0.0));
+    camera.setPosition(Vector3(-10.0, 5.0, -10.0));
+    camera.setViewDirection(Vector3(5.0, 5.0, 0.0));
+    camera.setUpDirection(Vector3(0.0, 1.0, 0.0));
 
     // // reset camera to center of cloth
     // resetCameraPosition();
