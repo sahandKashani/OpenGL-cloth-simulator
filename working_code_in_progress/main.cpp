@@ -16,9 +16,6 @@ void normalKeyboardRelease(unsigned char key, int x, int y);
 void specialKeyboardInput(int key, int x, int y);
 void applyChanges();
 
-ClothSimulator* clothSimulator = 0;
-Keyboard* keyboard = 0;
-
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
@@ -27,13 +24,10 @@ int main(int argc, char** argv)
     glutInitWindowSize(400, 400);
     glutInitWindowPosition(1520, 800);
 
-    clothSimulator = ClothSimulator::getInstance();
-    keyboard = Keyboard::getInstance();
-
     glutCreateWindow("Cloth Simulator");
 
     // create the scene
-    clothSimulator->createScene();
+    ClothSimulator::getInstance()->createScene();
 
     glutDisplayFunc(display);
     glutIdleFunc(applyChanges);
@@ -44,7 +38,7 @@ int main(int argc, char** argv)
 
     glutKeyboardFunc(normalKeyboardInput);
     glutKeyboardUpFunc(normalKeyboardRelease);
-    // glutSpecialFunc(specialKeyboardInput);
+    glutSpecialFunc(specialKeyboardInput);
 
     glutMainLoop();
     return 0;
@@ -54,7 +48,7 @@ int main(int argc, char** argv)
 // Will process all changes that occur, such as keyboard commands, new forces, ...
 void applyChanges()
 {
-    clothSimulator->simulate();
+    ClothSimulator::getInstance()->simulate();
 
     // redraw the screen
     glutPostRedisplay();
@@ -75,7 +69,7 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-
+    ClothSimulator* clothSimulator = ClothSimulator::getInstance();
     Camera* camera = clothSimulator->getScene()->getCamera();
     Vector3 cameraPosition = camera->getPosition();
     Vector3 cameraViewDirection = camera->getViewDirection();
@@ -101,18 +95,17 @@ void display()
 
 void normalKeyboardInput(unsigned char key, int x, int y)
 {
-    keyboard->handleNormalKeyboardInput(key, x, y);
+    Keyboard::getInstance()->handleNormalKeyboardInput(key, x, y);
 }
 
 void normalKeyboardRelease(unsigned char key, int x, int y)
 {
-    // clothSimulator->handleNormalKeyboardRelease(key, x, y);
-    keyboard->handleNormalKeyboardRelease(key, x, y);
+    Keyboard::getInstance()->handleNormalKeyboardRelease(key, x, y);
 }
 
 void specialKeyboardInput(int key, int x, int y)
 {
-    // clothSimulator->handleSpecialKeyboardInput(key, x, y);
+    Keyboard::getInstance()->handleSpecialKeyboardInput(key, x, y);
 }
 
 void reshape(int w, int h)
@@ -125,10 +118,11 @@ void reshape(int w, int h)
     // set window size to new values
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 
-    // set a big clipping plane for now (no display errors)
+    float nearPlane = ClothSimulator::getInstance()->getScene()->getNearPlane();
+    float farPlane = ClothSimulator::getInstance()->getScene()->getFarPlane();
+
     float aspectRatio = (1.0 * w) / h;
-    // gluPerspective(60.0, aspectRatio, clothSimulator->nearPlane, clothSimulator->farPlane);
-    gluPerspective(60.0, aspectRatio, 1.0, 1000.0);
+    gluPerspective(60.0, aspectRatio, nearPlane, farPlane);
 
     // go back to modelview matrix (for other functions)
     glMatrixMode(GL_MODELVIEW);

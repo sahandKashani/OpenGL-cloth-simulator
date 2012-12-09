@@ -10,7 +10,10 @@ private:
     Vector3 position;
     Vector3 viewDirection;
     Vector3 upDirection;
-    Vector3 rightDirection;
+
+    Vector3 savedPosition;
+    Vector3 savedViewDirection;
+    Vector3 savedUpDirection;
 
     // used for getters only, not for computation
     float yaw;
@@ -25,7 +28,6 @@ public:
     Vector3 getPosition();
     Vector3 getViewDirection();
     Vector3 getUpDirection();
-    Vector3 getRightDirection();
 
     float getYaw();
     float getPitch();
@@ -49,6 +51,9 @@ public:
     void rotateAroundZAxisObject(float angleInRadians);
 
     void showCameraStatus();
+
+    void saveCameraSetup();
+    void loadCameraSetup();
 };
 
 #endif

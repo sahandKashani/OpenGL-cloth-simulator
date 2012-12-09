@@ -18,6 +18,8 @@ public:
     float getFarPlane();
     Camera* getCamera();
 
+    void drawWorldAxis();
+
     // you must not instantiate Scene, but only descendants, because they will have
     // the draw and simulate methods needed to animate themselves correctly.
     virtual void draw() = 0;

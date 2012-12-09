@@ -1,6 +1,12 @@
 #include "Keyboard.h"
 #include "Camera.h"
 #include "ClothSimulator.h"
+#include "DrawingSettings.h"
+
+// OpenGL imports
+#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 Keyboard* Keyboard::instance = 0;
 
@@ -15,8 +21,8 @@ Keyboard* Keyboard::getInstance()
 }
 
 Keyboard::Keyboard() :
-    angleIncrement(0.03125),
-    translationIncrement(0.125)
+    angleIncrement(0.015625), // 2^(-6)
+    translationIncrement(0.125) // 2^(-3)
 {}
 
 void Keyboard::resetKeyboardStatus()
@@ -86,11 +92,11 @@ void Keyboard::applyNormalKeyboardActions()
                 // camera translation controls
                 case 'f':
                     // translate camera left
-                    camera->translate(-camera->getRightDirection().normalize() * translationIncrement);
+                    camera->translate(camera->getUpDirection().cross(camera->getViewDirection()).normalize() * translationIncrement);
                     break;
                 case 'h':
-                    // translate camera rightewDirection().cross(camera->getUpDirection()).normalize() * translationIncrement);
-                    camera->translate(camera->getRightDirection().normalize() * translationIncrement);
+                    // translate camera right
+                    camera->translate(camera->getViewDirection().cross(camera->getUpDirection()).normalize() * translationIncrement);
                     break;
                 case 't':
                     // translate camera up
@@ -130,48 +136,126 @@ void Keyboard::handleNormalKeyboardRelease(unsigned char key, int x, int y)
     keyboardStatus[key] = false;
 }
 
-// void Keyboard::handleSpecialKeyboardInput(int key, int x, int y)
-// {
-//     switch(key)
-//     {
-//         case GLUT_KEY_F1:
-//             showHelp();
-//             break;
-//         case GLUT_KEY_F2:
-//             resetCameraPosition();
-//             break;
-//         case GLUT_KEY_F3:
-//             showCameraStatus();
-//             break;
-//         case GLUT_KEY_F4:
-//             showDrawStatus();
-//             break;
-//         case GLUT_KEY_F5:
-//             drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
-//             break;
-//         case GLUT_KEY_F6:
-//             drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
-//             break;
-//         case GLUT_KEY_F7:
-//             drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
-//             break;
-//         case GLUT_KEY_F8:
-//             drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
-//             break;
-//         case GLUT_KEY_F9:
-//             drawNodesEnabled = !drawNodesEnabled;
-//             break;
-//         case GLUT_KEY_F10:
-//             drawWireFrameEnabled = !drawWireFrameEnabled;
-//             break;
-//         case GLUT_KEY_F11:
-//             drawWorldAxisEnabled = !drawWorldAxisEnabled;
-//             break;
-//         case GLUT_KEY_F12:
-//             drawSpheresEnabled = !drawSpheresEnabled;
-//             break;
+void Keyboard::handleSpecialKeyboardInput(int key, int x, int y)
+{
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
 
-//         default:
-//             break;
-//     }
-// }
+    switch(key)
+    {
+        case GLUT_KEY_F1:
+            showHelp();
+            break;
+        case GLUT_KEY_F2:
+            ClothSimulator::getInstance()->getScene()->getCamera()->loadCameraSetup();
+            break;
+        case GLUT_KEY_F3:
+            ClothSimulator::getInstance()->getScene()->getCamera()->showCameraStatus();
+            break;
+        case GLUT_KEY_F4:
+            DrawingSettings::getInstance()->showDrawStatus();
+            break;
+        case GLUT_KEY_F5:
+            drawingSettings->toggleDrawStructuralConstraintsEnabled();
+            break;
+        case GLUT_KEY_F6:
+            drawingSettings->toggleDrawShearConstraintsEnabled();
+            break;
+        case GLUT_KEY_F7:
+            drawingSettings->toggleDrawStructuralBendConstraintsEnabled();
+            break;
+        case GLUT_KEY_F8:
+            drawingSettings->toggleDrawShearBendConstraintsEnabled();
+            break;
+        case GLUT_KEY_F9:
+            drawingSettings->toggleDrawNodesEnabled();
+            break;
+        case GLUT_KEY_F10:
+            drawingSettings->toggleDrawWireFrameEnabled();
+            break;
+        case GLUT_KEY_F11:
+            drawingSettings->toggleDrawWorldAxisEnabled();
+            break;
+        case GLUT_KEY_F12:
+            drawingSettings->toggleDrawSpheresEnabled();
+            break;
+
+        default:
+            break;
+    }
+}
+
+void Keyboard::showHelp()
+{
+    std::cout << "******************************************" << std::endl;
+    std::cout << "********           help           ********" << std::endl;
+    std::cout << "******************************************" << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "ESC: exit cloth simulator" << std::endl;
+
+    std::cout << std::endl;
+
+    // help controls
+    std::cout << "help controls:" << std::endl;
+    std::cout << "  F1: show help" << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "camera position reset:" << std::endl;
+    std::cout << "  F2: reset camera position" << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "status controls:" << std::endl;
+    std::cout << "  F3: show camera status" << std::endl;
+    std::cout << "  F4: show draw   status" << std::endl;
+
+    std::cout << std::endl;
+
+    // drawing controls
+    std::cout << "drawing controls:" << std::endl;
+    std::cout << "  F5 : toggle draw structural      constraints" << std::endl;
+    std::cout << "  F6 : toggle draw shear           constraints" << std::endl;
+    std::cout << "  F7 : toggle draw structural bend constraints" << std::endl;
+    std::cout << "  F8 : toggle draw shear      bend constraints" << std::endl;
+    std::cout << "  F9 : toggle draw nodes" << std::endl;
+    std::cout << "  F10: toggle draw wireframe" << std::endl;
+    std::cout << "  F11: toggle draw world axis" << std::endl;
+    std::cout << "  F12: toggle draw spheres" << std::endl;
+
+    std::cout << std::endl;
+
+    // yaw, pitch and roll controls
+    std::cout << "camera object rotation controls:" << std::endl;
+    std::cout << "  j: yaw   left " << std::endl;
+    std::cout << "  l: yaw   right" << std::endl;
+    std::cout << "  k: pitch down " << std::endl;
+    std::cout << "  i: pitch up   " << std::endl;
+    std::cout << "  u: roll  left " << std::endl;
+    std::cout << "  o: roll  right" << std::endl;
+
+    std::cout << std::endl;
+
+    // world camera controls
+    std::cout << "camera world rotation controls:" << std::endl;
+    std::cout << "  s: rotate camera left  around world X axis" << std::endl;
+    std::cout << "  w: rotate camera right around world X axis" << std::endl;
+    std::cout << "  a: rotate camera left  around world Y axis" << std::endl;
+    std::cout << "  d: rotate camera right around world Y axis" << std::endl;
+    std::cout << "  e: rotate camera left  around world Z axis" << std::endl;
+    std::cout << "  q: rotate camera right around world Z axis" << std::endl;
+
+    std::cout << std::endl;
+
+    // camera position controls
+    std::cout << "camera translation controls:" << std::endl;
+    std::cout << "  f: translate camera left" << std::endl;
+    std::cout << "  h: translate camera right" << std::endl;
+    std::cout << "  t: translate camera up" << std::endl;
+    std::cout << "  g: translate camera down" << std::endl;
+    std::cout << "  r: translate camera back" << std::endl;
+    std::cout << "  z: translate camera front" << std::endl;
+
+    std::cout << std::endl;
+}

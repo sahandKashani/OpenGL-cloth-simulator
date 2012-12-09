@@ -1,6 +1,8 @@
 #ifndef DRAWING_SETTINGS_H
 #define DRAWING_SETTINGS_H
 
+#include <string>
+
 class DrawingSettings
 {
 private:
@@ -38,6 +40,11 @@ public:
     void toggleDrawStructuralBendConstraintsEnabled();
     void toggleDrawShearBendConstraintsEnabled();
     void toggleDrawSpheresEnabled();
+
+    void showDrawStatus();
+    std::string isEnabled(bool controlVariableEnabled);
+
+    void chooseRenderingMethod();
 };
 
 #endif

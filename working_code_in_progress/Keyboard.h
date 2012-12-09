@@ -24,6 +24,8 @@ public:
     void applyNormalKeyboardActions();
 
     void handleSpecialKeyboardInput(int key, int x, int y);
+
+    void showHelp();
 };
 
 #endif

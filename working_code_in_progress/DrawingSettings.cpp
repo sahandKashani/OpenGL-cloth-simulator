@@ -1,4 +1,5 @@
 #include "DrawingSettings.h"
+#include <iostream>
 
 DrawingSettings* DrawingSettings::instance = 0;
 
@@ -101,4 +102,44 @@ void DrawingSettings::toggleDrawShearBendConstraintsEnabled()
 void DrawingSettings::toggleDrawSpheresEnabled()
 {
     drawSpheresEnabled = !drawSpheresEnabled;
+}
+
+void DrawingSettings::showDrawStatus()
+{
+    std::cout << "draw status:" << std::endl;
+    std::cout << "  draw nodes                      : " << isEnabled(drawNodesEnabled) << std::endl;
+    std::cout << "  draw structural constraints     : " << isEnabled(drawStructuralConstraintsEnabled) << std::endl;
+    std::cout << "  draw shear constraints          : " << isEnabled(drawShearConstraintsEnabled) << std::endl;
+    std::cout << "  draw structural bend constraints: " << isEnabled(drawStructuralBendConstraintsEnabled) << std::endl;
+    std::cout << "  draw shear bend constraints     : " << isEnabled(drawShearBendConstraintsEnabled) << std::endl;
+    std::cout << "  draw wireframe                  : " << isEnabled(drawWireFrameEnabled) << std::endl;
+    std::cout << "  draw world axis                 : " << isEnabled(drawWorldAxisEnabled) << std::endl;
+
+    std::cout << std::endl;
+}
+
+// prints "true" if controlVariableEnabled is true, and "false" otherwise
+std::string DrawingSettings::isEnabled(bool controlVariableEnabled)
+{
+    if(controlVariableEnabled)
+    {
+        return "true";
+    }
+    else
+    {
+        return "false";
+    }
+}
+
+// determines if a wireframe is to be drawn, or a textured version
+void DrawingSettings::chooseRenderingMethod()
+{
+    if(drawWireFrameEnabled)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    else
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 }
