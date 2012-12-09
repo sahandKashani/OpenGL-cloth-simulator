@@ -27,7 +27,7 @@ void BatmanScene::createScene()
                       Vector3(10.0, 0.0, 0.0));
 
     // camera setup
-    camera->setPosition(Vector3(-10.0, 5.0, 20.0));
+    camera->setPosition(Vector3(-10.0, 7.5, 20.0));
     camera->setViewDirection(Vector3(1.0, 0.0, -1.0));
     camera->setUpDirection(Vector3(0.0, 1.0, 0.0));
 
@@ -54,13 +54,19 @@ void BatmanScene::createScene()
 
     // forces
     // gravity
-    Vector3 gravity(0.0, -10.0, 0.0);
+    Vector3 gravity(0.0, -1.0, 0.0);
     // wind
-    Vector3 wind(0.0, 0.0, -0.2);
+    Vector3 wind(0.0, 0.0, 1.0);
 
     // add forces to cape
     cape->addForce(gravity);
     cape->addForce(wind);
+}
+
+void BatmanScene::simulate()
+{
+    cape->applyForces(0.01);
+    cape->satisfyConstraints();
 }
 
 void BatmanScene::draw()

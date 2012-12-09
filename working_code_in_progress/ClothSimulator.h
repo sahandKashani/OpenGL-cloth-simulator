@@ -98,7 +98,7 @@ public:
     // void swingLeftFoot();
     // void swingRightFoot();
 
-    // void simulate();
+    void simulate();
 
     // void handleNormalKeyboardInput(unsigned char key, int x, int y);
     // void handleNormalKeyboardRelease(unsigned char key, int x, int y);

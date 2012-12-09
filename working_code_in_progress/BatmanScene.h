@@ -22,6 +22,7 @@ private:
 public:
     BatmanScene();
     void draw();
+    void simulate();
 };
 
 #endif

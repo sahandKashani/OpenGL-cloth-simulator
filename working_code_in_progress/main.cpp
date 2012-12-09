@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     clothSimulator->createScene();
 
     glutDisplayFunc(display);
-    // glutIdleFunc(applyChanges);
+    glutIdleFunc(applyChanges);
     glutReshapeFunc(reshape);
 
     // disable keyboard repeat, because we will use variables for continuous animation
@@ -52,10 +52,10 @@ int main(int argc, char** argv)
 void applyChanges()
 {
 
-    // clothSimulator->simulate();
+    clothSimulator->simulate();
 
-    // // redraw the screen
-    // glutPostRedisplay();
+    // redraw the screen
+    glutPostRedisplay();
 }
 
 // The display function only takes care of drawing.

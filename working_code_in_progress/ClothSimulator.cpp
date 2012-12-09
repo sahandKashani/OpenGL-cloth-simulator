@@ -39,8 +39,8 @@ ClothSimulator::ClothSimulator()
 //     delete cloth;
 // }
 
-// void ClothSimulator::simulate()
-// {
+void ClothSimulator::simulate()
+{
 //     // find out what commands the keyboard is sending and apply them
 //     applyContinuousKeyboardCommands();
 
@@ -60,7 +60,8 @@ ClothSimulator::ClothSimulator()
 
 //     // handle all collisions with the spheres in the scene
 //     cloth->handleSphereIntersections();
-// }
+    scene->simulate();
+}
 
 // void ClothSimulator::drawCloth()
 // {
