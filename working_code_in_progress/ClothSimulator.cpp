@@ -580,3 +580,18 @@ void ClothSimulator::handleSpecialKeyboardInput(int key, int x, int y)
             break;
     }
 }
+
+Vector3 ClothSimulator::getCameraPosition()
+{
+    return camera->getPosition();
+}
+
+Vector3 ClothSimulator::getCameraViewDirection()
+{
+    return camera->getViewDirection();
+}
+
+Vector3 ClothSimulator::getCameraUpDirection()
+{
+    return camera->getUpDirection();
+}

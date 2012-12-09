@@ -99,6 +99,10 @@ public:
     void handleNormalKeyboardInput(unsigned char key, int x, int y);
     void handleNormalKeyboardRelease(unsigned char key, int x, int y);
     void handleSpecialKeyboardInput(int key, int x, int y);
+
+    Vector3 getCameraPosition();
+    Vector3 getCameraViewDirection();
+    Vector3 getCameraUpDirection();
 };
 
 #endif

@@ -1,5 +1,5 @@
 // compile with the following command:
-//     g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp Floor.cpp -lglut -lGLU -lGL;
+//     g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp Floor.cpp Scene.cpp BatmanScene.cpp -lglut -lGLU -lGL;
 
 #include "ClothSimulator.h"
 
@@ -10,9 +10,9 @@
 
 void display();
 void reshape(int w, int h);
-void normalKeyboard(unsigned char key, int x, int y);
+void normalKeyboardInput(unsigned char key, int x, int y);
 void normalKeyboardRelease(unsigned char key, int x, int y);
-void specialKeyboard(int key, int x, int y);
+void specialKeyboardInput(int key, int x, int y);
 void applyChanges();
 
 ClothSimulator* clothSimulator = 0;
@@ -39,9 +39,9 @@ int main(int argc, char** argv)
     // disable keyboard repeat, because we will use variables for continuous animation
     glutIgnoreKeyRepeat(1);
 
-    glutKeyboardFunc(normalKeyboard);
+    glutKeyboardFunc(normalKeyboardInput);
     glutKeyboardUpFunc(normalKeyboardRelease);
-    glutSpecialFunc(specialKeyboard);
+    glutSpecialFunc(specialKeyboardInput);
 
     glutMainLoop();
     return 0;
@@ -73,9 +73,9 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    Vector3 cameraPosition = clothSimulator->camera->getPosition();
-    Vector3 cameraViewDirection = clothSimulator->camera->getViewDirection();
-    Vector3 cameraUpDirection = clothSimulator->camera->getUpDirection();
+    Vector3 cameraPosition = clothSimulator->getCameraPosition();
+    Vector3 cameraViewDirection = clothSimulator->getCameraViewDirection();
+    Vector3 cameraUpDirection = clothSimulator->getCameraUpDirection();
 
     // all perspectives are already calculated and stored, so just position
     // the camera where it is supposed to be
@@ -95,7 +95,7 @@ void display()
     glutSwapBuffers();
 }
 
-void normalKeyboard(unsigned char key, int x, int y)
+void normalKeyboardInput(unsigned char key, int x, int y)
 {
     clothSimulator->handleNormalKeyboardInput(key, x, y);
 }
@@ -105,7 +105,7 @@ void normalKeyboardRelease(unsigned char key, int x, int y)
     clothSimulator->handleNormalKeyboardRelease(key, x, y);
 }
 
-void specialKeyboard(int key, int x, int y)
+void specialKeyboardInput(int key, int x, int y)
 {
     clothSimulator->handleSpecialKeyboardInput(key, x, y);
 }
