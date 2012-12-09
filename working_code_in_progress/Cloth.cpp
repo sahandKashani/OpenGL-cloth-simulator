@@ -4,7 +4,7 @@
 #include <GL/glu.h>
 
 #include "Cloth.h"
-#include "ClothSimulator.h"
+#include "DrawingSettings.h"
 
 Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight) :
     clothWidth(clothTotalWidth),
@@ -18,25 +18,6 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
 
 void Cloth::handleSphereIntersections(std::vector<Sphere>* spheres)
 {
-    // ClothSimulator* clothSimulator = ClothSimulator::getInstance();
-    // for(std::vector<Sphere>::iterator sphereIterator = clothSimulator->spheres.begin();
-    //     sphereIterator != clothSimulator->spheres.end();
-    //     ++sphereIterator)
-    // {
-    //     for(int x = 0; x < numberNodesWidth; x += 1)
-    //     {
-    //         for(int y = 0; y < numberNodesHeight; y += 1)
-    //         {
-    //             if(sphereIterator->willHitSphere(getNode(x, y)))
-    //             {
-    //                 // removeRightStructuralConstraint(x, y);
-    //                 // removeTopStructuralConstraint(x, y);
-    //                 sphereIterator->handleNodeIntersection(getNode(x, y));
-    //             }
-    //         }
-    //     }
-    // }
-
     for(std::vector<Sphere>::iterator sphereIterator = spheres->begin();
         sphereIterator != spheres->end();
         ++sphereIterator)
@@ -52,19 +33,19 @@ void Cloth::handleSphereIntersections(std::vector<Sphere>* spheres)
 }
 
 // TODO : doesn't work
-void Cloth::removeRightStructuralConstraint(int x, int y)
-{
-    int position = y * (numberNodesHeight - 1) + x;
-    std::cout << Vector3(x, y, 0.0).toString() << std::endl;
-    rightStructuralConstraints[position].disable();
-}
+// void Cloth::removeRightStructuralConstraint(int x, int y)
+// {
+//     int position = y * (numberNodesHeight - 1) + x;
+//     std::cout << Vector3(x, y, 0.0).toString() << std::endl;
+//     rightStructuralConstraints[position].disable();
+// }
 
 // TODO : works, but not perfectly
-void Cloth::removeTopStructuralConstraint(int x, int y)
-{
-    int position = x * (numberNodesWidth - 1) + y;
-    topStructuralConstraints[position].disable();
-}
+// void Cloth::removeTopStructuralConstraint(int x, int y)
+// {
+//     int position = x * (numberNodesWidth - 1) + y;
+//     topStructuralConstraints[position].disable();
+// }
 
 float Cloth::getClothWidth()
 {
@@ -141,7 +122,8 @@ void Cloth::createConstraints()
 {
     createStructuralConstraints();
     createShearConstraints();
-    createBendConstraints();
+    createStructuralBendConstraints();
+    createShearBendConstraints();
 }
 
 void Cloth::createStructuralConstraints()
@@ -190,12 +172,6 @@ void Cloth::createShearConstraints()
             shearConstraints.push_back(diagonalConstraint2);
         }
     }
-}
-
-void Cloth::createBendConstraints()
-{
-    createStructuralBendConstraints();
-    createShearBendConstraints();
 }
 
 void Cloth::createStructuralBendConstraints()
@@ -250,32 +226,32 @@ void Cloth::draw()
 {
     glColor3f(1.0, 1.0, 1.0);
 
-    // ClothSimulator* clothSimulator = ClothSimulator::getInstance();
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
 
-    // if(clothSimulator->drawNodesEnabled)
-    // {
-        // drawNodes();
-    // }
+    if(drawingSettings->isDrawNodesEnabled())
+    {
+        drawNodes();
+    }
 
-    // if(clothSimulator->drawStructuralConstraintsEnabled)
-    // {
+    if(drawingSettings->isDrawStructuralConstraintsEnabled())
+    {
         drawStructuralConstraints();
-    // }
+    }
 
-    // if(clothSimulator->drawShearConstraintsEnabled)
-    // {
+    if(drawingSettings->isDrawShearConstraintsEnabled())
+    {
         drawShearConstraints();
-    // }
+    }
 
-    // if(clothSimulator->drawStructuralBendConstraintsEnabled)
-    // {
+    if(drawingSettings->isDrawStructuralBendConstraintsEnabled())
+    {
         drawStructuralBendConstraints();
-    // }
+    }
 
-    // if(clothSimulator->drawShearBendConstraintsEnabled)
-    // {
+    if(drawingSettings->isDrawShearBendConstraintsEnabled())
+    {
         drawShearBendConstraints();
-    // }
+    }
 }
 
 void Cloth::drawNodes()

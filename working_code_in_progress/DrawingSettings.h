@@ -30,14 +30,14 @@ public:
     bool isDrawShearBendConstraintsEnabled();
     bool isDrawSpheresEnabled();
 
-    bool toggleDrawWireFrameEnabled();
-    bool toggleDrawNodesEnabled();
-    bool toggleDrawWorldAxisEnabled();
-    bool toggleDrawStructuralConstraintsEnabled();
-    bool toggleDrawShearConstraintsEnabled();
-    bool toggleDrawStructuralBendConstraintsEnabled();
-    bool toggleDrawShearBendConstraintsEnabled();
-    bool toggleDrawSpheresEnabled();
+    void toggleDrawWireFrameEnabled();
+    void toggleDrawNodesEnabled();
+    void toggleDrawWorldAxisEnabled();
+    void toggleDrawStructuralConstraintsEnabled();
+    void toggleDrawShearConstraintsEnabled();
+    void toggleDrawStructuralBendConstraintsEnabled();
+    void toggleDrawShearBendConstraintsEnabled();
+    void toggleDrawSpheresEnabled();
 };
 
 #endif

@@ -23,82 +23,82 @@ DrawingSettings::DrawingSettings() :
     drawSpheresEnabled(true)
 {}
 
-bool isDrawWireFrameEnabled()
+bool DrawingSettings::isDrawWireFrameEnabled()
 {
     return drawWireFrameEnabled;
 }
 
-bool isDrawNodesEnabled()
+bool DrawingSettings::isDrawNodesEnabled()
 {
     return drawNodesEnabled;
 }
 
-bool isDrawWorldAxisEnabled()
+bool DrawingSettings::isDrawWorldAxisEnabled()
 {
     return drawWorldAxisEnabled;
 }
 
-bool isDrawStructuralConstraintsEnabled()
+bool DrawingSettings::isDrawStructuralConstraintsEnabled()
 {
     return drawStructuralConstraintsEnabled;
 }
 
-bool isDrawShearConstraintsEnabled()
+bool DrawingSettings::isDrawShearConstraintsEnabled()
 {
     return drawShearConstraintsEnabled;
 }
 
-bool isDrawStructuralBendConstraintsEnabled()
+bool DrawingSettings::isDrawStructuralBendConstraintsEnabled()
 {
     return drawStructuralBendConstraintsEnabled;
 }
 
-bool isDrawShearBendConstraintsEnabled()
+bool DrawingSettings::isDrawShearBendConstraintsEnabled()
 {
     return drawShearBendConstraintsEnabled;
 }
 
-bool isDrawSpheresEnabled()
+bool DrawingSettings::isDrawSpheresEnabled()
 {
     return drawSpheresEnabled;
 }
 
-bool toggleDrawWireFrameEnabled()
+void DrawingSettings::toggleDrawWireFrameEnabled()
 {
     drawWireFrameEnabled = !drawWireFrameEnabled;
 }
 
-bool toggleDrawNodesEnabled()
+void DrawingSettings::toggleDrawNodesEnabled()
 {
     drawNodesEnabled = !drawNodesEnabled;
 }
 
-bool toggleDrawWorldAxisEnabled()
+void DrawingSettings::toggleDrawWorldAxisEnabled()
 {
     drawWorldAxisEnabled = !drawWorldAxisEnabled;
 }
 
-bool toggleDrawStructuralConstraintsEnabled()
+void DrawingSettings::toggleDrawStructuralConstraintsEnabled()
 {
     drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
 }
 
-bool toggleDrawShearConstraintsEnabled()
+void DrawingSettings::toggleDrawShearConstraintsEnabled()
 {
     drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
 }
 
-bool toggleDrawStructuralBendConstraintsEnabled()
+void DrawingSettings::toggleDrawStructuralBendConstraintsEnabled()
 {
     drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
 }
 
-bool toggleDrawShearBendConstraintsEnabled()
+void DrawingSettings::toggleDrawShearBendConstraintsEnabled()
 {
     drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
 }
 
-bool toggleDrawSpheresEnabled()
+void DrawingSettings::toggleDrawSpheresEnabled()
 {
     drawSpheresEnabled = !drawSpheresEnabled;
 }

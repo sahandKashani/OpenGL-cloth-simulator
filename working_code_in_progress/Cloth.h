@@ -41,7 +41,6 @@ private:
     void createConstraints();
     void createStructuralConstraints();
     void createShearConstraints();
-    void createBendConstraints();
     void createStructuralBendConstraints();
     void createShearBendConstraints();
 
