@@ -13,5 +13,7 @@ float Scene::getFarPlane()
     return farPlane;
 }
 
-void Scene::draw()
-{}
+Camera* Scene::getCamera()
+{
+    return camera;
+}

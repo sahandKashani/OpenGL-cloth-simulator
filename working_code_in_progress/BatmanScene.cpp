@@ -17,6 +17,8 @@ void BatmanScene::createScene()
     nearPlane = 1.0;
     farPlane  = 200.0;
 
+    camera = new Camera();
+
     // cloth instantiation
     cape = new Cloth(10.0, 15.0, 20, 30);
     floor = new Floor(Vector3(0.0, 0.0, 0.0),
@@ -25,9 +27,9 @@ void BatmanScene::createScene()
                       Vector3(10.0, 0.0, 0.0));
 
     // camera setup
-    camera.setPosition(Vector3(-10.0, 5.0, -10.0));
-    camera.setViewDirection(Vector3(5.0, 5.0, 0.0));
-    camera.setUpDirection(Vector3(0.0, 1.0, 0.0));
+    camera->setPosition(Vector3(-10.0, 5.0, 20.0));
+    camera->setViewDirection(Vector3(1.0, 0.0, -1.0));
+    camera->setUpDirection(Vector3(0.0, 1.0, 0.0));
 
     // fixing cape at certain points
     cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
@@ -64,11 +66,11 @@ void BatmanScene::createScene()
 void BatmanScene::draw()
 {
     // draw cape
-    // cape->draw();
+    cape->draw();
 
     // draw feet
-    // drawBodyElement(&leftFoot);
-    // drawBodyElement(&rightFoot);
+    drawBodyElement(&leftFoot);
+    drawBodyElement(&rightFoot);
 }
 
 void BatmanScene::drawBodyElement(std::vector<Sphere>* elements)

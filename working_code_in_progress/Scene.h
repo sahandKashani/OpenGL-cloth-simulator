@@ -8,14 +8,19 @@ class Scene
 protected:
     float nearPlane;
     float farPlane;
-    Camera camera;
+    Camera* camera;
 
 public:
     Scene();
+
+    // getters
     float getNearPlane();
     float getFarPlane();
+    Camera* getCamera();
 
-    void draw();
+    // you must not instantiate Scene, but descendants, because they will have
+    // the draw method implemented
+    virtual void draw() = 0;
 };
 
 #endif

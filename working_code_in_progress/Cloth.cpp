@@ -18,24 +18,24 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
 
 void Cloth::handleSphereIntersections()
 {
-    ClothSimulator* clothSimulator = ClothSimulator::getInstance();
-    for(std::vector<Sphere>::iterator sphereIterator = clothSimulator->spheres.begin();
-        sphereIterator != clothSimulator->spheres.end();
-        ++sphereIterator)
-    {
-        for(int x = 0; x < numberNodesWidth; x += 1)
-        {
-            for(int y = 0; y < numberNodesHeight; y += 1)
-            {
-                if(sphereIterator->willHitSphere(getNode(x, y)))
-                {
-                    // removeRightStructuralConstraint(x, y);
-                    // removeTopStructuralConstraint(x, y);
-                    sphereIterator->handleNodeIntersection(getNode(x, y));
-                }
-            }
-        }
-    }
+    // ClothSimulator* clothSimulator = ClothSimulator::getInstance();
+    // for(std::vector<Sphere>::iterator sphereIterator = clothSimulator->spheres.begin();
+    //     sphereIterator != clothSimulator->spheres.end();
+    //     ++sphereIterator)
+    // {
+    //     for(int x = 0; x < numberNodesWidth; x += 1)
+    //     {
+    //         for(int y = 0; y < numberNodesHeight; y += 1)
+    //         {
+    //             if(sphereIterator->willHitSphere(getNode(x, y)))
+    //             {
+    //                 // removeRightStructuralConstraint(x, y);
+    //                 // removeTopStructuralConstraint(x, y);
+    //                 sphereIterator->handleNodeIntersection(getNode(x, y));
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 // TODO : doesn't work
@@ -237,32 +237,32 @@ void Cloth::draw()
 {
     glColor3f(1.0, 1.0, 1.0);
 
-    ClothSimulator* clothSimulator = ClothSimulator::getInstance();
+    // ClothSimulator* clothSimulator = ClothSimulator::getInstance();
 
-    if(clothSimulator->drawNodesEnabled)
-    {
+    // if(clothSimulator->drawNodesEnabled)
+    // {
         drawNodes();
-    }
+    // }
 
-    if(clothSimulator->drawStructuralConstraintsEnabled)
-    {
+    // if(clothSimulator->drawStructuralConstraintsEnabled)
+    // {
         drawStructuralConstraints();
-    }
+    // }
 
-    if(clothSimulator->drawShearConstraintsEnabled)
-    {
+    // if(clothSimulator->drawShearConstraintsEnabled)
+    // {
         drawShearConstraints();
-    }
+    // }
 
-    if(clothSimulator->drawStructuralBendConstraintsEnabled)
-    {
+    // if(clothSimulator->drawStructuralBendConstraintsEnabled)
+    // {
         drawStructuralBendConstraints();
-    }
+    // }
 
-    if(clothSimulator->drawShearBendConstraintsEnabled)
-    {
+    // if(clothSimulator->drawShearBendConstraintsEnabled)
+    // {
         drawShearBendConstraints();
-    }
+    // }
 }
 
 void Cloth::drawNodes()

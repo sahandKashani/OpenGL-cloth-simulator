@@ -33,15 +33,15 @@ int main(int argc, char** argv)
     clothSimulator->createScene();
 
     glutDisplayFunc(display);
-    glutIdleFunc(applyChanges);
+    // glutIdleFunc(applyChanges);
     glutReshapeFunc(reshape);
 
     // disable keyboard repeat, because we will use variables for continuous animation
     glutIgnoreKeyRepeat(1);
 
-    glutKeyboardFunc(normalKeyboardInput);
-    glutKeyboardUpFunc(normalKeyboardRelease);
-    glutSpecialFunc(specialKeyboardInput);
+    // glutKeyboardFunc(normalKeyboardInput);
+    // glutKeyboardUpFunc(normalKeyboardRelease);
+    // glutSpecialFunc(specialKeyboardInput);
 
     glutMainLoop();
     return 0;
@@ -52,10 +52,10 @@ int main(int argc, char** argv)
 void applyChanges()
 {
 
-    clothSimulator->simulate();
+    // clothSimulator->simulate();
 
-    // redraw the screen
-    glutPostRedisplay();
+    // // redraw the screen
+    // glutPostRedisplay();
 }
 
 // The display function only takes care of drawing.
@@ -97,17 +97,17 @@ void display()
 
 void normalKeyboardInput(unsigned char key, int x, int y)
 {
-    clothSimulator->handleNormalKeyboardInput(key, x, y);
+    // clothSimulator->handleNormalKeyboardInput(key, x, y);
 }
 
 void normalKeyboardRelease(unsigned char key, int x, int y)
 {
-    clothSimulator->handleNormalKeyboardRelease(key, x, y);
+    // clothSimulator->handleNormalKeyboardRelease(key, x, y);
 }
 
 void specialKeyboardInput(int key, int x, int y)
 {
-    clothSimulator->handleSpecialKeyboardInput(key, x, y);
+    // clothSimulator->handleSpecialKeyboardInput(key, x, y);
 }
 
 void reshape(int w, int h)
@@ -122,7 +122,8 @@ void reshape(int w, int h)
 
     // set a big clipping plane for now (no display errors)
     float aspectRatio = (1.0 * w) / h;
-    gluPerspective(60.0, aspectRatio, clothSimulator->nearPlane, clothSimulator->farPlane);
+    // gluPerspective(60.0, aspectRatio, clothSimulator->nearPlane, clothSimulator->farPlane);
+    gluPerspective(60.0, aspectRatio, 1.0, 1000.0);
 
     // go back to modelview matrix (for other functions)
     glMatrixMode(GL_MODELVIEW);
