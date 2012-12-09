@@ -107,48 +107,7 @@ void normalKeyboardRelease(unsigned char key, int x, int y)
 
 void specialKeyboard(int key, int x, int y)
 {
-    switch(key)
-    {
-        case GLUT_KEY_F1:
-            clothSimulator->showHelp();
-            break;
-        case GLUT_KEY_F2:
-            clothSimulator->resetCameraPosition();
-            break;
-        case GLUT_KEY_F3:
-            clothSimulator->showCameraStatus();
-            break;
-        case GLUT_KEY_F4:
-            clothSimulator->showDrawStatus();
-            break;
-        case GLUT_KEY_F5:
-            clothSimulator->drawStructuralConstraintsEnabled = !clothSimulator->drawStructuralConstraintsEnabled;
-            break;
-        case GLUT_KEY_F6:
-            clothSimulator->drawShearConstraintsEnabled = !clothSimulator->drawShearConstraintsEnabled;
-            break;
-        case GLUT_KEY_F7:
-            clothSimulator->drawStructuralBendConstraintsEnabled = !clothSimulator->drawStructuralBendConstraintsEnabled;
-            break;
-        case GLUT_KEY_F8:
-            clothSimulator->drawShearBendConstraintsEnabled = !clothSimulator->drawShearBendConstraintsEnabled;
-            break;
-        case GLUT_KEY_F9:
-            clothSimulator->drawNodesEnabled = !clothSimulator->drawNodesEnabled;
-            break;
-        case GLUT_KEY_F10:
-            clothSimulator->drawWireFrameEnabled = !clothSimulator->drawWireFrameEnabled;
-            break;
-        case GLUT_KEY_F11:
-            clothSimulator->drawWorldAxisEnabled = !clothSimulator->drawWorldAxisEnabled;
-            break;
-        case GLUT_KEY_F12:
-            clothSimulator->drawSpheresEnabled = !clothSimulator->drawSpheresEnabled;
-            break;
-
-        default:
-            break;
-    }
+    clothSimulator->handleSpecialKeyboardInput(key, x, y);
 }
 
 void reshape(int w, int h)

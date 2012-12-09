@@ -534,3 +534,49 @@ void ClothSimulator::handleNormalKeyboardRelease(unsigned char key, int x, int y
 {
     keyboardStatus[key] = false;
 }
+
+void ClothSimulator::handleSpecialKeyboardInput(int key, int x, int y)
+{
+    switch(key)
+    {
+        case GLUT_KEY_F1:
+            showHelp();
+            break;
+        case GLUT_KEY_F2:
+            resetCameraPosition();
+            break;
+        case GLUT_KEY_F3:
+            showCameraStatus();
+            break;
+        case GLUT_KEY_F4:
+            showDrawStatus();
+            break;
+        case GLUT_KEY_F5:
+            drawStructuralConstraintsEnabled = !drawStructuralConstraintsEnabled;
+            break;
+        case GLUT_KEY_F6:
+            drawShearConstraintsEnabled = !drawShearConstraintsEnabled;
+            break;
+        case GLUT_KEY_F7:
+            drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
+            break;
+        case GLUT_KEY_F8:
+            drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
+            break;
+        case GLUT_KEY_F9:
+            drawNodesEnabled = !drawNodesEnabled;
+            break;
+        case GLUT_KEY_F10:
+            drawWireFrameEnabled = !drawWireFrameEnabled;
+            break;
+        case GLUT_KEY_F11:
+            drawWorldAxisEnabled = !drawWorldAxisEnabled;
+            break;
+        case GLUT_KEY_F12:
+            drawSpheresEnabled = !drawSpheresEnabled;
+            break;
+
+        default:
+            break;
+    }
+}

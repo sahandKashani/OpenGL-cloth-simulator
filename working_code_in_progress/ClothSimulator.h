@@ -98,6 +98,7 @@ public:
 
     void handleNormalKeyboardInput(unsigned char key, int x, int y);
     void handleNormalKeyboardRelease(unsigned char key, int x, int y);
+    void handleSpecialKeyboardInput(int key, int x, int y);
 };
 
 #endif
