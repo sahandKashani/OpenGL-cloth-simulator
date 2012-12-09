@@ -52,6 +52,8 @@ void BatmanScene::createScene()
     // right foot
     rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2, false));
 
+    rightFoot.push_back(Sphere(Vector3(5.0, 5.0, 5.0), 1.2));
+
     // forces
     // gravity
     Vector3 gravity(0.0, -1.0, 0.0);
@@ -67,6 +69,9 @@ void BatmanScene::simulate()
 {
     cape->applyForces(0.01);
     cape->satisfyConstraints();
+
+    cape->handleSphereIntersections(&leftFoot);
+    cape->handleSphereIntersections(&rightFoot);
 }
 
 void BatmanScene::draw()

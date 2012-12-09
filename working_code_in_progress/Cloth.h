@@ -82,7 +82,7 @@ public:
     float getClothHeight();
     Node* getNode(int x, int y);
 
-    void handleSphereIntersections();
+    void handleSphereIntersections(std::vector<Sphere>* spheres);
 };
 
 #endif

@@ -1,7 +1,8 @@
 // compile with the following command:
-//     g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp Floor.cpp Scene.cpp BatmanScene.cpp -lglut -lGLU -lGL;
+//     g++ -o simulation main.cpp ClothSimulator.cpp Node.cpp Camera.cpp Constraint.cpp Arrow.cpp Sphere.cpp Triangle.cpp Cloth.cpp Floor.cpp Scene.cpp BatmanScene.cpp Keyboard.cpp -lglut -lGLU -lGL;
 
 #include "ClothSimulator.h"
+#include "Keyboard.h"
 
 // OpenGL imports
 #include <GL/glut.h>
@@ -16,6 +17,7 @@ void specialKeyboardInput(int key, int x, int y);
 void applyChanges();
 
 ClothSimulator* clothSimulator = 0;
+Keyboard* keyboard = 0;
 
 int main(int argc, char** argv)
 {
@@ -26,6 +28,7 @@ int main(int argc, char** argv)
     glutInitWindowPosition(1520, 800);
 
     clothSimulator = ClothSimulator::getInstance();
+    keyboard = Keyboard::getInstance();
 
     glutCreateWindow("Cloth Simulator");
 
@@ -39,8 +42,8 @@ int main(int argc, char** argv)
     // disable keyboard repeat, because we will use variables for continuous animation
     glutIgnoreKeyRepeat(1);
 
-    // glutKeyboardFunc(normalKeyboardInput);
-    // glutKeyboardUpFunc(normalKeyboardRelease);
+    glutKeyboardFunc(normalKeyboardInput);
+    glutKeyboardUpFunc(normalKeyboardRelease);
     // glutSpecialFunc(specialKeyboardInput);
 
     glutMainLoop();
@@ -73,9 +76,11 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    Vector3 cameraPosition = clothSimulator->getCameraPosition();
-    Vector3 cameraViewDirection = clothSimulator->getCameraViewDirection();
-    Vector3 cameraUpDirection = clothSimulator->getCameraUpDirection();
+
+    Camera* camera = clothSimulator->getScene()->getCamera();
+    Vector3 cameraPosition = camera->getPosition();
+    Vector3 cameraViewDirection = camera->getViewDirection();
+    Vector3 cameraUpDirection = camera->getUpDirection();
 
     // all perspectives are already calculated and stored, so just position
     // the camera where it is supposed to be
@@ -97,12 +102,13 @@ void display()
 
 void normalKeyboardInput(unsigned char key, int x, int y)
 {
-    // clothSimulator->handleNormalKeyboardInput(key, x, y);
+    keyboard->handleNormalKeyboardInput(key, x, y);
 }
 
 void normalKeyboardRelease(unsigned char key, int x, int y)
 {
     // clothSimulator->handleNormalKeyboardRelease(key, x, y);
+    keyboard->handleNormalKeyboardRelease(key, x, y);
 }
 
 void specialKeyboardInput(int key, int x, int y)

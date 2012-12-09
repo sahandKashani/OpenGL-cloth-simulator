@@ -203,3 +203,16 @@ void Camera::rotateAroundZAxisWorld(float angleInRadians)
     upDirection = rotationMatrix * upDirection;
     rightDirection = rotationMatrix * rightDirection;
 }
+
+void Camera::showCameraStatus()
+{
+    std::cout << "camera status:" << std::endl;
+    std::cout << "  camera position      : " << position.toString() << std::endl;
+    std::cout << "  camera view direction: " << viewDirection.toString() << std::endl;
+    std::cout << "  camera up direction  : " << upDirection.toString() << std::endl;
+    std::cout << "  yaw                  : " << yaw << " rad" << std::endl;
+    std::cout << "  pitch                : " << pitch << " rad" << std::endl;
+    std::cout << "  roll                 : " << roll << " rad" << std::endl;
+
+    std::cout << std::endl;
+}

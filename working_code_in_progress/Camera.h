@@ -47,6 +47,8 @@ public:
     void rotateAroundXAxisObject(float angleInRadians);
     void rotateAroundYAxisObject(float angleInRadians);
     void rotateAroundZAxisObject(float angleInRadians);
+
+    void showCameraStatus();
 };
 
 #endif
