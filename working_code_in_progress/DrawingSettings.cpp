@@ -29,7 +29,16 @@ DrawingSettings::DrawingSettings() :
     drawSpheresEnabled(true),
     drawTrianglesEnabled(true),
     drawFloorEnabled(true),
-    drawArrowsEnabled(true)
+    drawArrowsEnabled(true),
+    nodesColor(1.0, 1.0, 1.0),
+    structuralConstraintColor(1.0, 1.0, 1.0),
+    shearConstraintColor(1.0, 1.0, 1.0),
+    structuralBendConstraintColor(1.0, 1.0, 1.0),
+    shearBendConstraintColor(1.0, 1.0, 1.0),
+    sphereColor(1.0, 1.0, 1.0),
+    triangleColor(1.0, 1.0, 1.0),
+    floorColor(1.0, 1.0, 1.0),
+    arrowColor(1.0, 1.0, 1.0)
 {}
 
 bool DrawingSettings::isDrawWireFrameEnabled()
@@ -184,4 +193,49 @@ void DrawingSettings::chooseRenderingMethod()
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+}
+
+Vector3 DrawingSettings::getNodesColor()
+{
+    return nodesColor;
+}
+
+Vector3 DrawingSettings::getStructuralConstraintColor()
+{
+    return structuralConstraintColor;
+}
+
+Vector3 DrawingSettings::getShearConstraintColor()
+{
+    return shearConstraintColor;
+}
+
+Vector3 DrawingSettings::getStructuralBendConstraintColor()
+{
+    return structuralBendConstraintColor;
+}
+
+Vector3 DrawingSettings::getShearBendConstraintColor()
+{
+    return shearBendConstraintColor;
+}
+
+Vector3 DrawingSettings::getSphereColor()
+{
+    return sphereColor;
+}
+
+Vector3 DrawingSettings::getTriangleColor()
+{
+    return triangleColor;
+}
+
+Vector3 DrawingSettings::getFloorColor()
+{
+    return floorColor;
+}
+
+Vector3 DrawingSettings::getArrowColor()
+{
+    return arrowColor;
 }

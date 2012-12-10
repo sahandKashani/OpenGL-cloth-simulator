@@ -30,8 +30,8 @@ void Scene::drawWorldAxis()
     {
         glPushAttrib(GL_POLYGON_BIT ); // save mesh settings
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
             glPushAttrib(GL_CURRENT_BIT); // save color
+
                 glColor3f(1.0, 0.0, 0.0);
                 // x-axis in red
                 glBegin(GL_LINES);
@@ -66,8 +66,8 @@ void Scene::drawWorldAxis()
                     glTranslatef(0.0, 0.0, 1.0);
                     glutSolidCone(0.15, 0.30, 10, 10);
                 glPopMatrix();
-            glPopAttrib(); // GL_CURRENT_BIT
 
+            glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
     }
 }

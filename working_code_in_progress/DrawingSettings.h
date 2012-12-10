@@ -2,6 +2,7 @@
 #define DRAWING_SETTINGS_H
 
 #include <string>
+#include "Vector3.h"
 
 class DrawingSettings
 {
@@ -19,6 +20,16 @@ private:
     bool drawTrianglesEnabled;
     bool drawFloorEnabled;
     bool drawArrowsEnabled;
+
+    Vector3 nodesColor;
+    Vector3 structuralConstraintColor;
+    Vector3 shearConstraintColor;
+    Vector3 structuralBendConstraintColor;
+    Vector3 shearBendConstraintColor;
+    Vector3 sphereColor;
+    Vector3 triangleColor;
+    Vector3 floorColor;
+    Vector3 arrowColor;
 
 protected:
     DrawingSettings();
@@ -54,6 +65,16 @@ public:
     std::string isEnabled(bool controlVariableEnabled);
 
     void chooseRenderingMethod();
+
+    Vector3 getNodesColor();
+    Vector3 getStructuralConstraintColor();
+    Vector3 getShearConstraintColor();
+    Vector3 getStructuralBendConstraintColor();
+    Vector3 getShearBendConstraintColor();
+    Vector3 getSphereColor();
+    Vector3 getTriangleColor();
+    Vector3 getFloorColor();
+    Vector3 getArrowColor();
 };
 
 #endif

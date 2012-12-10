@@ -9,14 +9,16 @@
 
 void Triangle::draw()
 {
-    if(DrawingSettings::getInstance()->isDrawTrianglesEnabled())
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+
+    if(drawingSettings->isDrawTrianglesEnabled())
     {
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glPushAttrib(GL_CURRENT_BIT); // save color
 
-                glColor3f(1.0, 0.0, 1.0);
-
+                Vector3 color = drawingSettings->getTriangleColor();
+                glColor3f(color.x, color.y, color.z);
                 glBegin(GL_TRIANGLES);
                     glVertex3f(p1.x, p1.y, p1.z);
                     glVertex3f(p2.x, p2.y, p2.z);

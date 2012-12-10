@@ -17,20 +17,22 @@ Floor::Floor(Vector3 tl, Vector3 bl, Vector3 br, Vector3 tr) :
 
 void Floor::draw()
 {
-    if(DrawingSettings::getInstance()->isDrawFloorEnabled())
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+
+    if(drawingSettings->isDrawFloorEnabled())
     {
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
             glPushAttrib(GL_CURRENT_BIT); // save color
 
-            glColor3f(1.0, 1.0, 1.0);
-            glBegin(GL_QUADS);
-                glVertex3f(topLeft.x, topLeft.y, topLeft.z);
-                glVertex3f(topRight.x, topRight.y, topRight.z);
-                glVertex3f(bottomRight.x, bottomRight.y, bottomRight.z);
-                glVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z);
-            glEnd();
+                Vector3 color = drawingSettings->getFloorColor();
+                glColor3f(color.x, color.y, color.z);
+                glBegin(GL_QUADS);
+                    glVertex3f(topLeft.x, topLeft.y, topLeft.z);
+                    glVertex3f(topRight.x, topRight.y, topRight.z);
+                    glVertex3f(bottomRight.x, bottomRight.y, bottomRight.z);
+                    glVertex3f(bottomLeft.x, bottomLeft.y, bottomLeft.z);
+                glEnd();
 
             glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT

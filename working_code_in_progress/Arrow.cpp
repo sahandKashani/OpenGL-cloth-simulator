@@ -13,13 +13,15 @@ Arrow::Arrow(Vector3 basePoint, Vector3 endPoint) :
 
 void Arrow::draw()
 {
-    if(DrawingSettings::getInstance()->isDrawArrowsEnabled())
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+    if(drawingSettings->isDrawArrowsEnabled())
     {
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
             glPushAttrib(GL_CURRENT_BIT); // save color
-                glColor3f(0.0, 1.0, 0.0);
+
+                Vector3 color = drawingSettings->getArrowColor();
+                glColor3f(color.x, color.y, color.z);
 
                 glBegin(GL_LINES);
                     glVertex3f(base.x, base.y, base.z);
@@ -30,8 +32,8 @@ void Arrow::draw()
                     glTranslatef(end.x, end.y, end.z);
                     glutSolidSphere(0.1, 10, 10);
                 glPopMatrix();
-            glPopAttrib(); // GL_CURRENT_BIT
 
+            glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
     }
 }

@@ -35,24 +35,23 @@ void Sphere::setCenter(Vector3 c)
 
 void Sphere::draw()
 {
-    if(DrawingSettings::getInstance()->isDrawSpheresEnabled())
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+
+    if(drawingSettings->isDrawSpheresEnabled())
     {
-
-
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
             glPushAttrib(GL_CURRENT_BIT); // save color
-                glColor3f(1.0, 1.0, 1.0);
 
+                Vector3 color = drawingSettings->getSphereColor();
+                glColor3f(color.x, color.y, color.z);
                 glPushMatrix();
                     glTranslatef(center.x, center.y, center.z);
-
                     // draw the sphere a little smaller for collision problems
                     glutSolidSphere(radius - 0.1, 20, 20);
                 glPopMatrix();
-            glPopAttrib(); // GL_CURRENT_BIT
 
+            glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
     }
 }

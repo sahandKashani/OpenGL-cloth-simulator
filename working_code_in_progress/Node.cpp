@@ -83,13 +83,16 @@ void Node::resetToOriginalForce()
 
 void Node::draw()
 {
-    if(DrawingSettings::getInstance()->isDrawNodesEnabled())
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+
+    if(drawingSettings->isDrawNodesEnabled())
     {
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
             glPushAttrib(GL_CURRENT_BIT); // save color
-                glColor3f(1.0, 0.0, 0.0);
+
+                Vector3 color = drawingSettings->getNodesColor();
+                glColor3f(color.x, color.y, color.z);
                 // push matrix so we can come back to the "origin" (on element (0.0, 0.0, 0.0))
                 // for each node to draw.
                 glPushMatrix();
@@ -97,8 +100,8 @@ void Node::draw()
                     glutSolidSphere(0.1, 10, 10);
                 glPopMatrix();
                 // back at "origin" (on element (0.0, 0.0, 0.0)) again.
-            glPopAttrib(); // GL_CURRENT_BIT
 
+            glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
     }
 
