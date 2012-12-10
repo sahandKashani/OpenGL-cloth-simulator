@@ -33,9 +33,12 @@ void Keyboard::resetKeyboardStatus()
     }
 }
 
+// Note that these are the CONTINUOUS actions only. For toggle state actions,
+// take care of it before the array of keyboard button status is enabled.
 void Keyboard::applyNormalKeyboardActions()
 {
     Camera* camera = ClothSimulator::getInstance()->getScene()->getCamera();
+
     for(int key = 0; key < 256; key += 1)
     {
         // if the key is being continuously held down
@@ -122,11 +125,31 @@ void Keyboard::applyNormalKeyboardActions()
     } // end loop
 }
 
+// Put toggle keyboard controls here, and continuous ones in the "default" part of
+// the switch statement
 void Keyboard::handleNormalKeyboardInput(unsigned char key, int x, int y)
 {
-    // toggle enable state for keyboard buttons which are to be
-    // continuously applied (like rotations, translations, ...)
-    keyboardStatus[key] = true;
+    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+
+    switch(key)
+    {
+        case '1':
+            drawingSettings->toggleDrawArrowsEnabled();
+            break;
+        case '2':
+            drawingSettings->toggleDrawFloorEnabled();
+            break;
+        case '3':
+            drawingSettings->toggleDrawTrianglesEnabled();
+            break;
+
+        default:
+            // toggle enable state for keyboard buttons which are to be
+            // continuously applied (like rotations, translations, ...)
+            keyboardStatus[key] = true;
+            break;
+    }
+
 }
 
 void Keyboard::handleNormalKeyboardRelease(unsigned char key, int x, int y)
@@ -223,10 +246,13 @@ void Keyboard::showHelp()
     std::cout << "  F10: toggle draw wireframe" << std::endl;
     std::cout << "  F11: toggle draw world axis" << std::endl;
     std::cout << "  F12: toggle draw spheres" << std::endl;
+    std::cout << "  1  : toggle draw arrows" << std::endl;
+    std::cout << "  2  : toggle draw floor" << std::endl;
+    std::cout << "  3  : toggle draw triangles" << std::endl;
 
     std::cout << std::endl;
 
-    // yaw, pitch and roll controls
+    // yaw, pitch and roll camera controls
     std::cout << "camera object rotation controls:" << std::endl;
     std::cout << "  j: yaw   left " << std::endl;
     std::cout << "  l: yaw   right" << std::endl;

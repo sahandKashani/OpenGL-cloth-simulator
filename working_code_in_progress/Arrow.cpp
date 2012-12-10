@@ -15,22 +15,23 @@ void Arrow::draw()
 {
     if(DrawingSettings::getInstance()->isDrawArrowsEnabled())
     {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPushAttrib(GL_POLYGON_BIT ); // save mesh settings
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-        glColor3f(0.0, 1.0, 0.0);
-        glBegin(GL_LINES);
-            glVertex3f(base.x, base.y, base.z);
-            glVertex3f(end.x, end.y, end.z);
-        glEnd();
+            glPushAttrib(GL_CURRENT_BIT); // save color
+                glColor3f(0.0, 1.0, 0.0);
 
-        glPushMatrix();
-            glTranslatef(end.x, end.y, end.z);
-            glutSolidSphere(0.1, 10, 10);
-        glPopMatrix();
+                glBegin(GL_LINES);
+                    glVertex3f(base.x, base.y, base.z);
+                    glVertex3f(end.x, end.y, end.z);
+                glEnd();
 
-        if(DrawingSettings::getInstance()->isDrawWireFrameEnabled())
-        {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
+                glPushMatrix();
+                    glTranslatef(end.x, end.y, end.z);
+                    glutSolidSphere(0.1, 10, 10);
+                glPopMatrix();
+            glPopAttrib(); // GL_CURRENT_BIT
+
+        glPopAttrib(); // GL_POLYGON_BIT
     }
 }

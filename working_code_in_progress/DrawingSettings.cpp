@@ -153,9 +153,9 @@ void DrawingSettings::showDrawStatus()
     std::cout << "  draw wireframe                  : " << isEnabled(drawWireFrameEnabled) << std::endl;
     std::cout << "  draw world axis                 : " << isEnabled(drawWorldAxisEnabled) << std::endl;
     std::cout << "  draw spheres                    : " << isEnabled(drawSpheresEnabled) << std::endl;
-    std::cout << "  draw triangles                  : " << isEnabled(drawTrianglesEnabled) << std::endl;
     std::cout << "  draw arrows                     : " << isEnabled(drawArrowsEnabled) << std::endl;
     std::cout << "  draw floor                      : " << isEnabled(drawFloorEnabled) << std::endl;
+    std::cout << "  draw triangles                  : " << isEnabled(drawTrianglesEnabled) << std::endl;
 
     std::cout << std::endl;
 }
