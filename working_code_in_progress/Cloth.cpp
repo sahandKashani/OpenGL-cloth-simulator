@@ -152,11 +152,9 @@ void Cloth::createStructuralConstraints()
             }
         }
 
-        rightStructuralConstraints.push_back(ri);
+        rightStructuralConstraints.push_back(rightConstraintColumn);
+        topStructuralConstraints.push_back(topConstraintColumn);
     }
-
-    structuralConstraints.push_back(&rightStructuralConstraints);
-    structuralConstraints.push_back(&topStructuralConstraints);
 }
 
 void Cloth::createShearConstraints()
@@ -266,6 +264,11 @@ void Cloth::drawNodes()
             getNode(x, y)->draw();
         }
     }
+}
+
+void Cloth::drawConstraintsInVector(std::vector< std::vector<Constraint*> >)
+{
+
 }
 
 void Cloth::satisfyStructuralConstraints()

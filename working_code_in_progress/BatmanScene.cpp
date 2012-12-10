@@ -58,7 +58,7 @@ void BatmanScene::createScene()
     // gravity
     Vector3 gravity(0.0, -1.0, 0.0);
     // wind
-    Vector3 wind(0.0, 0.0, 3.0);
+    Vector3 wind(0.0, 0.0, 4.0);
 
     // add forces to cape
     cape->addForce(gravity);
