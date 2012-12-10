@@ -121,33 +121,38 @@ void Cloth::addForce(Vector3 force)
 void Cloth::createConstraints()
 {
     createStructuralConstraints();
-    createShearConstraints();
-    createStructuralBendConstraints();
-    createShearBendConstraints();
+    // createShearConstraints();
+    // createStructuralBendConstraints();
+    // createShearBendConstraints();
 }
 
 void Cloth::createStructuralConstraints()
 {
     for(int x = 0; x < numberNodesWidth; x += 1)
     {
+        std::vector<Constraint*> rightConstraintColumn;
+        std::vector<Constraint*> topConstraintColumn;
+
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
             if(x < numberNodesWidth - 1)
             {
                 Node* leftNode = getNode(x, y);
                 Node* rightNode = getNode(x + 1, y);
-                Constraint rightConstraint(leftNode, rightNode);
-                rightStructuralConstraints.push_back(rightConstraint);
+                // Constraint rightConstraint(leftNode, rightNode);
+                rightConstraintColumn.push_back(new Constraint(leftNode, rightNode));
             }
 
             if(y < numberNodesHeight - 1)
             {
                 Node* bottomNode = getNode(x, y);;
                 Node* topNode = getNode(x, y + 1);
-                Constraint topConstraint(bottomNode, topNode);
-                topStructuralConstraints.push_back(topConstraint);
+                // Constraint topConstraint(bottomNode, topNode);
+                topConstraintColumn.push_back(new Constraint(bottomNode, topNode));
             }
         }
+
+        rightStructuralConstraints.push_back(ri);
     }
 
     structuralConstraints.push_back(&rightStructuralConstraints);
@@ -156,70 +161,70 @@ void Cloth::createStructuralConstraints()
 
 void Cloth::createShearConstraints()
 {
-    for(int x = 0; x < numberNodesWidth - 1; x += 1)
-    {
-        for(int y = 0; y < numberNodesHeight - 1; y += 1)
-        {
-            Node* lowerLeftNode = getNode(x, y);
-            Node* lowerRightNode = getNode(x + 1, y);
-            Node* upperLeftNode = getNode(x, y + 1);
-            Node* upperRightNode = getNode(x + 1, y + 1);
+    // for(int x = 0; x < numberNodesWidth - 1; x += 1)
+    // {
+    //     for(int y = 0; y < numberNodesHeight - 1; y += 1)
+    //     {
+    //         Node* lowerLeftNode = getNode(x, y);
+    //         Node* lowerRightNode = getNode(x + 1, y);
+    //         Node* upperLeftNode = getNode(x, y + 1);
+    //         Node* upperRightNode = getNode(x + 1, y + 1);
 
-            Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
-            Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
+    //         Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
+    //         Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
 
-            shearConstraints.push_back(diagonalConstraint1);
-            shearConstraints.push_back(diagonalConstraint2);
-        }
-    }
+    //         shearConstraints.push_back(diagonalConstraint1);
+    //         shearConstraints.push_back(diagonalConstraint2);
+    //     }
+    // }
 }
 
 void Cloth::createStructuralBendConstraints()
 {
-    for(int x = 0; x < numberNodesWidth; x += 1)
-    {
-        for(int y = 0; y < numberNodesHeight; y += 1)
-        {
-            if(x < numberNodesWidth - 2)
-            {
-                Node* leftNode = getNode(x, y);
-                Node* rightNode = getNode(x + 2, y);
-                Constraint rightConstraint(leftNode, rightNode);
-                rightStructuralBendConstraints.push_back(rightConstraint);
-            }
+    // for(int x = 0; x < numberNodesWidth; x += 1)
+    // {
+    //     for(int y = 0; y < numberNodesHeight; y += 1)
+    //     {
+    //         if(x < numberNodesWidth - 2)
+    //         {
+    //             Node* leftNode = getNode(x, y);
+    //             Node* rightNode = getNode(x + 2, y);
+    //             Constraint rightConstraint(leftNode, rightNode);
+    //             rightStructuralBendConstraints.push_back(rightConstraint);
+    //         }
 
-            if(y < numberNodesHeight - 2)
-            {
-                Node* bottomNode = getNode(x, y);
-                Node* topNode = getNode(x, y + 2);
-                Constraint topConstraint(bottomNode, topNode);
-                topStructuralBendConstraints.push_back(topConstraint);
-            }
-        }
-    }
+    //         if(y < numberNodesHeight - 2)
+    //         {
+    //             Node* bottomNode = getNode(x, y);
+    //             Node* topNode = getNode(x, y + 2);
+    //             Constraint topConstraint(bottomNode, topNode);
+    //             topStructuralBendConstraints.push_back(topConstraint);
+    //         }
+    //     }
+    // }
 
-    structuralBendConstraints.push_back(&rightStructuralBendConstraints);
-    structuralBendConstraints.push_back(&topStructuralBendConstraints);
+    // structuralBendConstraints.push_back(&rightStructuralBendConstraints);
+    // structuralBendConstraints.push_back(&topStructuralBendConstraints);
 }
 
 void Cloth::createShearBendConstraints()
 {
-    for(int x = 0; x < numberNodesWidth - 2; x += 1)
-    {
-        for(int y = 0; y < numberNodesHeight - 2; y += 1)
-        {
-            Node* lowerLeftNode = getNode(x, y);
-            Node* lowerRightNode = getNode(x + 2, y);
-            Node* upperLeftNode = getNode(x, y + 2);
-            Node* upperRightNode = getNode(x + 2, y + 2);
+    // for(int x = 0; x < numberNodesWidth - 2; x += 1)
+    // {
+    //     for(int y = 0; y < numberNodesHeight - 2; y += 1)
+    //     {
+    //         Node* lowerLeftNode = getNode(x, y);
+    //         Node* lowerRightNode = getNode(x + 2, y);
+    //         Node* upperLeftNode = getNode(x, y + 2);
+    //         Node* upperRightNode = getNode(x + 2, y + 2);
 
-            Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
-            Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
+    //         Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
+    //         Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
 
-            shearBendConstraints.push_back(diagonalConstraint1);
-            shearBendConstraints.push_back(diagonalConstraint2);
-        }
-    }
+    //         shearBendConstraints.push_back(diagonalConstraint1);
+    //         shearBendConstraints.push_back(diagonalConstraint2);
+    //     }
+    // }
 }
 
 void Cloth::draw()
@@ -230,25 +235,25 @@ void Cloth::draw()
 
     drawNodes();
 
-    if(drawingSettings->isDrawStructuralConstraintsEnabled())
-    {
+    // if(drawingSettings->isDrawStructuralConstraintsEnabled())
+    // {
         drawStructuralConstraints();
-    }
+    // }
 
-    if(drawingSettings->isDrawShearConstraintsEnabled())
-    {
-        drawShearConstraints();
-    }
+    // if(drawingSettings->isDrawShearConstraintsEnabled())
+    // {
+    //     drawShearConstraints();
+    // }
 
-    if(drawingSettings->isDrawStructuralBendConstraintsEnabled())
-    {
-        drawStructuralBendConstraints();
-    }
+    // if(drawingSettings->isDrawStructuralBendConstraintsEnabled())
+    // {
+    //     drawStructuralBendConstraints();
+    // }
 
-    if(drawingSettings->isDrawShearBendConstraintsEnabled())
-    {
-        drawShearBendConstraints();
-    }
+    // if(drawingSettings->isDrawShearBendConstraintsEnabled())
+    // {
+    //     drawShearBendConstraints();
+    // }
 }
 
 void Cloth::drawNodes()
@@ -265,108 +270,110 @@ void Cloth::drawNodes()
 
 void Cloth::satisfyStructuralConstraints()
 {
-    for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralConstraintIterator = structuralConstraints.begin();
-        directionalStructuralConstraintIterator != structuralConstraints.end();
-        ++directionalStructuralConstraintIterator)
-    {
-        for(std::vector<Constraint>::iterator structuralConstraintIterator = (*directionalStructuralConstraintIterator)->begin();
-            structuralConstraintIterator != (*directionalStructuralConstraintIterator)->end();
-            ++structuralConstraintIterator)
-        {
-            structuralConstraintIterator->satisfyConstraint();
-        }
-    }
+    // for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralConstraintIterator = structuralConstraints.begin();
+    //     directionalStructuralConstraintIterator != structuralConstraints.end();
+    //     ++directionalStructuralConstraintIterator)
+    // {
+    //     for(std::vector<Constraint>::iterator structuralConstraintIterator = (*directionalStructuralConstraintIterator)->begin();
+    //         structuralConstraintIterator != (*directionalStructuralConstraintIterator)->end();
+    //         ++structuralConstraintIterator)
+    //     {
+    //         structuralConstraintIterator->satisfyConstraint();
+    //     }
+    // }
 }
 
 void Cloth::satisfyShearConstraints()
 {
-    for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
-        shearConstraintIterator != shearConstraints.end();
-        ++shearConstraintIterator)
-    {
-        shearConstraintIterator->satisfyConstraint();
-    }
+    // for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
+    //     shearConstraintIterator != shearConstraints.end();
+    //     ++shearConstraintIterator)
+    // {
+    //     shearConstraintIterator->satisfyConstraint();
+    // }
 }
 
 void Cloth::satisfyStructuralBendConstraints()
 {
-    for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
-        directionalStructuralBendConstraintIterator != structuralBendConstraints.end();
-        ++directionalStructuralBendConstraintIterator)
-    {
-        for(std::vector<Constraint>::iterator structuralBendConstraintIterator = (*directionalStructuralBendConstraintIterator)->begin();
-            structuralBendConstraintIterator != (*directionalStructuralBendConstraintIterator)->end();
-            ++structuralBendConstraintIterator)
-        {
-            structuralBendConstraintIterator->satisfyConstraint();
-        }
-    }
+    // for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
+    //     directionalStructuralBendConstraintIterator != structuralBendConstraints.end();
+    //     ++directionalStructuralBendConstraintIterator)
+    // {
+    //     for(std::vector<Constraint>::iterator structuralBendConstraintIterator = (*directionalStructuralBendConstraintIterator)->begin();
+    //         structuralBendConstraintIterator != (*directionalStructuralBendConstraintIterator)->end();
+    //         ++structuralBendConstraintIterator)
+    //     {
+    //         structuralBendConstraintIterator->satisfyConstraint();
+    //     }
+    // }
 }
 
 void Cloth::satisfyShearBendConstraints()
 {
-    for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
-        shearBendConstraintIterator != shearBendConstraints.end();
-        ++shearBendConstraintIterator)
-    {
-        shearBendConstraintIterator->satisfyConstraint();
-    }
+    // for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
+    //     shearBendConstraintIterator != shearBendConstraints.end();
+    //     ++shearBendConstraintIterator)
+    // {
+    //     shearBendConstraintIterator->satisfyConstraint();
+    // }
 }
 
 void Cloth::satisfyConstraints()
 {
-    satisfyStructuralConstraints();
-    satisfyShearConstraints();
-    satisfyStructuralBendConstraints();
-    satisfyShearBendConstraints();
+    // satisfyStructuralConstraints();
+    // satisfyShearConstraints();
+    // satisfyStructuralBendConstraints();
+    // satisfyShearBendConstraints();
 }
 
 void Cloth::drawStructuralConstraints()
 {
-    for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralConstraintIterator = structuralConstraints.begin();
-        directionalStructuralConstraintIterator != structuralConstraints.end();
-        ++directionalStructuralConstraintIterator)
-    {
-        for(std::vector<Constraint>::iterator structuralConstraintIterator = (*directionalStructuralConstraintIterator)->begin();
-            structuralConstraintIterator != (*directionalStructuralConstraintIterator)->end();
-            ++structuralConstraintIterator)
-        {
-            structuralConstraintIterator->draw();
-        }
-    }
+    // for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralConstraintIterator = structuralConstraints.begin();
+    //     directionalStructuralConstraintIterator != structuralConstraints.end();
+    //     ++directionalStructuralConstraintIterator)
+    // {
+    //     for(std::vector<Constraint>::iterator structuralConstraintIterator = (*directionalStructuralConstraintIterator)->begin();
+    //         structuralConstraintIterator != (*directionalStructuralConstraintIterator)->end();
+    //         ++structuralConstraintIterator)
+    //     {
+    //         // structuralConstraintIterator->draw();
+    //         Constraint* constraint = &(*(structuralConstraintIterator));
+    //         constraint->draw();
+    //     }
+    // }
 }
 
 void Cloth::drawShearConstraints()
 {
-    for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
-        shearConstraintIterator != shearConstraints.end();
-        ++shearConstraintIterator)
-    {
-        shearConstraintIterator->draw();
-    }
+    // for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
+    //     shearConstraintIterator != shearConstraints.end();
+    //     ++shearConstraintIterator)
+    // {
+    //     shearConstraintIterator->draw();
+    // }
 }
 
 void Cloth::drawStructuralBendConstraints()
 {
-    for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
-        directionalStructuralBendConstraintIterator != structuralBendConstraints.end();
-        ++directionalStructuralBendConstraintIterator)
-    {
-        for(std::vector<Constraint>::iterator structuralBendConstraintIterator = (*directionalStructuralBendConstraintIterator)->begin();
-            structuralBendConstraintIterator != (*directionalStructuralBendConstraintIterator)->end();
-            ++structuralBendConstraintIterator)
-        {
-            structuralBendConstraintIterator->draw();
-        }
-    }
+    // for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralBendConstraintIterator = structuralBendConstraints.begin();
+    //     directionalStructuralBendConstraintIterator != structuralBendConstraints.end();
+    //     ++directionalStructuralBendConstraintIterator)
+    // {
+    //     for(std::vector<Constraint>::iterator structuralBendConstraintIterator = (*directionalStructuralBendConstraintIterator)->begin();
+    //         structuralBendConstraintIterator != (*directionalStructuralBendConstraintIterator)->end();
+    //         ++structuralBendConstraintIterator)
+    //     {
+    //         structuralBendConstraintIterator->draw();
+    //     }
+    // }
 }
 
 void Cloth::drawShearBendConstraints()
 {
-    for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
-        shearBendConstraintIterator != shearBendConstraints.end();
-        ++shearBendConstraintIterator)
-    {
-        shearBendConstraintIterator->draw();
-    }
+    // for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
+    //     shearBendConstraintIterator != shearBendConstraints.end();
+    //     ++shearBendConstraintIterator)
+    // {
+    //     shearBendConstraintIterator->draw();
+    // }
 }

@@ -21,17 +21,21 @@ private:
     std::vector< std::vector<Node> > nodes;
 
     // constraints
-    std::vector< std::vector<Constraint>* > structuralConstraints;
-    std::vector<Constraint> rightStructuralConstraints;
-    std::vector<Constraint> topStructuralConstraints;
+    // std::vector< std::vector<Constraint*> > structuralConstraints;
+    std::vector< std::vector<Constraint*> > rightStructuralConstraints;
+    std::vector< std::vector<Constraint*> > topStructuralConstraints;
 
     std::vector<Constraint> shearConstraints;
+    std::vector<Constraint> upperRightShearConstraints;
+    std::vector<Constraint> lowerRightShearConstraints;
 
     std::vector< std::vector<Constraint>* > structuralBendConstraints;
     std::vector<Constraint> rightStructuralBendConstraints;
     std::vector<Constraint> topStructuralBendConstraints;
 
     std::vector<Constraint> shearBendConstraints;
+    std::vector<Constraint> upperRightShearBendConstraints;
+    std::vector<Constraint> lowerRightShearBendConstraints;
 
 
     // node creation method
