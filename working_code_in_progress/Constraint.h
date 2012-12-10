@@ -17,8 +17,9 @@ public:
     Node* getSecondNode();
     float getDistanceAtRest();
     void satisfyConstraint();
-    void draw();
     void disable();
+
+    virtual void draw();
 };
 
 #endif
