@@ -9,13 +9,23 @@ void Constraint::draw()
 {
     if(enabled)
     {
-        Vector3 firstNodePosition = node1->getPosition();
-        Vector3 secondNodePosition = node2->getPosition();
+        glPushAttrib(GL_POLYGON_BIT); // save mesh settings
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-        glBegin(GL_LINES);
-            glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
-            glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
-        glEnd();
+            glPushAttrib(GL_CURRENT_BIT); // save color
+                glColor3f(1.0, 1.0, 1.0);
+
+                Vector3 firstNodePosition = node1->getPosition();
+                Vector3 secondNodePosition = node2->getPosition();
+
+                glBegin(GL_LINES);
+                    glVertex3f(firstNodePosition.x, firstNodePosition.y, firstNodePosition.z);
+                    glVertex3f(secondNodePosition.x, secondNodePosition.y, secondNodePosition.z);
+                glEnd();
+
+            glPopAttrib(); // GL_CURRENT_BIT
+
+        glPopAttrib(); // GL_POLYGON_BIT
     }
 }
 

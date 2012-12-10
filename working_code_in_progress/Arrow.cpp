@@ -15,7 +15,7 @@ void Arrow::draw()
 {
     if(DrawingSettings::getInstance()->isDrawArrowsEnabled())
     {
-        glPushAttrib(GL_POLYGON_BIT ); // save mesh settings
+        glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
             glPushAttrib(GL_CURRENT_BIT); // save color

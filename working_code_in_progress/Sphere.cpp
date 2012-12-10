@@ -37,14 +37,23 @@ void Sphere::draw()
 {
     if(DrawingSettings::getInstance()->isDrawSpheresEnabled())
     {
-        glColor3f(1.0, 1.0, 1.0);
 
-        glPushMatrix();
-            glTranslatef(center.x, center.y, center.z);
 
-            // draw the sphere a little smaller for collision problems
-            glutSolidSphere(radius - 0.1, 20, 20);
-        glPopMatrix();
+        glPushAttrib(GL_POLYGON_BIT); // save mesh settings
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            glPushAttrib(GL_CURRENT_BIT); // save color
+                glColor3f(1.0, 1.0, 1.0);
+
+                glPushMatrix();
+                    glTranslatef(center.x, center.y, center.z);
+
+                    // draw the sphere a little smaller for collision problems
+                    glutSolidSphere(radius - 0.1, 20, 20);
+                glPopMatrix();
+            glPopAttrib(); // GL_CURRENT_BIT
+
+        glPopAttrib(); // GL_POLYGON_BIT
     }
 }
 
