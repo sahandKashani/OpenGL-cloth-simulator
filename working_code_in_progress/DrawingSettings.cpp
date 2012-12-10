@@ -19,26 +19,26 @@ DrawingSettings* DrawingSettings::getInstance()
 }
 
 DrawingSettings::DrawingSettings() :
-    drawWireFrameEnabled(false),
-    drawNodesEnabled(false),
-    drawWorldAxisEnabled(true),
-    drawStructuralConstraintsEnabled(true),
-    drawShearConstraintsEnabled(true),
-    drawStructuralBendConstraintsEnabled(true),
-    drawShearBendConstraintsEnabled(true),
-    drawSpheresEnabled(true),
-    drawTrianglesEnabled(true),
-    drawFloorEnabled(true),
-    drawArrowsEnabled(true),
-    nodesColor(1.0, 1.0, 1.0),
-    structuralConstraintColor(1.0, 1.0, 1.0),
-    shearConstraintColor(1.0, 1.0, 1.0),
+    drawWireFrameEnabled                 (false),
+    drawNodesEnabled                     (true),
+    drawWorldAxisEnabled                 (true) ,
+    drawStructuralConstraintsEnabled     (true) ,
+    drawShearConstraintsEnabled          (true) ,
+    drawStructuralBendConstraintsEnabled (true) ,
+    drawShearBendConstraintsEnabled      (true) ,
+    drawSpheresEnabled                   (true) ,
+    drawTrianglesEnabled                 (true) ,
+    drawFloorEnabled                     (true) ,
+    drawArrowsEnabled                    (true) ,
+    nodesColor                   (1.0, 0.0, 0.0),
+    structuralConstraintColor    (1.0, 1.0, 1.0),
+    shearConstraintColor         (1.0, 1.0, 1.0),
     structuralBendConstraintColor(1.0, 1.0, 1.0),
-    shearBendConstraintColor(1.0, 1.0, 1.0),
-    sphereColor(1.0, 1.0, 1.0),
-    triangleColor(1.0, 1.0, 1.0),
-    floorColor(1.0, 1.0, 1.0),
-    arrowColor(1.0, 1.0, 1.0)
+    shearBendConstraintColor     (1.0, 1.0, 1.0),
+    sphereColor                  (0.0, 0.0, 1.0),
+    triangleColor                (1.0, 1.0, 0.0),
+    floorColor                   (1.0, 1.0, 1.0),
+    arrowColor                   (0.0, 1.0, 0.0)
 {}
 
 bool DrawingSettings::isDrawWireFrameEnabled()
