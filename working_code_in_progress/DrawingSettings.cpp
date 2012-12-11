@@ -29,7 +29,7 @@ DrawingSettings::DrawingSettings() :
     drawFloorEnabled                     (false),
     drawArrowsEnabled                    (false),
     nodesColor                   (1.0, 0.0, 0.0),
-    structuralConstraintColor    (1.0, 0.0, 0.0),
+    structuralConstraintColor    (1.0, 1.0, 1.0),
     shearConstraintColor         (1.0, 1.0, 1.0),
     sphereColor                  (0.0, 0.0, 1.0),
     triangleColor                (1.0, 1.0, 0.0),

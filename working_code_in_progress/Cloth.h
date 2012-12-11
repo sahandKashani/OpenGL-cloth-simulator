@@ -42,14 +42,8 @@ private:
     void createStructuralConstraints();
     void createShearConstraints();
 
-    void createInterleavedStructuralConstraints(int interleaving,
-                                                std::vector< std::vector<Constraint*> >* rightConstraints,
-                                                std::vector< std::vector<Constraint*> >* topConstraints,
-                                                std::vector< std::vector< std::vector<Constraint*> >* >* combinedConstraints);
-    void createInterleavedShearConstraints     (int interleaving,
-                                                std::vector< std::vector<Constraint*> >* upperRightConstraints,
-                                                std::vector< std::vector<Constraint*> >* lowerRightConstraints,
-                                                std::vector< std::vector< std::vector<Constraint*> >* >* combinedConstraints);
+    void createInterleavedStructuralConstraints(int inter);
+    void createInterleavedShearConstraints     (int inter);
 
     // drawing methods
     void drawNodes();
