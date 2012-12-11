@@ -140,7 +140,7 @@ void Cloth::createStructuralConstraints()
                 Node* leftNode = getNode(x, y);
                 Node* rightNode = getNode(x + 1, y);
                 // Constraint rightConstraint(leftNode, rightNode);
-                rightConstraintColumn.push_back(new Constraint(leftNode, rightNode));
+                rightConstraintColumn.push_back(new StructuralConstraint(leftNode, rightNode));
             }
 
             if(y < numberNodesHeight - 1)
@@ -148,13 +148,16 @@ void Cloth::createStructuralConstraints()
                 Node* bottomNode = getNode(x, y);;
                 Node* topNode = getNode(x, y + 1);
                 // Constraint topConstraint(bottomNode, topNode);
-                topConstraintColumn.push_back(new Constraint(bottomNode, topNode));
+                topConstraintColumn.push_back(new StructuralConstraint(bottomNode, topNode));
             }
         }
 
         rightStructuralConstraints.push_back(rightConstraintColumn);
         topStructuralConstraints.push_back(topConstraintColumn);
     }
+
+    structuralConstraints.push_back(&rightStructuralConstraints);
+    structuralConstraints.push_back(&topStructuralConstraints);
 }
 
 void Cloth::createShearConstraints()
@@ -266,9 +269,27 @@ void Cloth::drawNodes()
     }
 }
 
-void Cloth::drawConstraintsInVector(std::vector< std::vector<Constraint*> >)
+void Cloth::drawConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container)
 {
-
+    // iterating over std::vector< std::vector< std::vector<Constraint*> >* >
+    for(std::vector< std::vector< std::vector<Constraint*> >* >::iterator it1 = container.begin();
+        it1 != container.end();
+        ++it1)
+    {
+        // iterating over std::vector< std::vector<Constraint*> >*
+        for(std::vector< std::vector<Constraint*> >::iterator it2 = (*it1)->begin();
+            it2 != (*it1)->end();
+            ++it2)
+        {
+            // iterating over std::vector<Constraint*>
+            for(std::vector<Constraint*>::iterator it3 = it2->begin();
+                it3 != it2->end();
+                ++it3)
+            {
+                (*it3)->draw();
+            }
+        }
+    }
 }
 
 void Cloth::satisfyStructuralConstraints()
@@ -331,6 +352,7 @@ void Cloth::satisfyConstraints()
 
 void Cloth::drawStructuralConstraints()
 {
+    drawConstraintsInContainer(structuralConstraints);
     // for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralConstraintIterator = structuralConstraints.begin();
     //     directionalStructuralConstraintIterator != structuralConstraints.end();
     //     ++directionalStructuralConstraintIterator)

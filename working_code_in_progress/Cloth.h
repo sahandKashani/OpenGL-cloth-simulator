@@ -5,6 +5,10 @@
 #include "Vector3.h"
 #include "Node.h"
 #include "Constraint.h"
+#include "StructuralConstraint.h"
+#include "ShearConstraint.h"
+#include "StructuralBendConstraint.h"
+#include "ShearBendConstraint.h"
 #include "Sphere.h"
 
 class Cloth
@@ -21,7 +25,7 @@ private:
     std::vector< std::vector<Node> > nodes;
 
     // constraints
-    // std::vector< std::vector<Constraint*> > structuralConstraints;
+    std::vector< std::vector< std::vector<Constraint*> >* > structuralConstraints;
     std::vector< std::vector<Constraint*> > rightStructuralConstraints;
     std::vector< std::vector<Constraint*> > topStructuralConstraints;
 
@@ -60,6 +64,8 @@ private:
     void satisfyShearConstraints();
     void satisfyStructuralBendConstraints();
     void satisfyShearBendConstraints();
+
+    void drawConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
 
     // tearing methods
     // void removeRightStructuralConstraint(int x, int y);
