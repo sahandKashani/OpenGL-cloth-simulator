@@ -33,6 +33,27 @@ void Cloth::handleSphereIntersections(std::vector<Sphere>* spheres)
     }
 }
 
+void Cloth::handleSelfIntersections()
+{
+    for(int x1 = 0; x1 < numberNodesWidth; x1 += 1)
+    {
+        for(int y1 = 0; y1 < numberNodesHeight; y1 += 1)
+        {
+            Node* node1 = getNode(x1, y1);
+
+            for(int x2 = 0; x2 < numberNodesWidth; x2 += 1)
+            {
+                for(int y2 = 0; y2 < numberNodesHeight; y2 += 1)
+                {
+                    Node* node2 = getNode(x2, y2);
+
+                    // node1->handleNodeIntersection(node2);
+                }
+            }
+        }
+    }
+}
+
 float Cloth::getClothWidth()
 {
     return clothWidth;

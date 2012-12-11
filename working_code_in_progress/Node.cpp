@@ -124,3 +124,10 @@ void Node::translate(Vector3 direction)
 {
     position += direction;
 }
+
+void Node::handleNodeIntersection(Node* node)
+{
+    float sphereRadius = 0.1;
+
+
+}

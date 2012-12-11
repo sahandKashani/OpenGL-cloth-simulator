@@ -8,14 +8,7 @@
 
 Sphere::Sphere(Vector3 c, float r) :
     center(c),
-    radius(r),
-    sticky(false)
-{}
-
-Sphere::Sphere(Vector3 c, float r, bool stick) :
-    center(c),
-    radius(r),
-    sticky(stick)
+    radius(r)
 {}
 
 Vector3 Sphere::getCenter()
@@ -78,12 +71,6 @@ void Sphere::handleNodeIntersection(Node* node)
 
         // only keep the tangent force now, since the normal force is absorbed by the sphere
         node->setForce(tangentForce);
-
-        if(sticky)
-        {
-            // sticky sphere
-            node->setMoveable(false);
-        }
     }
     else
     {

@@ -35,6 +35,8 @@ public:
     void applyForces(float duration);
 
     void resetToOriginalForce();
+
+    void handleNodeIntersection(Node* node);
 };
 
 #endif

@@ -79,6 +79,7 @@ public:
     Node* getNode(int x, int y);
 
     void handleSphereIntersections(std::vector<Sphere>* spheres);
+    void handleSelfIntersections();
 };
 
 #endif
