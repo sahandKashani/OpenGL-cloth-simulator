@@ -33,9 +33,9 @@ private:
     std::vector<Constraint> upperRightShearConstraints;
     std::vector<Constraint> lowerRightShearConstraints;
 
-    std::vector< std::vector<Constraint>* > structuralBendConstraints;
-    std::vector<Constraint> rightStructuralBendConstraints;
-    std::vector<Constraint> topStructuralBendConstraints;
+    std::vector< std::vector< std::vector<Constraint*> >* > structuralBendConstraints;
+    std::vector< std::vector<Constraint*> > rightStructuralBendConstraints;
+    std::vector< std::vector<Constraint*> > topStructuralBendConstraints;
 
     std::vector<Constraint> shearBendConstraints;
     std::vector<Constraint> upperRightShearBendConstraints;
