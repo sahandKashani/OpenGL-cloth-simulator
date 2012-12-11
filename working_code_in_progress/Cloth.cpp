@@ -121,9 +121,9 @@ void Cloth::addForce(Vector3 force)
 void Cloth::createConstraints()
 {
     createStructuralConstraints();
-    // createShearConstraints();
+    createShearConstraints();
     createStructuralBendConstraints();
-    // createShearBendConstraints();
+    createShearBendConstraints();
 }
 
 void Cloth::createStructuralConstraints()
@@ -176,6 +176,24 @@ void Cloth::createShearConstraints()
     //         shearConstraints.push_back(diagonalConstraint2);
     //     }
     // }
+    for(int x = 0; x < numberNodesWidth - 1; x += 1)
+    {
+        for(int y = 0; y < numberNodesHeight - 1; y += 1)
+        {
+            std::vector<Constraint*> upperRightConstraintColumn;
+            std::vector<Constraint*> lowerRightConstraintColumn;
+
+            if(y == 0)
+            {
+                Node* lowerLeftNode = getNode(x, y);
+                Node* upperRightNode = getNode(x + 1, y + 1);
+            }
+            else
+            {
+
+            }
+        }
+    }
 }
 
 void Cloth::createStructuralBendConstraints()
@@ -233,10 +251,7 @@ void Cloth::createShearBendConstraints()
 void Cloth::draw()
 {
     drawNodes();
-    drawStructuralConstraints();
-    drawShearConstraints();
-    drawStructuralBendConstraints();
-    drawShearBendConstraints();
+    drawConstraints();
 }
 
 void Cloth::drawNodes()
@@ -251,6 +266,14 @@ void Cloth::drawNodes()
     }
 }
 
+void Cloth::satisfyConstraints()
+{
+    satisfyStructuralConstraints();
+    satisfyShearConstraints();
+    satisfyStructuralBendConstraints();
+    satisfyShearBendConstraints();
+}
+
 void Cloth::satisfyStructuralConstraints()
 {
     satisfyConstraintsInContainer(structuralConstraints);
@@ -258,12 +281,7 @@ void Cloth::satisfyStructuralConstraints()
 
 void Cloth::satisfyShearConstraints()
 {
-    // for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
-    //     shearConstraintIterator != shearConstraints.end();
-    //     ++shearConstraintIterator)
-    // {
-    //     shearConstraintIterator->satisfyConstraint();
-    // }
+    satisfyConstraintsInContainer(shearConstraints);
 }
 
 void Cloth::satisfyStructuralBendConstraints()
@@ -273,20 +291,15 @@ void Cloth::satisfyStructuralBendConstraints()
 
 void Cloth::satisfyShearBendConstraints()
 {
-    // for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
-    //     shearBendConstraintIterator != shearBendConstraints.end();
-    //     ++shearBendConstraintIterator)
-    // {
-    //     shearBendConstraintIterator->satisfyConstraint();
-    // }
+    satisfyConstraintsInContainer(shearBendConstraints);
 }
 
-void Cloth::satisfyConstraints()
+void Cloth::drawConstraints()
 {
-    satisfyStructuralConstraints();
-    // satisfyShearConstraints();
-    // satisfyStructuralBendConstraints();
-    // satisfyShearBendConstraints();
+    drawStructuralConstraints();
+    drawShearConstraints();
+    drawStructuralBendConstraints();
+    drawShearBendConstraints();
 }
 
 void Cloth::drawStructuralConstraints()
@@ -296,12 +309,7 @@ void Cloth::drawStructuralConstraints()
 
 void Cloth::drawShearConstraints()
 {
-    // for(std::vector<Constraint>::iterator shearConstraintIterator = shearConstraints.begin();
-    //     shearConstraintIterator != shearConstraints.end();
-    //     ++shearConstraintIterator)
-    // {
-    //     shearConstraintIterator->draw();
-    // }
+    drawConstraintsInContainer(shearConstraints);
 }
 
 void Cloth::drawStructuralBendConstraints()
@@ -311,12 +319,7 @@ void Cloth::drawStructuralBendConstraints()
 
 void Cloth::drawShearBendConstraints()
 {
-    // for(std::vector<Constraint>::iterator shearBendConstraintIterator = shearBendConstraints.begin();
-    //     shearBendConstraintIterator != shearBendConstraints.end();
-    //     ++shearBendConstraintIterator)
-    // {
-    //     shearBendConstraintIterator->draw();
-    // }
+    drawConstraintsInContainer(shearBendConstraints);
 }
 
 // method for automatic drawing of constraints in a container

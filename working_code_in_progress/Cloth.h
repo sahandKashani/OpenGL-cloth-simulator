@@ -24,22 +24,25 @@ private:
     // Nodes
     std::vector< std::vector<Node> > nodes;
 
-    // constraints
+    // structural constraints
     std::vector< std::vector< std::vector<Constraint*> >* > structuralConstraints;
     std::vector< std::vector<Constraint*> > rightStructuralConstraints;
     std::vector< std::vector<Constraint*> > topStructuralConstraints;
 
-    std::vector<Constraint> shearConstraints;
-    std::vector<Constraint> upperRightShearConstraints;
-    std::vector<Constraint> lowerRightShearConstraints;
+    // shear constraints
+    std::vector< std::vector< std::vector<Constraint*> >* > shearConstraints;
+    std::vector< std::vector<Constraint*> > upperRightShearConstraints;
+    std::vector< std::vector<Constraint*> > lowerRightShearConstraints;
 
+    // structural bend constraints
     std::vector< std::vector< std::vector<Constraint*> >* > structuralBendConstraints;
     std::vector< std::vector<Constraint*> > rightStructuralBendConstraints;
     std::vector< std::vector<Constraint*> > topStructuralBendConstraints;
 
-    std::vector<Constraint> shearBendConstraints;
-    std::vector<Constraint> upperRightShearBendConstraints;
-    std::vector<Constraint> lowerRightShearBendConstraints;
+    // shear bend constraints
+    std::vector< std::vector< std::vector<Constraint*> >* > shearBendConstraints;
+    std::vector< std::vector<Constraint*> > upperRightShearBendConstraints;
+    std::vector< std::vector<Constraint*> > lowerRightShearBendConstraints;
 
     // node creation method
     void createNodes();
@@ -53,6 +56,7 @@ private:
 
     // drawing methods
     void drawNodes();
+    void drawConstraints();
     void drawStructuralConstraints();
     void drawShearConstraints();
     void drawStructuralBendConstraints();
