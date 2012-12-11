@@ -16,9 +16,13 @@ void ShearBendConstraint::draw()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glPushAttrib(GL_CURRENT_BIT); // save color
 
-            Vector3 color = DrawingSettings::getInstance()->getShearBendConstraintColor();
-            glColor3f(color.x, color.y, color.z);
-            Constraint::draw();
+            DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+            if(drawingSettings->isDrawShearBendConstraintsEnabled())
+            {
+                Vector3 color = DrawingSettings::getInstance()->getShearBendConstraintColor();
+                glColor3f(color.x, color.y, color.z);
+                Constraint::draw();
+            }
 
         glPopAttrib(); // GL_CURRENT_BIT
     glPopAttrib(); // GL_POLYGON_BIT

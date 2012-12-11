@@ -41,7 +41,6 @@ private:
     std::vector<Constraint> upperRightShearBendConstraints;
     std::vector<Constraint> lowerRightShearBendConstraints;
 
-
     // node creation method
     void createNodes();
 
@@ -66,6 +65,7 @@ private:
     void satisfyShearBendConstraints();
 
     void drawConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
+    void satisfyConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
 
     // tearing methods
     // void removeRightStructuralConstraint(int x, int y);

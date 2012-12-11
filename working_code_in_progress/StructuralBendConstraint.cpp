@@ -16,9 +16,13 @@ void StructuralBendConstraint::draw()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glPushAttrib(GL_CURRENT_BIT); // save color
 
-            Vector3 color = DrawingSettings::getInstance()->getStructuralBendConstraintColor();
-            glColor3f(color.x, color.y, color.z);
-            Constraint::draw();
+            DrawingSettings* drawingSettings = DrawingSettings::getInstance();
+            if(drawingSettings->isDrawStructuralBendConstraintsEnabled())
+            {
+                Vector3 color = DrawingSettings::getInstance()->getStructuralBendConstraintColor();
+                glColor3f(color.x, color.y, color.z);
+                Constraint::draw();
+            }
 
         glPopAttrib(); // GL_CURRENT_BIT
     glPopAttrib(); // GL_POLYGON_BIT

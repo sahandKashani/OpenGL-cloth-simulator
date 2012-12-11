@@ -70,7 +70,6 @@ void BatmanScene::simulate()
     float timeStep = 0.001;
     cape->applyForces(timeStep);
     cape->satisfyConstraints();
-
     cape->handleSphereIntersections(&leftFoot);
     cape->handleSphereIntersections(&rightFoot);
 }

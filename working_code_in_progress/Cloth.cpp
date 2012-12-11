@@ -230,31 +230,11 @@ void Cloth::createShearBendConstraints()
 
 void Cloth::draw()
 {
-    glColor3f(1.0, 1.0, 1.0);
-
-    DrawingSettings* drawingSettings = DrawingSettings::getInstance();
-
     drawNodes();
-
-    // if(drawingSettings->isDrawStructuralConstraintsEnabled())
-    // {
-        drawStructuralConstraints();
-    // }
-
-    // if(drawingSettings->isDrawShearConstraintsEnabled())
-    // {
-    //     drawShearConstraints();
-    // }
-
-    // if(drawingSettings->isDrawStructuralBendConstraintsEnabled())
-    // {
-    //     drawStructuralBendConstraints();
-    // }
-
-    // if(drawingSettings->isDrawShearBendConstraintsEnabled())
-    // {
-    //     drawShearBendConstraints();
-    // }
+    drawStructuralConstraints();
+    drawShearConstraints();
+    drawStructuralBendConstraints();
+    drawShearBendConstraints();
 }
 
 void Cloth::drawNodes()
@@ -269,42 +249,9 @@ void Cloth::drawNodes()
     }
 }
 
-void Cloth::drawConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container)
-{
-    // iterating over std::vector< std::vector< std::vector<Constraint*> >* >
-    for(std::vector< std::vector< std::vector<Constraint*> >* >::iterator it1 = container.begin();
-        it1 != container.end();
-        ++it1)
-    {
-        // iterating over std::vector< std::vector<Constraint*> >*
-        for(std::vector< std::vector<Constraint*> >::iterator it2 = (*it1)->begin();
-            it2 != (*it1)->end();
-            ++it2)
-        {
-            // iterating over std::vector<Constraint*>
-            for(std::vector<Constraint*>::iterator it3 = it2->begin();
-                it3 != it2->end();
-                ++it3)
-            {
-                (*it3)->draw();
-            }
-        }
-    }
-}
-
 void Cloth::satisfyStructuralConstraints()
 {
-    // for(std::vector< std::vector<Constraint>* >::iterator directionalStructuralConstraintIterator = structuralConstraints.begin();
-    //     directionalStructuralConstraintIterator != structuralConstraints.end();
-    //     ++directionalStructuralConstraintIterator)
-    // {
-    //     for(std::vector<Constraint>::iterator structuralConstraintIterator = (*directionalStructuralConstraintIterator)->begin();
-    //         structuralConstraintIterator != (*directionalStructuralConstraintIterator)->end();
-    //         ++structuralConstraintIterator)
-    //     {
-    //         structuralConstraintIterator->satisfyConstraint();
-    //     }
-    // }
+    satisfyConstraintsInContainer(structuralConstraints);
 }
 
 void Cloth::satisfyShearConstraints()
@@ -344,7 +291,7 @@ void Cloth::satisfyShearBendConstraints()
 
 void Cloth::satisfyConstraints()
 {
-    // satisfyStructuralConstraints();
+    satisfyStructuralConstraints();
     // satisfyShearConstraints();
     // satisfyStructuralBendConstraints();
     // satisfyShearBendConstraints();
@@ -401,4 +348,50 @@ void Cloth::drawShearBendConstraints()
     // {
     //     shearBendConstraintIterator->draw();
     // }
+}
+
+void Cloth::drawConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container)
+{
+    // iterating over std::vector< std::vector< std::vector<Constraint*> >* >
+    for(std::vector< std::vector< std::vector<Constraint*> >* >::iterator it1 = container.begin();
+        it1 != container.end();
+        ++it1)
+    {
+        // iterating over std::vector< std::vector<Constraint*> >*
+        for(std::vector< std::vector<Constraint*> >::iterator it2 = (*it1)->begin();
+            it2 != (*it1)->end();
+            ++it2)
+        {
+            // iterating over std::vector<Constraint*>
+            for(std::vector<Constraint*>::iterator it3 = it2->begin();
+                it3 != it2->end();
+                ++it3)
+            {
+                (*it3)->draw();
+            }
+        }
+    }
+}
+
+void Cloth::satisfyConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container)
+{
+    // iterating over std::vector< std::vector< std::vector<Constraint*> >* >
+    for(std::vector< std::vector< std::vector<Constraint*> >* >::iterator it1 = container.begin();
+        it1 != container.end();
+        ++it1)
+    {
+        // iterating over std::vector< std::vector<Constraint*> >*
+        for(std::vector< std::vector<Constraint*> >::iterator it2 = (*it1)->begin();
+            it2 != (*it1)->end();
+            ++it2)
+        {
+            // iterating over std::vector<Constraint*>
+            for(std::vector<Constraint*>::iterator it3 = it2->begin();
+                it3 != it2->end();
+                ++it3)
+            {
+                (*it3)->satisfyConstraint();
+            }
+        }
+    }
 }
