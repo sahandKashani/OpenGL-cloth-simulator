@@ -71,10 +71,6 @@ private:
     void drawConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
     void satisfyConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
 
-    // tearing methods
-    // void removeRightStructuralConstraint(int x, int y);
-    // void removeTopStructuralConstraint(int x, int y);
-
 public:
     Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
 

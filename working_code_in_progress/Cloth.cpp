@@ -32,21 +32,6 @@ void Cloth::handleSphereIntersections(std::vector<Sphere>* spheres)
     }
 }
 
-// TODO : doesn't work
-// void Cloth::removeRightStructuralConstraint(int x, int y)
-// {
-//     int position = y * (numberNodesHeight - 1) + x;
-//     std::cout << Vector3(x, y, 0.0).toString() << std::endl;
-//     rightStructuralConstraints[position].disable();
-// }
-
-// TODO : works, but not perfectly
-// void Cloth::removeTopStructuralConstraint(int x, int y)
-// {
-//     int position = x * (numberNodesWidth - 1) + y;
-//     topStructuralConstraints[position].disable();
-// }
-
 float Cloth::getClothWidth()
 {
     return clothWidth;
@@ -160,40 +145,48 @@ void Cloth::createStructuralConstraints()
 
 void Cloth::createShearConstraints()
 {
-    // for(int x = 0; x < numberNodesWidth - 1; x += 1)
-    // {
-    //     for(int y = 0; y < numberNodesHeight - 1; y += 1)
-    //     {
-    //         Node* lowerLeftNode = getNode(x, y);
-    //         Node* lowerRightNode = getNode(x + 1, y);
-    //         Node* upperLeftNode = getNode(x, y + 1);
-    //         Node* upperRightNode = getNode(x + 1, y + 1);
-
-    //         Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
-    //         Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
-
-    //         shearConstraints.push_back(diagonalConstraint1);
-    //         shearConstraints.push_back(diagonalConstraint2);
-    //     }
-    // }
+    // in x direction, only go until numberNodesWidth - 1, because no shear constraint
+    // can exist towards the right after that point
     for(int x = 0; x < numberNodesWidth - 1; x += 1)
     {
-        for(int y = 0; y < numberNodesHeight - 1; y += 1)
+        std::vector<Constraint*> upperRightConstraintColumn;
+        std::vector<Constraint*> lowerRightConstraintColumn;
+
+        // in y direction, go until extreme top, because we have to create a lower right
+        // constraint
+        for(int y = 0; y < numberNodesHeight; y += 1)
         {
-            std::vector<Constraint*> upperRightConstraintColumn;
-            std::vector<Constraint*> lowerRightConstraintColumn;
+            Node* centerNode = getNode(x, y);
 
             if(y == 0)
             {
-                Node* lowerLeftNode = getNode(x, y);
+                // link to upper right node only
                 Node* upperRightNode = getNode(x + 1, y + 1);
+                upperRightConstraintColumn.push_back(new ShearConstraint(centerNode, upperRightNode));
+            }
+            else if(y == numberNodesHeight - 1)
+            {
+                // link to lower right node only
+                Node* lowerRightNode = getNode(x + 1, y - 1);
+                lowerRightConstraintColumn.push_back(new ShearConstraint(centerNode, lowerRightNode));
             }
             else
             {
+                // link to both upper right, and lower right nodes
+                Node* upperRightNode = getNode(x + 1, y + 1);
+                Node* lowerRightNode = getNode(x + 1, y - 1);
 
+                upperRightConstraintColumn.push_back(new ShearConstraint(centerNode, upperRightNode));
+                lowerRightConstraintColumn.push_back(new ShearConstraint(centerNode, lowerRightNode));
             }
         }
+
+        upperRightShearConstraints.push_back(upperRightConstraintColumn);
+        lowerRightShearConstraints.push_back(lowerRightConstraintColumn);
     }
+
+    shearConstraints.push_back(&upperRightShearConstraints);
+    shearConstraints.push_back(&lowerRightShearConstraints);
 }
 
 void Cloth::createStructuralBendConstraints()
@@ -230,22 +223,65 @@ void Cloth::createStructuralBendConstraints()
 
 void Cloth::createShearBendConstraints()
 {
+    // // for(int x = 0; x < numberNodesWidth - 2; x += 1)
+    // // {
+    // //     for(int y = 0; y < numberNodesHeight - 2; y += 1)
+    // //     {
+    // //         Node* lowerLeftNode = getNode(x, y);
+    // //         Node* lowerRightNode = getNode(x + 2, y);
+    // //         Node* upperLeftNode = getNode(x, y + 2);
+    // //         Node* upperRightNode = getNode(x + 2, y + 2);
+
+    // //         Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
+    // //         Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
+
+    // //         shearBendConstraints.push_back(diagonalConstraint1);
+    // //         shearBendConstraints.push_back(diagonalConstraint2);
+    // //     }
+    // // }
+
+    // // in x direction, only go until numberNodesWidth - 1, because no shear constraint
+    // // can exist towards the right after that point
     // for(int x = 0; x < numberNodesWidth - 2; x += 1)
     // {
-    //     for(int y = 0; y < numberNodesHeight - 2; y += 1)
+    //     std::vector<Constraint*> upperRightConstraintColumn;
+    //     std::vector<Constraint*> lowerRightConstraintColumn;
+
+    //     // in y direction, go until extreme top, because we have to create a lower right
+    //     // constraint
+    //     for(int y = 0; y < numberNodesHeight; y += 1)
     //     {
-    //         Node* lowerLeftNode = getNode(x, y);
-    //         Node* lowerRightNode = getNode(x + 2, y);
-    //         Node* upperLeftNode = getNode(x, y + 2);
-    //         Node* upperRightNode = getNode(x + 2, y + 2);
+    //         Node* centerNode = getNode(x, y);
 
-    //         Constraint diagonalConstraint1(lowerLeftNode, upperRightNode);
-    //         Constraint diagonalConstraint2(lowerRightNode, upperLeftNode);
+    //         if(y == 0)
+    //         {
+    //             // link to upper right node only
+    //             Node* upperRightNode = getNode(x + 2, y + 2);
+    //             upperRightConstraintColumn.push_back(new ShearConstraint(centerNode, upperRightNode));
+    //         }
+    //         else if(y == numberNodesHeight - 1)
+    //         {
+    //             // link to lower right node only
+    //             Node* lowerRightNode = getNode(x + 2, y - 2);
+    //             lowerRightConstraintColumn.push_back(new ShearConstraint(centerNode, lowerRightNode));
+    //         }
+    //         else
+    //         {
+    //             // link to both upper right, and lower right nodes
+    //             Node* upperRightNode = getNode(x + 2, y + 2);
+    //             Node* lowerRightNode = getNode(x + 2, y - 2);
 
-    //         shearBendConstraints.push_back(diagonalConstraint1);
-    //         shearBendConstraints.push_back(diagonalConstraint2);
+    //             upperRightConstraintColumn.push_back(new ShearConstraint(centerNode, upperRightNode));
+    //             lowerRightConstraintColumn.push_back(new ShearConstraint(centerNode, lowerRightNode));
+    //         }
     //     }
+
+    //     upperRightShearBendConstraints.push_back(upperRightConstraintColumn);
+    //     lowerRightShearBendConstraints.push_back(lowerRightConstraintColumn);
     // }
+
+    // shearBendConstraints.push_back(&upperRightShearBendConstraints);
+    // shearBendConstraints.push_back(&lowerRightShearBendConstraints);
 }
 
 void Cloth::draw()
