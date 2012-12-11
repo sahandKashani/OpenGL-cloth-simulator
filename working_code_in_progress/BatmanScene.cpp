@@ -25,7 +25,7 @@ void BatmanScene::createScene()
     camera->saveCameraSetup();
 
     // cloth setup
-    cape = new Cloth(10.0, 15.0, 20, 30);
+    cape = new Cloth(10.0, 15.0, 20, 30, 1);
     // fixing cape at certain points
     cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
     cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);

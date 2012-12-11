@@ -7,8 +7,6 @@
 #include "Constraint.h"
 #include "StructuralConstraint.h"
 #include "ShearConstraint.h"
-#include "StructuralBendConstraint.h"
-#include "ShearBendConstraint.h"
 #include "Sphere.h"
 
 class Cloth
@@ -20,6 +18,8 @@ private:
 
     float clothWidth;
     float clothHeight;
+
+    int interleaving;
 
     // Nodes
     std::vector< std::vector<Node> > nodes;
@@ -34,16 +34,6 @@ private:
     std::vector< std::vector<Constraint*> > upperRightShearConstraints;
     std::vector< std::vector<Constraint*> > lowerRightShearConstraints;
 
-    // structural bend constraints
-    std::vector< std::vector< std::vector<Constraint*> >* > structuralBendConstraints;
-    std::vector< std::vector<Constraint*> > rightStructuralBendConstraints;
-    std::vector< std::vector<Constraint*> > topStructuralBendConstraints;
-
-    // shear bend constraints
-    std::vector< std::vector< std::vector<Constraint*> >* > shearBendConstraints;
-    std::vector< std::vector<Constraint*> > upperRightShearBendConstraints;
-    std::vector< std::vector<Constraint*> > lowerRightShearBendConstraints;
-
     // node creation method
     void createNodes();
 
@@ -51,36 +41,31 @@ private:
     void createConstraints();
     void createStructuralConstraints();
     void createShearConstraints();
-    void createStructuralBendConstraints();
-    void createShearBendConstraints();
+
     void createInterleavedStructuralConstraints(int interleaving,
                                                 std::vector< std::vector<Constraint*> >* rightConstraints,
                                                 std::vector< std::vector<Constraint*> >* topConstraints,
                                                 std::vector< std::vector< std::vector<Constraint*> >* >* combinedConstraints);
-    void createInterleavedShearConstraints(int interleaving,
-                                          std::vector< std::vector<Constraint*> >* upperRightConstraints,
-                                          std::vector< std::vector<Constraint*> >* lowerRightConstraints,
-                                          std::vector< std::vector< std::vector<Constraint*> >* >* combinedConstraints);
+    void createInterleavedShearConstraints     (int interleaving,
+                                                std::vector< std::vector<Constraint*> >* upperRightConstraints,
+                                                std::vector< std::vector<Constraint*> >* lowerRightConstraints,
+                                                std::vector< std::vector< std::vector<Constraint*> >* >* combinedConstraints);
 
     // drawing methods
     void drawNodes();
     void drawConstraints();
     void drawStructuralConstraints();
     void drawShearConstraints();
-    void drawStructuralBendConstraints();
-    void drawShearBendConstraints();
 
     // constraint satisfaction methods
     void satisfyStructuralConstraints();
     void satisfyShearConstraints();
-    void satisfyStructuralBendConstraints();
-    void satisfyShearBendConstraints();
 
     void drawConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
     void satisfyConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
 
 public:
-    Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight);
+    Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight, int constraintInterleavingLevels);
 
     // general drawing method
     void draw();

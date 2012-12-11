@@ -6,11 +6,12 @@
 #include "Cloth.h"
 #include "DrawingSettings.h"
 
-Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight) :
+Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight, int constraintInterleavingLevels) :
     clothWidth(clothTotalWidth),
     clothHeight(clothTotalHeight),
     numberNodesWidth(nodesWidth),
-    numberNodesHeight(nodesHeight)
+    numberNodesHeight(nodesHeight),
+    interleaving(constraintInterleavingLevels)
 {
     createNodes();
     createConstraints();
@@ -107,8 +108,6 @@ void Cloth::createConstraints()
 {
     createStructuralConstraints();
     createShearConstraints();
-    createStructuralBendConstraints();
-    createShearBendConstraints();
 }
 
 void Cloth::createStructuralConstraints()
@@ -122,22 +121,6 @@ void Cloth::createStructuralConstraints()
 void Cloth::createShearConstraints()
 {
     createInterleavedShearConstraints(1,
-                                      &upperRightShearConstraints,
-                                      &lowerRightShearConstraints,
-                                      &shearConstraints);
-}
-
-void Cloth::createStructuralBendConstraints()
-{
-    createInterleavedStructuralConstraints(2,
-                                           &rightStructuralBendConstraints,
-                                           &topStructuralBendConstraints,
-                                           &structuralBendConstraints);
-}
-
-void Cloth::createShearBendConstraints()
-{
-    createInterleavedShearConstraints(2,
                                       &upperRightShearConstraints,
                                       &lowerRightShearConstraints,
                                       &shearConstraints);
@@ -165,8 +148,6 @@ void Cloth::satisfyConstraints()
 {
     satisfyStructuralConstraints();
     satisfyShearConstraints();
-    satisfyStructuralBendConstraints();
-    satisfyShearBendConstraints();
 }
 
 void Cloth::satisfyStructuralConstraints()
@@ -179,22 +160,10 @@ void Cloth::satisfyShearConstraints()
     satisfyConstraintsInContainer(shearConstraints);
 }
 
-void Cloth::satisfyStructuralBendConstraints()
-{
-    satisfyConstraintsInContainer(structuralBendConstraints);
-}
-
-void Cloth::satisfyShearBendConstraints()
-{
-    satisfyConstraintsInContainer(shearBendConstraints);
-}
-
 void Cloth::drawConstraints()
 {
     drawStructuralConstraints();
     drawShearConstraints();
-    drawStructuralBendConstraints();
-    drawShearBendConstraints();
 }
 
 void Cloth::drawStructuralConstraints()
@@ -205,16 +174,6 @@ void Cloth::drawStructuralConstraints()
 void Cloth::drawShearConstraints()
 {
     drawConstraintsInContainer(shearConstraints);
-}
-
-void Cloth::drawStructuralBendConstraints()
-{
-    drawConstraintsInContainer(structuralBendConstraints);
-}
-
-void Cloth::drawShearBendConstraints()
-{
-    drawConstraintsInContainer(shearBendConstraints);
 }
 
 // method for automatic drawing of constraints in a container
