@@ -187,7 +187,6 @@ void Keyboard::handleSpecialKeyboardInput(int key, int x, int y)
             drawingSettings->toggleDrawStructuralBendConstraintsEnabled();
             break;
         case GLUT_KEY_F8:
-            drawingSettings->toggleDrawShearBendConstraintsEnabled();
             break;
         case GLUT_KEY_F9:
             drawingSettings->toggleDrawNodesEnabled();

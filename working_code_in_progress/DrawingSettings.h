@@ -15,7 +15,6 @@ private:
     bool drawStructuralConstraintsEnabled;
     bool drawShearConstraintsEnabled;
     bool drawStructuralBendConstraintsEnabled;
-    bool drawShearBendConstraintsEnabled;
     bool drawSpheresEnabled;
     bool drawTrianglesEnabled;
     bool drawFloorEnabled;
@@ -25,7 +24,6 @@ private:
     Vector3 structuralConstraintColor;
     Vector3 shearConstraintColor;
     Vector3 structuralBendConstraintColor;
-    Vector3 shearBendConstraintColor;
     Vector3 sphereColor;
     Vector3 triangleColor;
     Vector3 floorColor;
@@ -43,7 +41,6 @@ public:
     bool isDrawStructuralConstraintsEnabled();
     bool isDrawShearConstraintsEnabled();
     bool isDrawStructuralBendConstraintsEnabled();
-    bool isDrawShearBendConstraintsEnabled();
     bool isDrawSpheresEnabled();
     bool isDrawTrianglesEnabled();
     bool isDrawFloorEnabled();
@@ -55,7 +52,6 @@ public:
     void toggleDrawStructuralConstraintsEnabled();
     void toggleDrawShearConstraintsEnabled();
     void toggleDrawStructuralBendConstraintsEnabled();
-    void toggleDrawShearBendConstraintsEnabled();
     void toggleDrawSpheresEnabled();
     void toggleDrawTrianglesEnabled();
     void toggleDrawFloorEnabled();
@@ -70,7 +66,6 @@ public:
     Vector3 getStructuralConstraintColor();
     Vector3 getShearConstraintColor();
     Vector3 getStructuralBendConstraintColor();
-    Vector3 getShearBendConstraintColor();
     Vector3 getSphereColor();
     Vector3 getTriangleColor();
     Vector3 getFloorColor();

@@ -25,7 +25,6 @@ DrawingSettings::DrawingSettings() :
     drawStructuralConstraintsEnabled     (false),
     drawShearConstraintsEnabled          (true ),
     drawStructuralBendConstraintsEnabled (false),
-    drawShearBendConstraintsEnabled      (false),
     drawSpheresEnabled                   (true ),
     drawTrianglesEnabled                 (false),
     drawFloorEnabled                     (false),
@@ -34,7 +33,6 @@ DrawingSettings::DrawingSettings() :
     structuralConstraintColor    (1.0, 0.0, 0.0),
     shearConstraintColor         (1.0, 1.0, 1.0),
     structuralBendConstraintColor(0.0, 1.0, 0.0),
-    shearBendConstraintColor     (1.0, 1.0, 1.0),
     sphereColor                  (0.0, 0.0, 1.0),
     triangleColor                (1.0, 1.0, 0.0),
     floorColor                   (1.0, 1.0, 1.0),
@@ -69,11 +67,6 @@ bool DrawingSettings::isDrawShearConstraintsEnabled()
 bool DrawingSettings::isDrawStructuralBendConstraintsEnabled()
 {
     return drawStructuralBendConstraintsEnabled;
-}
-
-bool DrawingSettings::isDrawShearBendConstraintsEnabled()
-{
-    return drawShearBendConstraintsEnabled;
 }
 
 bool DrawingSettings::isDrawSpheresEnabled()
@@ -126,11 +119,6 @@ void DrawingSettings::toggleDrawStructuralBendConstraintsEnabled()
     drawStructuralBendConstraintsEnabled = !drawStructuralBendConstraintsEnabled;
 }
 
-void DrawingSettings::toggleDrawShearBendConstraintsEnabled()
-{
-    drawShearBendConstraintsEnabled = !drawShearBendConstraintsEnabled;
-}
-
 void DrawingSettings::toggleDrawSpheresEnabled()
 {
     drawSpheresEnabled = !drawSpheresEnabled;
@@ -158,7 +146,6 @@ void DrawingSettings::showDrawStatus()
     std::cout << "  draw structural constraints     : " << isEnabled(drawStructuralConstraintsEnabled) << std::endl;
     std::cout << "  draw shear constraints          : " << isEnabled(drawShearConstraintsEnabled) << std::endl;
     std::cout << "  draw structural bend constraints: " << isEnabled(drawStructuralBendConstraintsEnabled) << std::endl;
-    std::cout << "  draw shear bend constraints     : " << isEnabled(drawShearBendConstraintsEnabled) << std::endl;
     std::cout << "  draw wireframe                  : " << isEnabled(drawWireFrameEnabled) << std::endl;
     std::cout << "  draw world axis                 : " << isEnabled(drawWorldAxisEnabled) << std::endl;
     std::cout << "  draw spheres                    : " << isEnabled(drawSpheresEnabled) << std::endl;
@@ -213,11 +200,6 @@ Vector3 DrawingSettings::getShearConstraintColor()
 Vector3 DrawingSettings::getStructuralBendConstraintColor()
 {
     return structuralBendConstraintColor;
-}
-
-Vector3 DrawingSettings::getShearBendConstraintColor()
-{
-    return shearBendConstraintColor;
 }
 
 Vector3 DrawingSettings::getSphereColor()
