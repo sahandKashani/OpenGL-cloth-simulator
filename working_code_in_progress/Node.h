@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include "Vector3.h"
+#include "Sphere.h"
 
 class Node
 {
@@ -12,6 +13,7 @@ private:
     Vector3 originalForce;
     Vector3 force;
     float mass;
+    Sphere boundary;
 
 public:
     Node();
@@ -36,7 +38,7 @@ public:
 
     void resetToOriginalForce();
 
-    // void handleNodeIntersection(Node* node);
+    void handleNodeIntersection(Node* node);
 };
 
 #endif

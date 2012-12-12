@@ -56,11 +56,6 @@ bool Sphere::willHitSphere(Node* node)
     return (node->getPosition() - center).length() < radius;
 }
 
-bool Sphere::willHitSphere(Sphere* s)
-{
-    return (s->getCenter() - center).length() < radius;
-}
-
 void Sphere::handleNodeIntersection(Node* node)
 {
     if(willHitSphere(node))
@@ -84,9 +79,4 @@ void Sphere::handleNodeIntersection(Node* node)
         // no longer in collision with the sphere, so put the original force back
         node->resetToOriginalForce();
     }
-}
-
-void Sphere::translate(Vector3 direction)
-{
-    center += direction;
 }
