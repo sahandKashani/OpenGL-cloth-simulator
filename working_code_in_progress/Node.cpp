@@ -125,9 +125,11 @@ void Node::translate(Vector3 direction)
     position += direction;
 }
 
-void Node::handleNodeIntersection(Node* node)
-{
-    float sphereRadius = 0.1;
+// void Node::handleNodeIntersection(Node* node)
+// {
+//     float sphereRadius = 0.5;
 
-
-}
+//     // keep this node still, and move the node which was passed as a paramter.
+//     Sphere s(position, sphereRadius);
+//     s.handleNodeIntersection(node);
+// }

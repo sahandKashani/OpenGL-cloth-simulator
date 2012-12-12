@@ -36,7 +36,7 @@ public:
 
     void resetToOriginalForce();
 
-    void handleNodeIntersection(Node* node);
+    // void handleNodeIntersection(Node* node);
 };
 
 #endif

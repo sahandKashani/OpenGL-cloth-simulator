@@ -25,7 +25,7 @@ void BatmanScene::createScene()
     camera->saveCameraSetup();
 
     // cloth setup (cannot put more than 7 rigidity)
-    cape = new Cloth(10.0, 15.0, 10, 15, 3);
+    cape = new Cloth(10.0, 15.0, 10, 15, 2);
     // fixing cape at certain points
     cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
     cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
@@ -46,22 +46,27 @@ void BatmanScene::createScene()
                       Vector3(10.0, 0.0, 0.0));
 
     // body setup
-    Vector3 centerBetweenFeet(5.0, 2.0, -1.0);
+    // Vector3 centerBetweenFeet(5.0, 2.0, -1.0);
     // left foot
-    leftFoot.push_back(Sphere(centerBetweenFeet + Vector3(-2.0, 0.0, 0.0 ), 1.2));
+    // leftFoot.push_back(Sphere(centerBetweenFeet + Vector3(-2.0, 0.0, 0.0 ), 1.2));
     // right foot
-    rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2));
+    // rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2));
 
-    rightFoot.push_back(Sphere(Vector3(5.0, 10.0, 5.0), 1.2));
+    // rightFoot.push_back(Sphere(Vector3(5.0, 12.0, 5.0), 1.0));
+    rightFoot.push_back(Sphere(Vector3(5.0, 10.0, 5.0), 1.0));
+    // rightFoot.push_back(Sphere(Vector3(5.0, 8.0, 5.0), 1.0));
+    // rightFoot.push_back(Sphere(Vector3(5.0, 6.0, 5.0), 1.0));
+    // rightFoot.push_back(Sphere(Vector3(5.0, 4.0, 5.0), 1.0));
+    // rightFoot.push_back(Sphere(Vector3(5.0, 2.0, 5.0), 1.0));
 
     // forces
     // gravity
     Vector3 gravity(0.0, -1.0, 0.0);
     // wind
-    Vector3 wind(0.0, 0.0, 10.0);
+    Vector3 wind(0.0, 0.0, 4.0);
 
     // add forces to cape
-    cape->addForce(gravity);
+    // cape->addForce(gravity);
     cape->addForce(wind);
 }
 

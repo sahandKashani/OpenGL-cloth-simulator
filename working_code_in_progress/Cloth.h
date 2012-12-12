@@ -34,6 +34,10 @@ private:
     std::vector< std::vector<Constraint*> > upperRightShearConstraints;
     std::vector< std::vector<Constraint*> > lowerRightShearConstraints;
 
+    // self intersection handling spheres
+    std::vector< std::vector<Sphere> > selfIntersectionSpheres;
+    void createSelfIntersectionSpheres();
+
     // node creation method
     void createNodes();
 
@@ -50,6 +54,7 @@ private:
     void drawConstraints();
     void drawStructuralConstraints();
     void drawShearConstraints();
+    void drawSelfIntersectionSpheres();
 
     // constraint satisfaction methods
     void satisfyStructuralConstraints();

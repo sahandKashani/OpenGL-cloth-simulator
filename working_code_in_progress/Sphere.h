@@ -16,8 +16,11 @@ public:
     float getRadius();
     void draw();
     void handleNodeIntersection(Node* node);
+    void handleSphereIntersection(Sphere* s);
     bool willHitSphere(Node* node);
+    bool willHitSphere(Sphere* s);
     void setCenter(Vector3 c);
+    void translate(Vector3 direction);
 };
 
 #endif
