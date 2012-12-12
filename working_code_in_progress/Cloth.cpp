@@ -19,43 +19,22 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
 
 void Cloth::handleSphereIntersections(std::vector<Sphere>* spheres)
 {
-    // for(std::vector<Sphere>::iterator sphereIterator = spheres->begin();
-    //     sphereIterator != spheres->end();
-    //     ++sphereIterator)
-    // {
-    //     for(int x = 0; x < numberNodesWidth; x += 1)
-    //     {
-    //         for(int y = 0; y < numberNodesHeight; y += 1)
-    //         {
-    //             sphereIterator->handleNodeIntersection(getNode(x, y));
-    //         }
-    //     }
-    // }
+    for(std::vector<Sphere>::iterator sphereIterator = spheres->begin();
+        sphereIterator != spheres->end();
+        ++sphereIterator)
+    {
+        for(int x = 0; x < numberNodesWidth; x += 1)
+        {
+            for(int y = 0; y < numberNodesHeight; y += 1)
+            {
+                sphereIterator->handleNodeIntersection(getNode(x, y));
+            }
+        }
+    }
 }
 
 void Cloth::handleSelfIntersections()
 {
-    for(int x1 = 0; x1 < numberNodesWidth - 1; x1 += 1)
-    {
-        for(int y1 = 0; y1 < numberNodesHeight - 1; y1 += 1)
-        {
-            Sphere* s1 = &selfIntersectionSpheres[x1][y1];
-
-            for(int x2 = 0; x2 < numberNodesWidth - 1; x2 += 1)
-            {
-                for(int y2 = 0; y2 < numberNodesHeight - 1; y2 += 1)
-                {
-                    Sphere* s2 = &selfIntersectionSpheres[x2][y2];
-
-                    if(x1 != x2 && y1 != y2)
-                    {
-                        s1->handleSphereIntersection(s2);
-                    }
-                }
-            }
-        }
-    }
-
     // for(int x1 = 0; x1 < numberNodesWidth; x1 += 1)
     // {
     //     for(int y1 = 0; y1 < numberNodesHeight; y1 += 1)
@@ -113,7 +92,6 @@ void Cloth::createNodes()
         float xPos = x * horizontalSpacing;
 
         std::vector<Node> nodeColumn;
-        std::vector<Sphere> sphereColumn;
 
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
@@ -121,24 +99,9 @@ void Cloth::createNodes()
 
             // put elements in rectangular grid with 0.0 depth
             nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0)));
-
-            // the number of self intersection spheres is the same as the number
-            // of edges, not vertices
-            if((x < numberNodesWidth - 1) && (y < numberNodesHeight - 1))
-            {
-                // create self intersection spheres
-                sphereColumn.push_back(Sphere(
-                                              Vector3(xPos + horizontalSpacing / 2,
-                                                      yPos + verticalSpacing / 2  ,
-                                                      0.0),
-                                              horizontalSpacing / 2
-                                             )
-                                      );
-            }
         }
 
         nodes.push_back(nodeColumn);
-        selfIntersectionSpheres.push_back(sphereColumn);
     }
 }
 
@@ -197,7 +160,6 @@ void Cloth::draw()
 {
     drawNodes();
     drawConstraints();
-    drawSelfIntersectionSpheres();
 }
 
 void Cloth::drawNodes()
@@ -208,17 +170,6 @@ void Cloth::drawNodes()
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
             getNode(x, y)->draw();
-        }
-    }
-}
-
-void Cloth::drawSelfIntersectionSpheres()
-{
-    for(int x = 0; x < numberNodesWidth - 1; x += 1)
-    {
-        for(int y = 0; y < numberNodesHeight - 1; y += 1)
-        {
-            selfIntersectionSpheres[x][y].draw();
         }
     }
 }

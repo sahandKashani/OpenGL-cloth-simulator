@@ -43,7 +43,7 @@ void Sphere::draw()
                     // draw the sphere a little smaller for collision problems
 
                     // TODO: remember to substract small increment
-                    glutSolidSphere(radius, 20, 20);
+                    glutSolidSphere(radius - 0.1, 20, 20);
                 glPopMatrix();
 
             glPopAttrib(); // GL_CURRENT_BIT
@@ -61,43 +61,32 @@ bool Sphere::willHitSphere(Sphere* s)
     return (s->getCenter() - center).length() < radius;
 }
 
-// void Sphere::handleNodeIntersection(Node* node)
-// {
-//     if(willHitSphere(node))
-//     {
-//         Vector3 currentPositionToCenter = node->getPosition() - center;
-//         float length = currentPositionToCenter.length();
+void Sphere::handleNodeIntersection(Node* node)
+{
+    if(willHitSphere(node))
+    {
+        Vector3 currentPositionToCenter = node->getPosition() - center;
+        float length = currentPositionToCenter.length();
 
-//         node->translate(currentPositionToCenter.normalize() * (radius - length));
+        node->translate(currentPositionToCenter.normalize() * (radius - length));
 
-//         Vector3 t1Pos = node->getPosition();
-//         Vector3 sphereNormalNormalized = (-1) * (t1Pos - center).normalize();
-//         Vector3 normalForceDirectionNormalized = node->getForce().dot(sphereNormalNormalized) * sphereNormalNormalized;
-//         Vector3 tangentForceDirectionNormalized = node->getForce() - normalForceDirectionNormalized;
-//         Vector3 tangentForce = tangentForceDirectionNormalized;
+        Vector3 t1Pos = node->getPosition();
+        Vector3 sphereNormalNormalized = (-1) * (t1Pos - center).normalize();
+        Vector3 normalForceDirectionNormalized = node->getForce().dot(sphereNormalNormalized) * sphereNormalNormalized;
+        Vector3 tangentForceDirectionNormalized = node->getForce() - normalForceDirectionNormalized;
+        Vector3 tangentForce = tangentForceDirectionNormalized;
 
-//         // only keep the tangent force now, since the normal force is absorbed by the sphere
-//         node->setForce(tangentForce);
-//     }
-//     else
-//     {
-//         // no longer in collision with the sphere, so put the original force back
-//         node->resetToOriginalForce();
-//     }
-// }
+        // only keep the tangent force now, since the normal force is absorbed by the sphere
+        node->setForce(tangentForce);
+    }
+    else
+    {
+        // no longer in collision with the sphere, so put the original force back
+        node->resetToOriginalForce();
+    }
+}
 
 void Sphere::translate(Vector3 direction)
 {
     center += direction;
-}
-
-void Sphere::handleSphereIntersection(Sphere* s)
-{
-    if(willHitSphere(s))
-    {
-        Vector3 currentPositionToCenter = s->getCenter() - center;
-        float length = currentPositionToCenter.length();
-
-        s->translate(currentPositionToCenter.normalize() * (radius - length));
-    }
 }
