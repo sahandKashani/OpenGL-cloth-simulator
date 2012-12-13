@@ -110,6 +110,17 @@ void Cloth::createNodes()
     }
 }
 
+void Cloth::updateTriangles()
+{
+    for(int x = 0; x < numberNodesWidth - 1; x += 1)
+    {
+        for(int y = 0; y < numberNodesHeight - 1; y += 1)
+        {
+
+        }
+    }
+}
+
 void Cloth::createTriangles()
 {
     for(int x = 0; x < numberNodesWidth - 1; x += 1)
@@ -131,6 +142,8 @@ void Cloth::createTriangles()
 
             triangleColumn.push_back(triangleSquare);
         }
+
+        triangles.push_back(triangleColumn);
     }
 }
 
@@ -206,7 +219,16 @@ void Cloth::drawNodes()
 
 void Cloth::drawShaded()
 {
-
+    for(int x = 0; x < numberNodesWidth - 1; x += 1)
+    {
+        for(int y = 0; y < numberNodesHeight - 1; y += 1)
+        {
+            for(int triangleSquareIndex = 0; triangleSquareIndex < 2; triangleSquareIndex += 1)
+            {
+                triangles[x][y][triangleSquareIndex].draw();
+            }
+        }
+    }
 }
 
 void Cloth::satisfyConstraints()

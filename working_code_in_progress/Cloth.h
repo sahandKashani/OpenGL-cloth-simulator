@@ -49,6 +49,7 @@ private:
     void createShearConstraints();
 
     void createTriangles();
+    void updateTriangles();
 
     void createInterleavedStructuralConstraints(int inter);
     void createInterleavedShearConstraints     (int inter);
