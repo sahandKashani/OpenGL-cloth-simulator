@@ -58,6 +58,9 @@ void applyChanges()
 // No modifications to any forces, keyboard commands, ... are processed here.
 void display()
 {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
     // clear color buffer
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);

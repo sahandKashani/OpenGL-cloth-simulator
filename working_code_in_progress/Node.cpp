@@ -16,7 +16,8 @@ Node::Node() :
     moveable(true),
     force(Vector3(0.0, 0.0, 0.0)),
     mass(1.0),
-    boundary(new Sphere(Vector3(0.0, 0.0, 0.0), 0.5))
+    boundary(new Sphere(Vector3(0.0, 0.0, 0.0), 0.5)),
+    normal(Vector3(0.0, 0.0, 1.0))
 {}
 
 Node::Node(Vector3 pos, float boundaryRadius) :
@@ -25,7 +26,8 @@ Node::Node(Vector3 pos, float boundaryRadius) :
     moveable(true),
     force(Vector3(0.0, 0.0, 0.0)),
     mass(1.0),
-    boundary(new Sphere(position, boundaryRadius))
+    boundary(new Sphere(position, boundaryRadius)),
+    normal(Vector3(0.0, 0.0, 1.0))
 {}
 
 Vector3 Node::getForce()
@@ -46,6 +48,11 @@ void Node::setMass(float m)
 void Node::setForce(Vector3 f)
 {
     force = f;
+}
+
+void Node::setNormal(Vector3 n)
+{
+    normal = n;
 }
 
 void Node::applyForces(float duration)

@@ -15,6 +15,7 @@ private:
     Vector3 force;
     float mass;
     Sphere* boundary;
+    Vector3 normal;
 
 public:
     Node();
@@ -28,6 +29,7 @@ public:
     void setMass(float m);
     void setPosition(Vector3 pos);
     void setForce(Vector3 f);
+    void setNormal(Vector3 n);
 
     bool isMoveable();
     void translate(Vector3 direction);

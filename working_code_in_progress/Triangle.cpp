@@ -16,14 +16,17 @@ void Triangle::draw()
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPushAttrib(GL_CURRENT_BIT); // save color
 
+                // GLfloat mat_amb_diff[] = { 0.1, 0.5, 0.8, 1.0 };
+                // glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mat_amb_diff);
+
                 Vector3 color = drawingSettings->getTriangleColor();
                 glColor3f(color.x, color.y, color.z);
                 glBegin(GL_TRIANGLES);
+                    glNormal3f(normal.x, normal.y, normal.z);
                     glVertex3f(p1.x, p1.y, p1.z);
                     glVertex3f(p2.x, p2.y, p2.z);
                     glVertex3f(p3.x, p3.y, p3.z);
                 glEnd();
-
 
             glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
@@ -41,6 +44,6 @@ Triangle::Triangle(Vector3 point1, Vector3 point2, Vector3 point3) :
     p1(point1),
     p2(point2),
     p3(point3),
-    normal((p2 - p1).cross(p3 - p1)),
+    normal((p2 - p1).cross(p3 - p1).normalize()),
     area(normal.length() * 0.5)
 {}
