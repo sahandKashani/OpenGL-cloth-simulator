@@ -46,6 +46,10 @@ void Cloth::handleSelfIntersections()
             {
                 for(int y2 = 0; y2 < numberNodesHeight; y2 += 1)
                 {
+                    // we should not test if 2 identical nodes touch each other,
+                    // otherwise the cloth would deform forever, as 2 identical
+                    // nodes are exactly on one another, and will try to continuously
+                    // repel themselves
                     if(x1 != x2 || y1 != y2)
                     {
                         Node* node2 = getNode(x2, y2);

@@ -25,7 +25,7 @@ void BatmanScene::createScene()
     camera->saveCameraSetup();
 
     // cloth setup (cannot put more than 7 rigidity)
-    cape = new Cloth(15.0, 15.0, 15, 2);
+    cape = new Cloth(10.0, 15.0, 20, 2);
     // fixing cape at certain points
     // cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
     // cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
@@ -63,10 +63,10 @@ void BatmanScene::createScene()
     // gravity
     Vector3 gravity(0.0, -1.0, 0.0);
     // wind
-    Vector3 wind(0.0, 0.0, 14.0);
+    Vector3 wind(0.0, 0.0, 10.0);
 
     // add forces to cape
-    // cape->addForce(gravity);
+    cape->addForce(gravity);
     cape->addForce(wind);
 }
 
