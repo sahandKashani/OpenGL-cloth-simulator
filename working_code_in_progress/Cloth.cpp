@@ -10,7 +10,7 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
     clothWidth(clothTotalWidth),
     clothHeight(clothTotalHeight),
     numberNodesWidth(nodesWidth),
-    numberNodesHeight((clothTotalWidth / nodesWidth) * clothTotalHeight),
+    numberNodesHeight(clothTotalHeight / (clothTotalWidth / nodesWidth)),
     interleaving(constraintInterleavingLevels)
 {
     createNodes();
@@ -89,6 +89,9 @@ int Cloth::getNumberNodesHeight()
 
 void Cloth::createNodes()
 {
+    std::cout << "numberNodesWidth  = " << numberNodesWidth << std::endl;
+    std::cout << "numberNodesHeight = " << numberNodesHeight << std::endl;
+
     float spacing = clothWidth / numberNodesWidth;
 
     for(int x = 0; x < numberNodesWidth; x += 1)
@@ -102,7 +105,7 @@ void Cloth::createNodes()
             float yPos = y * spacing;
 
             // put elements in rectangular grid with 0.0 depth
-            nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0), spacing / 2.0));
+            nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0), spacing / 1.2));
         }
 
         nodes.push_back(nodeColumn);
