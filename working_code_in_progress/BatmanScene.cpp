@@ -25,7 +25,7 @@ void BatmanScene::createScene()
     camera->saveCameraSetup();
 
     // cloth setup (cannot put more than 7 rigidity)
-    cape = new Cloth(15.0, 15.0, 20, 2);
+    cape = new Cloth(15.0, 15.0, 30, 2);
     // fixing cape at certain points
     cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
     cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);

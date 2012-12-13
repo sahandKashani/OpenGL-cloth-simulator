@@ -22,7 +22,6 @@ void Floor::draw()
     if(drawingSettings->isDrawFloorEnabled())
     {
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glPushAttrib(GL_CURRENT_BIT); // save color
 
                 Vector3 color = drawingSettings->getFloorColor();

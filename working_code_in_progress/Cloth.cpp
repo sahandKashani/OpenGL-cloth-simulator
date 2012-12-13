@@ -116,7 +116,16 @@ void Cloth::updateTriangles()
     {
         for(int y = 0; y < numberNodesHeight - 1; y += 1)
         {
+            Vector3 bottomLeft = getNode(x, y)->getPosition();
+            Vector3 bottomRight = getNode(x + 1, y)->getPosition();
+            Vector3 topLeft = getNode(x, y + 1)->getPosition();
+            Vector3 topRight = getNode(x + 1, y + 1)->getPosition();
 
+            Triangle lowerTriangle(topLeft, bottomLeft, bottomRight);
+            Triangle upperTriangle(topRight, topLeft, bottomRight);
+
+            triangles[x][y][0] = lowerTriangle;
+            triangles[x][y][1] = upperTriangle;
         }
     }
 }
@@ -219,6 +228,8 @@ void Cloth::drawNodes()
 
 void Cloth::drawShaded()
 {
+    updateTriangles();
+
     for(int x = 0; x < numberNodesWidth - 1; x += 1)
     {
         for(int y = 0; y < numberNodesHeight - 1; y += 1)

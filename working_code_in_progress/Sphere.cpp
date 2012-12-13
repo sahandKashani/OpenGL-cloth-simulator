@@ -48,7 +48,7 @@ void Sphere::draw()
                     // draw the sphere a little smaller for collision problems
 
                     // TODO: remember to substract small increment
-                    glutSolidSphere(radius - 0.05, 20, 20);
+                    glutSolidSphere(radius - 0.1, 20, 20);
                 glPopMatrix();
 
             glPopAttrib(); // GL_CURRENT_BIT

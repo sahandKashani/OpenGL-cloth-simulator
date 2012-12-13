@@ -29,7 +29,6 @@ void Scene::drawWorldAxis()
     if(DrawingSettings::getInstance()->isDrawWorldAxisEnabled())
     {
         glPushAttrib(GL_POLYGON_BIT ); // save mesh settings
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glPushAttrib(GL_CURRENT_BIT); // save color
 
                 glColor3f(1.0, 0.0, 0.0);

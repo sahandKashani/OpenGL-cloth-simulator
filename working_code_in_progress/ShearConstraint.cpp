@@ -13,7 +13,6 @@ ShearConstraint::ShearConstraint(Node* n1, Node* n2) :
 void ShearConstraint::draw()
 {
     glPushAttrib(GL_POLYGON_BIT); // save mesh settings
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glPushAttrib(GL_CURRENT_BIT); // save color
 
             DrawingSettings* drawingSettings = DrawingSettings::getInstance();
