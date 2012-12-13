@@ -114,15 +114,22 @@ void Cloth::createTriangles()
 {
     for(int x = 0; x < numberNodesWidth - 1; x += 1)
     {
+        std::vector< std::vector<Triangle> > triangleColumn;
+
         for(int y = 0; y < numberNodesHeight - 1; y += 1)
         {
-            Node* bottomLeft = getNode(x, y);
-            Node* bottomRight = getNode(x + 1, y);
-            Node* topLeft = getNode(x, y + 1);
-            Node* topRight = getNode(x + 1, y + 1);
+            Vector3 bottomLeft = getNode(x, y)->getPosition();
+            Vector3 bottomRight = getNode(x + 1, y)->getPosition();
+            Vector3 topLeft = getNode(x, y + 1)->getPosition();
+            Vector3 topRight = getNode(x + 1, y + 1)->getPosition();
 
-            triangles.push_back(Triangle(topLeft, bottomLeft, bottomRight));
-            triangles.push_back(Triangle(topRight, topLeft,));
+            std::vector<Triangle> triangleSquare;
+            Triangle lowerTriangle(topLeft, bottomLeft, bottomRight);
+            Triangle upperTriangle(topRight, topLeft, bottomRight);
+            triangleSquare.push_back(lowerTriangle);
+            triangleSquare.push_back(upperTriangle);
+
+            triangleColumn.push_back(triangleSquare);
         }
     }
 }

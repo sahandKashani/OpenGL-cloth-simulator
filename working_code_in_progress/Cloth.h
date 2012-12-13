@@ -8,6 +8,7 @@
 #include "StructuralConstraint.h"
 #include "ShearConstraint.h"
 #include "Sphere.h"
+#include "Triangle.h"
 
 class Cloth
 {
