@@ -15,6 +15,7 @@ Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int 
 {
     createNodes();
     createConstraints();
+    createTriangles();
 }
 
 void Cloth::handleSphereIntersections(std::vector<Sphere>* spheres)
@@ -89,9 +90,6 @@ int Cloth::getNumberNodesHeight()
 
 void Cloth::createNodes()
 {
-    std::cout << "numberNodesWidth  = " << numberNodesWidth << std::endl;
-    std::cout << "numberNodesHeight = " << numberNodesHeight << std::endl;
-
     float spacing = clothWidth / numberNodesWidth;
 
     for(int x = 0; x < numberNodesWidth; x += 1)
@@ -105,11 +103,16 @@ void Cloth::createNodes()
             float yPos = y * spacing;
 
             // put elements in rectangular grid with 0.0 depth
-            nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0), spacing / 1.2));
+            nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0), spacing / 1.125));
         }
 
         nodes.push_back(nodeColumn);
     }
+}
+
+void Cloth::createTriangles()
+{
+
 }
 
 // moves the nodes depending on the forces that are being applied to them
@@ -167,6 +170,7 @@ void Cloth::draw()
 {
     drawNodes();
     drawConstraints();
+    drawShaded();
 }
 
 void Cloth::drawNodes()
@@ -179,6 +183,11 @@ void Cloth::drawNodes()
             getNode(x, y)->draw();
         }
     }
+}
+
+void Cloth::drawShaded()
+{
+
 }
 
 void Cloth::satisfyConstraints()

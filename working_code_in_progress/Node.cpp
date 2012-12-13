@@ -110,8 +110,6 @@ void Node::draw()
     // force applied to the node
     Arrow appliedForce(position, position + force);
     appliedForce.draw();
-
-    // boundary->draw();
 }
 
 bool Node::isMoveable()

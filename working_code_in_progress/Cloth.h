@@ -42,6 +42,8 @@ private:
     void createStructuralConstraints();
     void createShearConstraints();
 
+    void createTriangles();
+
     void createInterleavedStructuralConstraints(int inter);
     void createInterleavedShearConstraints     (int inter);
 
@@ -50,7 +52,7 @@ private:
     void drawConstraints();
     void drawStructuralConstraints();
     void drawShearConstraints();
-    void drawSelfIntersectionSpheres();
+    void drawShaded();
 
     // constraint satisfaction methods
     void satisfyStructuralConstraints();

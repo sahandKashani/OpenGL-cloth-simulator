@@ -25,11 +25,11 @@ void BatmanScene::createScene()
     camera->saveCameraSetup();
 
     // cloth setup (cannot put more than 7 rigidity)
-    cape = new Cloth(10.0, 15.0, 20, 1);
+    cape = new Cloth(15.0, 15.0, 20, 2);
     // fixing cape at certain points
-    // cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    // cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    // cape->getNode(cape->getNumberNodesWidth() - 1      , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    cape->getNode(cape->getNumberNodesWidth() - 1      , cape->getNumberNodesHeight() - 1)->setMoveable(false);
     // setting cape node mass
     for(int x = 0; x < cape->getNumberNodesWidth() - 1; x += 1)
     {
@@ -52,12 +52,12 @@ void BatmanScene::createScene()
     // right foot
     // rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2));
 
-    rightFoot.push_back(Sphere(Vector3(7.5, 12.0, 5.0), 1.0));
-    rightFoot.push_back(Sphere(Vector3(7.5, 10.0, 5.0), 1.0));
-    rightFoot.push_back(Sphere(Vector3(7.5, 8.0, 5.0), 1.0));
-    rightFoot.push_back(Sphere(Vector3(7.5, 6.0, 5.0), 1.0));
-    rightFoot.push_back(Sphere(Vector3(7.5, 4.0, 5.0), 1.0));
-    rightFoot.push_back(Sphere(Vector3(7.5, 2.0, 5.0), 1.0));
+    // rightFoot.push_back(Sphere(Vector3(7.5, 12.0, 5.0), 1.0));
+    rightFoot.push_back(Sphere(Vector3(7.5, 10.0, 5.0), 2.0));
+    // rightFoot.push_back(Sphere(Vector3(7.5, 8.0, 5.0), 1.0));
+    // rightFoot.push_back(Sphere(Vector3(7.5, 6.0, 5.0), 2.0));
+    // rightFoot.push_back(Sphere(Vector3(7.5, 4.0, 5.0), 1.0));
+    // rightFoot.push_back(Sphere(Vector3(7.5, 2.0, 5.0), 1.0));
 
     // forces
     // gravity
@@ -72,7 +72,7 @@ void BatmanScene::createScene()
 
 void BatmanScene::simulate()
 {
-    float timeStep = 0.00001;
+    float timeStep = 0.0001;
     cape->applyForces(timeStep);
     cape->satisfyConstraints();
     cape->handleSphereIntersections(&leftFoot);
