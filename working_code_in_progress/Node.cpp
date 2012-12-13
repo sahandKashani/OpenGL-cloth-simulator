@@ -105,11 +105,11 @@ void Node::draw()
 
             glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
-    }
 
-    // force applied to the node
-    Arrow appliedForce(position, position + force);
-    appliedForce.draw();
+        // force applied to the node
+        Arrow appliedForce(position, position + force);
+        appliedForce.draw();
+    }
 }
 
 bool Node::isMoveable()

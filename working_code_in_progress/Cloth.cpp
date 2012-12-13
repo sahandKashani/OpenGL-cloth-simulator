@@ -112,7 +112,19 @@ void Cloth::createNodes()
 
 void Cloth::createTriangles()
 {
+    for(int x = 0; x < numberNodesWidth - 1; x += 1)
+    {
+        for(int y = 0; y < numberNodesHeight - 1; y += 1)
+        {
+            Node* bottomLeft = getNode(x, y);
+            Node* bottomRight = getNode(x + 1, y);
+            Node* topLeft = getNode(x, y + 1);
+            Node* topRight = getNode(x + 1, y + 1);
 
+            triangles.push_back(Triangle(topLeft, bottomLeft, bottomRight));
+            triangles.push_back(Triangle(topRight, topLeft,));
+        }
+    }
 }
 
 // moves the nodes depending on the forces that are being applied to them

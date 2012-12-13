@@ -34,6 +34,11 @@ private:
     std::vector< std::vector<Constraint*> > upperRightShearConstraints;
     std::vector< std::vector<Constraint*> > lowerRightShearConstraints;
 
+    // triangles
+    // first 2 vectors contain (x, y) coordinate, and the third vector contains
+    // the 2 triangles contained in a square area
+    std::vector< std::vector< std::vector<Triangle> > > triangles;
+
     // node creation method
     void createNodes();
 

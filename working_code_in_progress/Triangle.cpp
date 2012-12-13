@@ -25,16 +25,19 @@ void Triangle::draw()
                     glVertex3f(p3.x, p3.y, p3.z);
                 glEnd();
 
-                // draw normal vector
-                Vector3 center = (p1 + p2 + p3) / 3.0;
-                Arrow normalVector(center, center + normal);
-                normalVector.draw();
 
             glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
+
+        // draw normal vector
+        Vector3 center = (p1 + p2 + p3) / 3.0;
+        Arrow normalVector(center, center + normal);
+        normalVector.draw();
     }
 }
 
+// declare points in counter-clockwise direction for all triangles to have the
+// same outer surface
 Triangle::Triangle(Vector3 point1, Vector3 point2, Vector3 point3) :
     p1(point1),
     p2(point2),
