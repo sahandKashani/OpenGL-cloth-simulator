@@ -2,7 +2,8 @@
 #define NODE_H
 
 #include "Vector3.h"
-#include "Sphere.h"
+
+class Sphere;
 
 class Node
 {
@@ -13,11 +14,11 @@ private:
     Vector3 originalForce;
     Vector3 force;
     float mass;
-    Sphere boundary;
+    Sphere* boundary;
 
 public:
     Node();
-    Node(Vector3 pos);
+    Node(Vector3 pos, float boundaryRadius);
 
     Vector3 getPosition();
     Vector3 getOldPosition();

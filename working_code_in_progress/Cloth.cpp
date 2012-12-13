@@ -6,11 +6,11 @@
 #include "Cloth.h"
 #include "DrawingSettings.h"
 
-Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight, int constraintInterleavingLevels) :
+Cloth::Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int constraintInterleavingLevels) :
     clothWidth(clothTotalWidth),
     clothHeight(clothTotalHeight),
     numberNodesWidth(nodesWidth),
-    numberNodesHeight(nodesHeight),
+    numberNodesHeight((clothTotalWidth / nodesWidth) * clothTotalHeight),
     interleaving(constraintInterleavingLevels)
 {
     createNodes();
@@ -84,21 +84,20 @@ int Cloth::getNumberNodesHeight()
 
 void Cloth::createNodes()
 {
-    float horizontalSpacing = clothWidth / numberNodesWidth;
-    float verticalSpacing = clothHeight / numberNodesHeight;
+    float spacing = clothWidth / numberNodesWidth;
 
     for(int x = 0; x < numberNodesWidth; x += 1)
     {
-        float xPos = x * horizontalSpacing;
+        float xPos = x * spacing;
 
         std::vector<Node> nodeColumn;
 
         for(int y = 0; y < numberNodesHeight; y += 1)
         {
-            float yPos = y * verticalSpacing;
+            float yPos = y * spacing;
 
             // put elements in rectangular grid with 0.0 depth
-            nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0)));
+            nodeColumn.push_back(Node(Vector3(xPos, yPos, 0.0), spacing));
         }
 
         nodes.push_back(nodeColumn);

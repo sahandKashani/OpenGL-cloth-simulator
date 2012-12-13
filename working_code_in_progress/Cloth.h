@@ -60,7 +60,7 @@ private:
     void satisfyConstraintsInContainer(std::vector< std::vector< std::vector<Constraint*> >* > container);
 
 public:
-    Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int nodesHeight, int constraintInterleavingLevels);
+    Cloth(float clothTotalWidth, float clothTotalHeight, int nodesWidth, int constraintInterleavingLevels);
 
     // general drawing method
     void draw();

@@ -15,15 +15,17 @@ Node::Node() :
     oldPosition(Vector3(0.0, 0.0, 0.0)),
     moveable(true),
     force(Vector3(0.0, 0.0, 0.0)),
-    mass(1.0)
+    mass(1.0),
+    boundary(new Sphere(Vector3(0.0, 0.0, 0.0), 0.5))
 {}
 
-Node::Node(Vector3 pos) :
+Node::Node(Vector3 pos, float boundaryRadius) :
     position(pos),
     oldPosition(pos),
     moveable(true),
     force(Vector3(0.0, 0.0, 0.0)),
-    mass(1.0)
+    mass(1.0),
+    boundary(new Sphere(position, boundaryRadius))
 {}
 
 Vector3 Node::getForce()
