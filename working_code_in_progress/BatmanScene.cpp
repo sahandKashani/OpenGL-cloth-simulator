@@ -27,9 +27,9 @@ void BatmanScene::createScene()
     // cloth setup (cannot put more than 7 rigidity)
     cape = new Cloth(15.0, 15.0, 15, 2);
     // fixing cape at certain points
-    cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    cape->getNode(cape->getNumberNodesWidth() - 1      , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    // cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    // cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    // cape->getNode(cape->getNumberNodesWidth() - 1      , cape->getNumberNodesHeight() - 1)->setMoveable(false);
     // setting cape node mass
     for(int x = 0; x < cape->getNumberNodesWidth() - 1; x += 1)
     {
@@ -63,7 +63,7 @@ void BatmanScene::createScene()
     // gravity
     Vector3 gravity(0.0, -1.0, 0.0);
     // wind
-    Vector3 wind(0.0, 0.0, 10.0);
+    Vector3 wind(0.0, 0.0, 14.0);
 
     // add forces to cape
     // cape->addForce(gravity);
@@ -72,7 +72,7 @@ void BatmanScene::createScene()
 
 void BatmanScene::simulate()
 {
-    float timeStep = 0.0001;
+    float timeStep = 0.00001;
     cape->applyForces(timeStep);
     cape->satisfyConstraints();
     cape->handleSphereIntersections(&leftFoot);

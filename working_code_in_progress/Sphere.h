@@ -15,9 +15,10 @@ public:
     Vector3 getCenter();
     float getRadius();
     void draw();
-    void handleNodeIntersection(Node* node);
+    void handleNodeIntersection(Node* node, bool isClothSelfIntersectionSphere);
     bool willHitSphere(Node* node);
     void setCenter(Vector3 c);
+    void translate(Vector3 direction);
 };
 
 #endif

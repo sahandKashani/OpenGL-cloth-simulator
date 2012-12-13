@@ -110,6 +110,8 @@ void Node::draw()
     // force applied to the node
     Arrow appliedForce(position, position + force);
     appliedForce.draw();
+
+    boundary->draw();
 }
 
 bool Node::isMoveable()
@@ -129,5 +131,8 @@ void Node::translate(Vector3 direction)
 
 void Node::handleNodeIntersection(Node* node)
 {
+    boundary->setCenter(position);
 
+    // this is a self-intersection test
+    boundary->handleNodeIntersection(node, true);
 }
