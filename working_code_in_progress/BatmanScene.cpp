@@ -38,7 +38,7 @@ void BatmanScene::createScene()
     camera->saveCameraSetup();
 
     // cloth setup (cannot put more than 7 rigidity)
-    cape = new Cloth(15.0, 20.0, 15, 2);
+    cape = new Cloth(15.0, 20.0, 60, 2);
     // fixing cape at certain points
     cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
     cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
@@ -72,7 +72,7 @@ void BatmanScene::createScene()
     // rightFoot.push_back(Sphere(Vector3(7.5, 4.0, 5.0), 1.0));
     // rightFoot.push_back(Sphere(Vector3(7.5, 2.0, 5.0), 1.0));
 
-    rightFoot.push_back(Sphere(Vector3(7.5, 12.0, 5.0), 2.0));
+    rightFoot.push_back(Sphere(Vector3(7.5, 12.0, 5.0), 1.5));
 
     // forces
     // gravity
@@ -92,7 +92,7 @@ void BatmanScene::simulate()
     cape->satisfyConstraints();
     cape->handleSphereIntersections(&leftFoot);
     cape->handleSphereIntersections(&rightFoot);
-    cape->handleSelfIntersections();
+    // cape->handleSelfIntersections();
 }
 
 void BatmanScene::draw()
