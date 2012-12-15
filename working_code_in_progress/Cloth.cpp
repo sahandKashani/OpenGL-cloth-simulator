@@ -132,32 +132,101 @@ void Cloth::updateTriangles()
 
 void Cloth::updateNodeNormals()
 {
-    for(int x = 0; x < numberNodesWidth - 1; x += 1)
+    for(int x = 0; x < numberNodesWidth; x += 1)
     {
-        for(int y = 0; y < numberNodesHeight - 1; y += 1)
+        for(int y = 0; y < numberNodesHeight; y += 1)
         {
             Node* currentNode = getNode(x, y);
             Vector3 currentNormal;
 
             if(x == 0 && y == 0)
             {
-                Triangle* bottomTriangle      = &triangles[x][y - 1][0];
-                Triangle* bottomRightTriangle = &triangles[x][y - 1][1];
-                Triangle* topRightTriangle    = &triangles[x][y    ][0];
+                Triangle* topRightTriangle = &triangles[x][y][0];
 
-                // currentNormal = bottomTriangle->getNormal() +
-                //                 bottomRightTriangle->getNormal() +
+                currentNormal = topRightTriangle->getNormal();
 
+                currentNormal = currentNormal.normalize();
+            }
+            else if(x == 0 && y == numberNodesHeight - 1)
+            {
+                Triangle* bottomTriangle = &triangles[x][y - 1][0];
+                Triangle* rightTriangle  = &triangles[x][y - 1][1];
+
+                currentNormal = bottomTriangle->getNormal() +
+                                rightTriangle->getNormal();
+
+                currentNormal = currentNormal.normalize();
+            }
+            else if(x == numberNodesWidth - 1 && y == 0)
+            {
+                Triangle* leftTriangle = &triangles[x - 1][y][0];
+                Triangle* topTriangle  = &triangles[x - 1][y][1];
+
+                currentNormal = leftTriangle->getNormal() +
+                                topTriangle->getNormal();
+
+                currentNormal = currentNormal.normalize();
+            }
+            else if(x == numberNodesWidth - 1 && y == numberNodesHeight - 1)
+            {
+                Triangle* bottomTriangle = &triangles[x - 1][y - 1][1];
+
+                currentNormal = bottomTriangle->getNormal();
+
+                currentNormal = currentNormal.normalize();
             }
             else if(x == 0)
             {
+                Triangle* bottomTriangle = &triangles[x][y - 1][0];
+                Triangle* rightTriangle  = &triangles[x][y - 1][1];
+                Triangle* topTriangle    = &triangles[x][y][0];
 
+                currentNormal = bottomTriangle->getNormal() +
+                                rightTriangle->getNormal() +
+                                topTriangle->getNormal();
+
+                currentNormal = currentNormal.normalize();
+            }
+            else if(x == numberNodesWidth - 1)
+            {
+                Triangle* bottomTriangle = &triangles[x - 1][y - 1][1];
+                Triangle* leftTriangle   = &triangles[x - 1][y    ][0];
+                Triangle* topTriangle    = &triangles[x - 1][y - 1][1];
+
+                currentNormal = bottomTriangle->getNormal() +
+                                leftTriangle->getNormal() +
+                                topTriangle->getNormal();
+
+                currentNormal = currentNormal.normalize();
             }
             else if(y == 0)
             {
+                Triangle* leftTriangle  = &triangles[x - 1][y][0];
+                Triangle* topTriangle   = &triangles[x - 1][y][1];
+                Triangle* rightTriangle = &triangles[x    ][y][0];
 
+                currentNormal = leftTriangle->getNormal() +
+                                topTriangle->getNormal() +
+                                rightTriangle->getNormal();
+
+                currentNormal = currentNormal.normalize();
             }
-            else
+            else if(y == numberNodesHeight - 1)
+            {
+                Triangle* leftTriangle   = &triangles[x - 1][y - 1][1];
+                Triangle* bottomTriangle = &triangles[x    ][y - 1][0];
+                Triangle* rightTriangle  = &triangles[x    ][y - 1][1];
+
+                currentNormal = leftTriangle->getNormal() +
+                                bottomTriangle->getNormal() +
+                                rightTriangle->getNormal();
+
+                currentNormal = currentNormal.normalize();
+            }
+            else if(0 < x                      &&
+                    x < numberNodesWidth - 1   &&
+                    0 < y                      &&
+                    y < numberNodesHeight - 1)
             {
                 Triangle* bottomLeftTriangle  = &triangles[x - 1][y - 1][1];
                 Triangle* bottomTriangle      = &triangles[x    ][y - 1][0];
@@ -174,9 +243,9 @@ void Cloth::updateNodeNormals()
                                 topLeftTriangle->getNormal();
 
                 currentNormal = currentNormal.normalize();
-
-                currentNode->setNormal(currentNormal);
             }
+
+            currentNode->setNormal(currentNormal);
         }
     }
 }
