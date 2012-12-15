@@ -15,15 +15,16 @@ private:
     // 5) if dot product < 0, then move node towards surface
 
 public:
-    Vector3 p1;
-    Vector3 p2;
-    Vector3 p3;
+    Node* n1;
+    Node* n2;
+    Node* n3;
 
     Vector3 normal;
-    float area;
 
-    Triangle(Vector3 n1, Vector3 n2, Vector3 n3);
+    Triangle(Node* p1, Node* p2, Node* p3);
     void draw();
+
+    Vector3 getNormal();
 };
 
 #endif

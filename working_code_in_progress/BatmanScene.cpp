@@ -14,13 +14,16 @@ BatmanScene::BatmanScene() :
 
 void BatmanScene::createScene()
 {
-    GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
-    GLfloat white_light[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat lmodel_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
 
-    glShadeModel(GL_SMOOTH);
+    // GLfloat light_position[] = { 0.0, 0.0, 1.0, 0.0 };
+    // GLfloat white_light[] = { 1.0, 1.0, 1.0, 1.0 };
+    // GLfloat lmodel_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
 
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    // glShadeModel(GL_SMOOTH);
+
+    // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     // glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
 

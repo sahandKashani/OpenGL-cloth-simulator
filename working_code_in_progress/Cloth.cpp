@@ -116,21 +116,43 @@ void Cloth::updateTriangles()
     {
         for(int y = 0; y < numberNodesHeight - 1; y += 1)
         {
-            Vector3 bottomLeft = getNode(x, y)->getPosition();
-            Vector3 bottomRight = getNode(x + 1, y)->getPosition();
-            Vector3 topLeft = getNode(x, y + 1)->getPosition();
-            Vector3 topRight = getNode(x + 1, y + 1)->getPosition();
-            Vector3 center = (bottomLeft + bottomRight + topRight + topLeft) / 4;
+            Node* bottomLeft = getNode(x, y);
+            Node* bottomRight = getNode(x + 1, y);
+            Node* topLeft = getNode(x, y + 1);
+            Node* topRight = getNode(x + 1, y + 1);
 
-            Triangle leftTriangle(center, topLeft, bottomLeft);
-            Triangle bottomTriangle(center, bottomLeft, bottomRight);
-            Triangle rightTriangle(center, bottomRight, topRight);
-            Triangle topTriangle(center, topRight, topLeft);
+            Triangle lowerTriangle(topLeft, bottomLeft, bottomRight);
+            Triangle upperTriangle(topLeft, bottomRight, topRight);
 
-            triangles[x][y][0] = leftTriangle;
-            triangles[x][y][1] = bottomTriangle;
-            triangles[x][y][2] = rightTriangle;
-            triangles[x][y][3] = topTriangle;
+            triangles[x][y][0] = lowerTriangle;
+            triangles[x][y][1] = upperTriangle;
+        }
+    }
+}
+
+void Cloth::updateNodeNormals()
+{
+    for(int x = 1; x < numberNodesWidth - 1; x += 1)
+    {
+        for(int y = 1; y < numberNodesHeight - 1; y += 1)
+        {
+            Triangle* bottomLeftTriangle  = &triangles[x - 1][y - 1][1];
+            Triangle* bottomTriangle      = &triangles[x    ][y - 1][0];
+            Triangle* bottomRightTriangle = &triangles[x    ][y - 1][1];
+            Triangle* topRightTriangle    = &triangles[x    ][y    ][0];
+            Triangle* topTriangle         = &triangles[x - 1][y    ][1];
+            Triangle* topLeftTriangle     = &triangles[x - 1][y    ][0];
+
+            Vector3 currentNormal = bottomLeftTriangle->getNormal()  +
+                                    bottomTriangle->getNormal()      +
+                                    bottomRightTriangle->getNormal() +
+                                    topRightTriangle->getNormal()    +
+                                    topTriangle->getNormal()         +
+                                    topLeftTriangle->getNormal();
+            currentNormal = currentNormal.normalize();
+
+            Node* currentNode = getNode(x, y);
+            currentNode->setNormal(currentNormal);
         }
     }
 }
@@ -143,22 +165,17 @@ void Cloth::createTriangles()
 
         for(int y = 0; y < numberNodesHeight - 1; y += 1)
         {
-            Vector3 bottomLeft = getNode(x, y)->getPosition();
-            Vector3 bottomRight = getNode(x + 1, y)->getPosition();
-            Vector3 topLeft = getNode(x, y + 1)->getPosition();
-            Vector3 topRight = getNode(x + 1, y + 1)->getPosition();
-            Vector3 center = (bottomLeft + bottomRight + topRight + topLeft) / 4;
+            Node* bottomLeft = getNode(x, y);
+            Node* bottomRight = getNode(x + 1, y);
+            Node* topLeft = getNode(x, y + 1);
+            Node* topRight = getNode(x + 1, y + 1);
 
-            Triangle leftTriangle(center, topLeft, bottomLeft);
-            Triangle bottomTriangle(center, bottomLeft, bottomRight);
-            Triangle rightTriangle(center, bottomRight, topRight);
-            Triangle topTriangle(center, topRight, topLeft);
+            Triangle lowerTriangle(topLeft, bottomLeft, bottomRight);
+            Triangle upperTriangle(topLeft, bottomRight, topRight);
 
             std::vector<Triangle> triangleSquare;
-            triangleSquare.push_back(leftTriangle);
-            triangleSquare.push_back(bottomTriangle);
-            triangleSquare.push_back(rightTriangle);
-            triangleSquare.push_back(topTriangle);
+            triangleSquare.push_back(lowerTriangle);
+            triangleSquare.push_back(upperTriangle);
 
             triangleColumn.push_back(triangleSquare);
         }
@@ -240,15 +257,14 @@ void Cloth::drawNodes()
 void Cloth::drawShaded()
 {
     updateTriangles();
+    updateNodeNormals();
 
     for(int x = 0; x < numberNodesWidth - 1; x += 1)
     {
         for(int y = 0; y < numberNodesHeight - 1; y += 1)
         {
-            for(int triangleSquareIndex = 0; triangleSquareIndex < 4; triangleSquareIndex += 1)
-            {
-                triangles[x][y][triangleSquareIndex].draw();
-            }
+            triangles[x][y][0].draw();
+            triangles[x][y][1].draw();
         }
     }
 }

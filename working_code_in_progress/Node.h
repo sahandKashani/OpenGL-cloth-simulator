@@ -24,6 +24,7 @@ public:
     Vector3 getPosition();
     Vector3 getOldPosition();
     Vector3 getForce();
+    Vector3 getNormal();
 
     void setMoveable(bool isMovePossible);
     void setMass(float m);

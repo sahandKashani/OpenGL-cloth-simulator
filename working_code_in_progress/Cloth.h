@@ -42,6 +42,7 @@ private:
 
     // node creation method
     void createNodes();
+    void updateNodeNormals();
 
     // constraint creation methods
     void createConstraints();
