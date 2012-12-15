@@ -92,7 +92,7 @@ void BatmanScene::simulate()
     cape->satisfyConstraints();
     cape->handleSphereIntersections(&leftFoot);
     cape->handleSphereIntersections(&rightFoot);
-    // cape->handleSelfIntersections();
+    cape->handleSelfIntersections();
 }
 
 void BatmanScene::draw()

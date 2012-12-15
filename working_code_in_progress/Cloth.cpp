@@ -141,6 +141,12 @@ void Cloth::updateNodeNormals()
 
             if(x == 0 && y == 0)
             {
+                Triangle* bottomTriangle      = &triangles[x][y - 1][0];
+                Triangle* bottomRightTriangle = &triangles[x][y - 1][1];
+                Triangle* topRightTriangle    = &triangles[x][y    ][0];
+
+                // currentNormal = bottomTriangle->getNormal() +
+                //                 bottomRightTriangle->getNormal() +
 
             }
             else if(x == 0)
