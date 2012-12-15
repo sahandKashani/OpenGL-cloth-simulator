@@ -144,8 +144,6 @@ void Cloth::updateNodeNormals()
                 Triangle* topRightTriangle = &triangles[x][y][0];
 
                 currentNormal = topRightTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(x == 0 && y == numberNodesHeight - 1)
             {
@@ -154,8 +152,6 @@ void Cloth::updateNodeNormals()
 
                 currentNormal = bottomTriangle->getNormal() +
                                 rightTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(x == numberNodesWidth - 1 && y == 0)
             {
@@ -164,16 +160,12 @@ void Cloth::updateNodeNormals()
 
                 currentNormal = leftTriangle->getNormal() +
                                 topTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(x == numberNodesWidth - 1 && y == numberNodesHeight - 1)
             {
                 Triangle* bottomTriangle = &triangles[x - 1][y - 1][1];
 
                 currentNormal = bottomTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(x == 0)
             {
@@ -184,8 +176,6 @@ void Cloth::updateNodeNormals()
                 currentNormal = bottomTriangle->getNormal() +
                                 rightTriangle->getNormal() +
                                 topTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(x == numberNodesWidth - 1)
             {
@@ -196,8 +186,6 @@ void Cloth::updateNodeNormals()
                 currentNormal = bottomTriangle->getNormal() +
                                 leftTriangle->getNormal() +
                                 topTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(y == 0)
             {
@@ -208,8 +196,6 @@ void Cloth::updateNodeNormals()
                 currentNormal = leftTriangle->getNormal() +
                                 topTriangle->getNormal() +
                                 rightTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(y == numberNodesHeight - 1)
             {
@@ -220,8 +206,6 @@ void Cloth::updateNodeNormals()
                 currentNormal = leftTriangle->getNormal() +
                                 bottomTriangle->getNormal() +
                                 rightTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
             else if(0 < x                      &&
                     x < numberNodesWidth - 1   &&
@@ -241,10 +225,9 @@ void Cloth::updateNodeNormals()
                                 topRightTriangle->getNormal()    +
                                 topTriangle->getNormal()         +
                                 topLeftTriangle->getNormal();
-
-                currentNormal = currentNormal.normalize();
             }
 
+            currentNormal = currentNormal.normalize();
             currentNode->setNormal(currentNormal);
         }
     }
