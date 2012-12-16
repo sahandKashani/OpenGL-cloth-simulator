@@ -474,8 +474,3 @@ void Cloth::createInterleavedShearConstraints(int inter)
         lowerRightShearConstraints.push_back(lowerRightConstraintColumn);
     }
 }
-
-void Cloth::handleTearing()
-{
-
-}

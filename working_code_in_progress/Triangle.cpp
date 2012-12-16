@@ -15,31 +15,38 @@ void Triangle::draw()
     {
         glPushAttrib(GL_POLYGON_BIT); // save mesh settings
             glPushAttrib(GL_CURRENT_BIT); // save color
+                glPushAttrib(GL_LIGHTING_BIT);
 
-                // GLfloat mat_amb_diff[] = { 1.0, 0.0, 0.0, 1.0 };
-                // glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mat_amb_diff);
-                Vector3 p1 = n1->getPosition();
-                Vector3 p1_normal = n1->getNormal();
+                    glEnable(GL_LIGHTING);
+                    glEnable(GL_LIGHT0);
+                    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 
-                Vector3 p2 = n2->getPosition();
-                Vector3 p2_normal = n2->getNormal();
+                    Vector3 p1 = n1->getPosition();
+                    Vector3 p1_normal = n1->getNormal();
 
-                Vector3 p3 = n3->getPosition();
-                Vector3 p3_normal = n3->getNormal();
+                    Vector3 p2 = n2->getPosition();
+                    Vector3 p2_normal = n2->getNormal();
 
-                Vector3 color = drawingSettings->getTriangleColor();
-                glColor3f(color.x, color.y, color.z);
-                glBegin(GL_TRIANGLES);
-                    glNormal3f(p1_normal.x, p1_normal.y, p1_normal.z);
-                    glVertex3f(p1.x, p1.y, p1.z);
+                    Vector3 p3 = n3->getPosition();
+                    Vector3 p3_normal = n3->getNormal();
 
-                    glNormal3f(p2_normal.x, p2_normal.y, p2_normal.z);
-                    glVertex3f(p2.x, p2.y, p2.z);
+                    Vector3 color = drawingSettings->getTriangleColor();
 
-                    glNormal3f(p3_normal.x, p3_normal.y, p3_normal.z);
-                    glVertex3f(p3.x, p3.y, p3.z);
-                glEnd();
+                    GLfloat mat_amb_diff[] = {color.x, color.y, color.z, 1.0};
+                    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mat_amb_diff);
 
+                    glBegin(GL_TRIANGLES);
+                        glNormal3f(p1_normal.x, p1_normal.y, p1_normal.z);
+                        glVertex3f(p1.x, p1.y, p1.z);
+
+                        glNormal3f(p2_normal.x, p2_normal.y, p2_normal.z);
+                        glVertex3f(p2.x, p2.y, p2.z);
+
+                        glNormal3f(p3_normal.x, p3_normal.y, p3_normal.z);
+                        glVertex3f(p3.x, p3.y, p3.z);
+                    glEnd();
+
+                glPopAttrib(); // GL_LIGHTING_BIT
             glPopAttrib(); // GL_CURRENT_BIT
         glPopAttrib(); // GL_POLYGON_BIT
 

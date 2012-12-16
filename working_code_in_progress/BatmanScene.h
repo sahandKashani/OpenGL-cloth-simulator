@@ -18,6 +18,8 @@ private:
 
     void createScene();
     void drawBodyElement(std::vector<Sphere>* elements);
+    void swingLeftFoot();
+    void swingRightFoot();
 
 public:
     BatmanScene();
