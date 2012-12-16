@@ -91,6 +91,7 @@ public:
 
     void handleSphereIntersections(std::vector<Sphere>* spheres);
     void handleSelfIntersections();
+    void handleTearing();
 };
 
 #endif
