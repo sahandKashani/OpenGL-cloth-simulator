@@ -139,92 +139,70 @@ void Cloth::updateNodeNormals()
             Node* currentNode = getNode(x, y);
             Vector3 currentNormal;
 
+            std::vector<Triangle*> adjacentTriangles;
+
             if(x == 0 && y == 0)
             {
-                Triangle* topRightTriangle = &triangles[x][y][0];
-
-                currentNormal = topRightTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x][y][0]);
             }
             else if(x == 0 && y == numberNodesHeight - 1)
             {
-                Triangle* bottomTriangle = &triangles[x][y - 1][0];
-                Triangle* rightTriangle  = &triangles[x][y - 1][1];
-
-                currentNormal = bottomTriangle->getNormal() +
-                                rightTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x][y - 1][0]);
+                adjacentTriangles.push_back(&triangles[x][y - 1][1]);
             }
             else if(x == numberNodesWidth - 1 && y == 0)
             {
-                Triangle* leftTriangle = &triangles[x - 1][y][0];
-                Triangle* topTriangle  = &triangles[x - 1][y][1];
-
-                currentNormal = leftTriangle->getNormal() +
-                                topTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x - 1][y][0]);
+                adjacentTriangles.push_back(&triangles[x - 1][y][1]);
             }
             else if(x == numberNodesWidth - 1 && y == numberNodesHeight - 1)
             {
-                Triangle* bottomTriangle = &triangles[x - 1][y - 1][1];
-
-                currentNormal = bottomTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x - 1][y - 1][1]);
             }
             else if(x == 0)
             {
-                Triangle* bottomTriangle = &triangles[x][y - 1][0];
-                Triangle* rightTriangle  = &triangles[x][y - 1][1];
-                Triangle* topTriangle    = &triangles[x][y][0];
-
-                currentNormal = bottomTriangle->getNormal() +
-                                rightTriangle->getNormal() +
-                                topTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x][y - 1][0]);
+                adjacentTriangles.push_back(&triangles[x][y - 1][1]);
+                adjacentTriangles.push_back(&triangles[x][y    ][0]);
             }
             else if(x == numberNodesWidth - 1)
             {
-                Triangle* bottomTriangle = &triangles[x - 1][y - 1][1];
-                Triangle* leftTriangle   = &triangles[x - 1][y    ][0];
-                Triangle* topTriangle    = &triangles[x - 1][y - 1][1];
-
-                currentNormal = bottomTriangle->getNormal() +
-                                leftTriangle->getNormal() +
-                                topTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x - 1][y - 1][1]);
+                adjacentTriangles.push_back(&triangles[x - 1][y    ][0]);
+                adjacentTriangles.push_back(&triangles[x - 1][y - 1][1]);
             }
             else if(y == 0)
             {
-                Triangle* leftTriangle  = &triangles[x - 1][y][0];
-                Triangle* topTriangle   = &triangles[x - 1][y][1];
-                Triangle* rightTriangle = &triangles[x    ][y][0];
-
-                currentNormal = leftTriangle->getNormal() +
-                                topTriangle->getNormal() +
-                                rightTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x - 1][y][0]);
+                adjacentTriangles.push_back(&triangles[x - 1][y][1]);
+                adjacentTriangles.push_back(&triangles[x    ][y][0]);
             }
             else if(y == numberNodesHeight - 1)
             {
-                Triangle* leftTriangle   = &triangles[x - 1][y - 1][1];
-                Triangle* bottomTriangle = &triangles[x    ][y - 1][0];
-                Triangle* rightTriangle  = &triangles[x    ][y - 1][1];
-
-                currentNormal = leftTriangle->getNormal() +
-                                bottomTriangle->getNormal() +
-                                rightTriangle->getNormal();
+                adjacentTriangles.push_back(&triangles[x - 1][y - 1][1]);
+                adjacentTriangles.push_back(&triangles[x    ][y - 1][0]);
+                adjacentTriangles.push_back(&triangles[x    ][y - 1][1]);
             }
             else if(0 < x                      &&
                     x < numberNodesWidth - 1   &&
                     0 < y                      &&
                     y < numberNodesHeight - 1)
             {
-                Triangle* bottomLeftTriangle  = &triangles[x - 1][y - 1][1];
-                Triangle* bottomTriangle      = &triangles[x    ][y - 1][0];
-                Triangle* bottomRightTriangle = &triangles[x    ][y - 1][1];
-                Triangle* topRightTriangle    = &triangles[x    ][y    ][0];
-                Triangle* topTriangle         = &triangles[x - 1][y    ][1];
-                Triangle* topLeftTriangle     = &triangles[x - 1][y    ][0];
+                adjacentTriangles.push_back(&triangles[x - 1][y - 1][1]);
+                adjacentTriangles.push_back(&triangles[x    ][y - 1][0]);
+                adjacentTriangles.push_back(&triangles[x    ][y - 1][1]);
+                adjacentTriangles.push_back(&triangles[x    ][y    ][0]);
+                adjacentTriangles.push_back(&triangles[x - 1][y    ][1]);
+                adjacentTriangles.push_back(&triangles[x - 1][y    ][0]);
+            }
 
-                currentNormal = bottomLeftTriangle->getNormal()  +
-                                bottomTriangle->getNormal()      +
-                                bottomRightTriangle->getNormal() +
-                                topRightTriangle->getNormal()    +
-                                topTriangle->getNormal()         +
-                                topLeftTriangle->getNormal();
+            // sum the normals of each adjacent triangle to get the current node's
+            // normal value
+            for(std::vector<Triangle*>::iterator it = adjacentTriangles.begin();
+                it != adjacentTriangles.end();
+                ++it)
+            {
+                currentNormal += (*it)->getNormal();
             }
 
             currentNormal = currentNormal.normalize();
