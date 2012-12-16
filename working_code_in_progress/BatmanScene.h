@@ -16,10 +16,18 @@ private:
     std::vector<Sphere> leftFoot;
     std::vector<Sphere> rightFoot;
 
+    float time;
+
     void createScene();
     void drawBodyElement(std::vector<Sphere>* elements);
+
     void swingLeftFoot();
     void swingRightFoot();
+
+    void swingLeftShoulder();
+    void swingRightShoulder();
+
+    void followBatman();
 
 public:
     BatmanScene();
