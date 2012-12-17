@@ -7,7 +7,8 @@
 #include <GL/glu.h>
 
 BatmanScene::BatmanScene() :
-    Scene()
+    Scene(),
+    pi(3.141592)
 {
     createScene();
 }
@@ -28,7 +29,7 @@ void BatmanScene::createScene()
     camera->saveCameraSetup();
 
     // cloth setup (cannot put more than 7 rigidity)
-    cape = new Cloth(10.0, 15.0, 15, 2);
+    cape = new Cloth(10.0, 15.0, 15, 7);
 
     // fixing cape at certain points
     cape->getNode(0                              , cape->getNumberNodesHeight() - 1)->setMoveable(false);
@@ -38,7 +39,7 @@ void BatmanScene::createScene()
     {
         for(int y = 0; y < cape->getNumberNodesHeight() - 1; y += 1)
         {
-            cape->getNode(x, y)->setMass(1.0);
+            cape->getNode(x, y)->setMass(1000000.0);
         }
     }
 
@@ -63,10 +64,10 @@ void BatmanScene::createScene()
     // gravity
     Vector3 gravity(0.0, -1.0, 0.0);
     // wind
-    Vector3 wind(0.0, 0.0, -0.1);
+    Vector3 wind(0.0, 0.0, 1.0);
 
     // add forces to cape
-    // cape->addForce(gravity);
+    cape->addForce(gravity);
     cape->addForce(wind);
 
     time = 0.0;
@@ -74,16 +75,16 @@ void BatmanScene::createScene()
 
 void BatmanScene::simulate()
 {
-    float timeStep = 0.001;
+    float timeStep = 0.0005;
     time += timeStep;
     cape->applyForces(timeStep);
     cape->satisfyConstraints();
 
     swingLeftFoot();
-    // swingLeftShoulder();
+    swingLeftShoulder();
 
     swingRightFoot();
-    // swingRightShoulder();
+    swingRightShoulder();
 
     Node* leftshoulder = cape->getNode(0, cape->getNumberNodesHeight() - 1);
     Node* rightshoulder = cape->getNode(cape->getNumberNodesWidth() - 1, cape->getNumberNodesHeight() -1);
@@ -157,8 +158,8 @@ void BatmanScene::swingRightFoot()
     float t = time * 100;
 
     float x = right->getCenter().x;
-    float y = r  * (1 - cos(t - 3.141592));
-    float z = -r * (t - sin(t - 3.141592));
+    float y = r  * (1 - cos(t - pi));
+    float z = -r * (t - sin(t - pi));
 
     Vector3 position(x, y, z);
     right->setCenter(position);
@@ -172,7 +173,7 @@ void BatmanScene::swingLeftShoulder()
 
     float x = left->getPosition().x;
     float y = left->getPosition().y;
-    float z = -r * (t - sin(t));
+    float z = -r * (t - sin(t - pi));
 
     Vector3 position(x, y, z);
     left->setPosition(position);
@@ -186,7 +187,7 @@ void BatmanScene::swingRightShoulder()
 
     float x = right->getPosition().x;
     float y = right->getPosition().y;
-    float z = -r * (t - sin(t - 3.141592));
+    float z = -r * (t - sin(t));
 
     Vector3 position(x, y, z);
     right->setPosition(position);

@@ -16,6 +16,8 @@ private:
     std::vector<Sphere> leftFoot;
     std::vector<Sphere> rightFoot;
 
+    float pi;
+
     float time;
 
     void createScene();
