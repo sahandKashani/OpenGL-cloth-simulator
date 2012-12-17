@@ -18,6 +18,8 @@ private:
 
     std::vector<Sphere> boundaries;
 
+    std::vector<Sphere> otherSpheres;
+
     float pi;
 
     float time;
@@ -35,10 +37,24 @@ private:
 
     void translateBoundaries();
 
+    void setClothMass(float mass);
+    void setupClothTips();
+    void createBoundaries();
+    void setupCamera();
+    void setupFeet();
+
+    void drawFeet();
+    void drawOtherSpheres();
+    void addForces();
+    void createCenterCollisionBallScene();
+    void createRunningScene();
+
 public:
     BatmanScene();
     void draw();
     void simulate();
+
+    static float timeStep;
 };
 
 #endif

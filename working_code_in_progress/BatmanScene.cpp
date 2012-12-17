@@ -6,6 +6,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+float BatmanScene::timeStep = 0.0001;
+
 BatmanScene::BatmanScene() :
     Scene(),
     pi(3.141592)
@@ -18,38 +20,82 @@ void BatmanScene::createScene()
     GLfloat light_position[] = {0.0, 1.0, 1.0, 0.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
+    setupCamera();
+
+    // cannot put more than 7 rigidity for cloth
+    cape = new Cloth(15.0, 15.0, 15, 2);
+
+    setupClothTips();
+    setClothMass(1.0);
+    // createRunningScene();
+    createCenterCollisionBallScene();
+    addForces();
+
+    time = 0.0;
+}
+
+void BatmanScene::createRunningScene()
+{
+    setupFeet();
+    createBoundaries();
+}
+
+void BatmanScene::addForces()
+{
+    Vector3 gravity(0.0, -1.0, 0.0);
+    Vector3 wind(0.0, 0.0, 10.0);
+
+    cape->addForce(gravity);
+    cape->addForce(wind);
+}
+
+void BatmanScene::createCenterCollisionBallScene()
+{
+    otherSpheres.push_back(Sphere(Vector3(7.5, 10.0, 5.0), 2.0));
+}
+
+void BatmanScene::setupFeet()
+{
+    Vector3 centerBetweenFeet(5.0, 2.0, -1.0);
+
+    // left foot
+    leftFoot.push_back(Sphere(centerBetweenFeet +  Vector3(-2.0, 0.0, 0.0 ), 1.2));
+
+    // right foot
+    rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2));
+}
+
+void BatmanScene::setupCamera()
+{
     nearPlane = 1.0;
     farPlane  = 200.0;
 
-    // camera setup
     camera = new Camera();
     camera->setPosition(Vector3(-10.0, 7.5, 20.0));
     camera->setViewDirection(Vector3(1.0, 0.0, -1.0));
     camera->setUpDirection(Vector3(0.0, 1.0, 0.0));
     camera->saveCameraSetup();
+}
 
-    // cloth setup (cannot put more than 7 rigidity)
-    cape = new Cloth(10.0, 15.0, 15, 7);
-
-    // fixing cape at certain points
-    cape->getNode(0                              , cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    cape->getNode(cape->getNumberNodesWidth() - 1, cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    // setting cape node mass
+void BatmanScene::setClothMass(float mass)
+{
     for(int x = 0; x < cape->getNumberNodesWidth() - 1; x += 1)
     {
         for(int y = 0; y < cape->getNumberNodesHeight() - 1; y += 1)
         {
-            cape->getNode(x, y)->setMass(1.0);
+            cape->getNode(x, y)->setMass(mass);
         }
     }
+}
 
-    // body setup
-    Vector3 centerBetweenFeet(5.0, 2.0, -1.0);
-    // left foot
-    leftFoot.push_back(Sphere(centerBetweenFeet +  Vector3(-2.0, 0.0, 0.0 ), 1.2));
-    // right foot
-    rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2));
+void BatmanScene::setupClothTips()
+{
+    cape->getNode(0                              , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    cape->getNode(cape->getNumberNodesWidth() - 1, cape->getNumberNodesHeight() - 1)->setMoveable(false);
+}
 
+void BatmanScene::createBoundaries()
+{
     float spacing = cape->getClothWidth() / cape->getNumberNodesWidth();
     for(int x = 0; x < cape->getNumberNodesWidth(); x += 1)
     {
@@ -60,77 +106,63 @@ void BatmanScene::createScene()
             float yPos = y * spacing;
 
             // put elements in rectangular grid with yPos depth
-            boundaries.push_back(Sphere(Vector3(xPos, yPos, -yPos) + Vector3(0.0, 0.0, 15), 0.5));
             boundaries.push_back(Sphere(Vector3(xPos, yPos, -1.0), 0.5));
+            boundaries.push_back(Sphere(Vector3(xPos, yPos, -yPos) + Vector3(0.0, 0.0, 15), 0.5));
         }
     }
-
-    // rightFoot.push_back(Sphere(Vector3(7.5, 12.0, 5.0), 1.5));
-    // rightFoot.push_back(Sphere(Vector3(7.5, 10.0, 5.0), 1.5));
-    // rightFoot.push_back(Sphere(Vector3(7.5, 8.0, 5.0) , 1.5));
-    // rightFoot.push_back(Sphere(Vector3(7.5, 6.0, 5.0) , 1.5));
-    // rightFoot.push_back(Sphere(Vector3(7.5, 4.0, 5.0) , 1.5));
-    // rightFoot.push_back(Sphere(Vector3(7.5, 2.0, 5.0) , 1.5));
-
-    // center ball collision test
-    // rightFoot.push_back(Sphere(Vector3(7.5, 10.0, 5.0), 1.5));
-
-    // forces
-    // gravity
-    Vector3 gravity(0.0, -1.0, 0.0);
-    // wind
-    Vector3 wind(0.0, 0.0, 1.0);
-
-    // add forces to cape
-    cape->addForce(gravity);
-    // cape->addForce(wind);
-
-    time = 0.0;
 }
 
 void BatmanScene::translateBoundaries()
 {
+    float leftShoulderZ = cape->getNode(0, cape->getNumberNodesHeight() - 1)->getPosition().z;
+
     for(std::vector<Sphere>::iterator it = boundaries.begin();
         it != boundaries.end();
         ++it)
     {
-        it->translate(Vector3(0.0, 0.0, cape->getNode(0, cape->getNumberNodesHeight() - 1)->getPosition().z) - boundaries[0].getCenter());
+        it->translate(Vector3(0.0, 0.0, leftShoulderZ) - boundaries[0].getCenter());
     }
 }
 
 void BatmanScene::simulate()
 {
-    float timeStep = 0.0005;
     time += timeStep;
     cape->applyForces(timeStep);
     cape->satisfyConstraints();
 
-    swingLeftFoot();
-    swingLeftShoulder();
-
-    swingRightFoot();
-    swingRightShoulder();
+    // swingLeftFoot();
+    // swingLeftShoulder();
+    // swingRightFoot();
+    // swingRightShoulder();
 
     translateBoundaries();
-
     cape->handleSphereIntersections(&leftFoot);
     cape->handleSphereIntersections(&rightFoot);
     cape->handleSphereIntersections(&boundaries);
+    cape->handleSphereIntersections(&otherSpheres);
     cape->handleSelfIntersections();
+}
+
+void BatmanScene::drawFeet()
+{
+    drawBodyElement(&leftFoot);
+    drawBodyElement(&rightFoot);
+}
+
+void BatmanScene::drawOtherSpheres()
+{
+    drawBodyElement(&otherSpheres);
 }
 
 void BatmanScene::draw()
 {
     DrawingSettings::getInstance()->chooseRenderingMethod();
-
     drawWorldAxis();
-
-    // draw cape
     cape->draw();
+    drawFeet();
+    drawOtherSpheres();
 
-    // draw feet
-    drawBodyElement(&leftFoot);
-    drawBodyElement(&rightFoot);
+    // TODO : remove
     drawBodyElement(&boundaries);
 }
 
