@@ -29,15 +29,10 @@ void BatmanScene::createScene()
 
     // cloth setup (cannot put more than 7 rigidity)
     cape = new Cloth(10.0, 15.0, 15, 2);
-    // fixing cape at certain points
-    for(int x = 0; x < cape->getNumberNodesWidth(); x += 1)
-    {
-        cape->getNode(x, cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    }
 
-    // cape->getNode(0                                    , cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    // cape->getNode((cape->getNumberNodesWidth() - 1) / 2, cape->getNumberNodesHeight() - 1)->setMoveable(false);
-    // cape->getNode(cape->getNumberNodesWidth() - 1      , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    // fixing cape at certain points
+    cape->getNode(0                              , cape->getNumberNodesHeight() - 1)->setMoveable(false);
+    cape->getNode(cape->getNumberNodesWidth() - 1, cape->getNumberNodesHeight() - 1)->setMoveable(false);
     // setting cape node mass
     for(int x = 0; x < cape->getNumberNodesWidth() - 1; x += 1)
     {
@@ -98,16 +93,14 @@ void BatmanScene::simulate()
     float z = -r * (t - sin(t));
 
     Vector3 direction(0.0, 0.0, z - leftshoulder->getPosition().z);
-    for(int x = 0; x < cape->getNumberNodesWidth(); x += 1)
-    {
-        cape->getNode(x, cape->getNumberNodesHeight() - 1)->translate(direction);
-    }
+    leftshoulder->translate(direction);
+    rightshoulder->translate(direction);
 
     cape->handleSphereIntersections(&leftFoot);
     cape->handleSphereIntersections(&rightFoot);
     cape->handleSelfIntersections();
 
-    followBatman();
+    // followBatman();
 }
 
 void BatmanScene::followBatman()
