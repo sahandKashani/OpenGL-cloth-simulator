@@ -15,6 +15,9 @@ private:
 
     std::vector<Sphere> leftFoot;
     std::vector<Sphere> rightFoot;
+    std::vector<Sphere> leftShoulder;
+    std::vector<Sphere> rightShoulder;
+    std::vector<Sphere> body;
 
     float time;
 
@@ -26,8 +29,6 @@ private:
 
     void swingLeftShoulder();
     void swingRightShoulder();
-
-    void followBatman();
 
 public:
     BatmanScene();
