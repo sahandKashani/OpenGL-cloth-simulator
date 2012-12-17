@@ -55,7 +55,7 @@ void Sphere::draw()
                         glTranslatef(center.x, center.y, center.z);
 
                         // draw the sphere a little smaller for collision problems
-                        glutSolidSphere(radius - 0.2, 100, 100);
+                        glutSolidSphere(radius - 0.2, 20, 20);
                     glPopMatrix();
 
                 glPopAttrib(); // GL_LIGHTING_BIT

@@ -39,7 +39,7 @@ void BatmanScene::createScene()
     {
         for(int y = 0; y < cape->getNumberNodesHeight() - 1; y += 1)
         {
-            cape->getNode(x, y)->setMass(1000000.0);
+            cape->getNode(x, y)->setMass(1.0);
         }
     }
 
@@ -49,6 +49,21 @@ void BatmanScene::createScene()
     leftFoot.push_back(Sphere(centerBetweenFeet +  Vector3(-2.0, 0.0, 0.0 ), 1.2));
     // right foot
     rightFoot.push_back(Sphere(centerBetweenFeet + Vector3( 2.0, 0.0, 0.0 ), 1.2));
+
+    float spacing = cape->getClothWidth() / cape->getNumberNodesWidth();
+    for(int x = 0; x < cape->getNumberNodesWidth(); x += 1)
+    {
+        float xPos = x * spacing;
+
+        for(int y = 0; y < cape->getNumberNodesHeight(); y += 1)
+        {
+            float yPos = y * spacing;
+
+            // put elements in rectangular grid with yPos depth
+            boundaries.push_back(Sphere(Vector3(xPos, yPos, -yPos) + Vector3(0.0, 0.0, 15), 0.5));
+            boundaries.push_back(Sphere(Vector3(xPos, yPos, -1.0), 0.5));
+        }
+    }
 
     // rightFoot.push_back(Sphere(Vector3(7.5, 12.0, 5.0), 1.5));
     // rightFoot.push_back(Sphere(Vector3(7.5, 10.0, 5.0), 1.5));
@@ -68,9 +83,19 @@ void BatmanScene::createScene()
 
     // add forces to cape
     cape->addForce(gravity);
-    cape->addForce(wind);
+    // cape->addForce(wind);
 
     time = 0.0;
+}
+
+void BatmanScene::translateBoundaries()
+{
+    for(std::vector<Sphere>::iterator it = boundaries.begin();
+        it != boundaries.end();
+        ++it)
+    {
+        it->translate(Vector3(0.0, 0.0, cape->getNode(0, cape->getNumberNodesHeight() - 1)->getPosition().z) - boundaries[0].getCenter());
+    }
 }
 
 void BatmanScene::simulate()
@@ -86,31 +111,12 @@ void BatmanScene::simulate()
     swingRightFoot();
     swingRightShoulder();
 
-    Node* leftshoulder = cape->getNode(0, cape->getNumberNodesHeight() - 1);
-    Node* rightshoulder = cape->getNode(cape->getNumberNodesWidth() - 1, cape->getNumberNodesHeight() -1);
-
-    float r = 1.5;
-    float t = time * 100;
-    float z = -r * (t - sin(t));
-
-    Vector3 direction(0.0, 0.0, z - leftshoulder->getPosition().z);
-    leftshoulder->translate(direction);
-    rightshoulder->translate(direction);
+    translateBoundaries();
 
     cape->handleSphereIntersections(&leftFoot);
     cape->handleSphereIntersections(&rightFoot);
+    cape->handleSphereIntersections(&boundaries);
     cape->handleSelfIntersections();
-
-    // followBatman();
-}
-
-void BatmanScene::followBatman()
-{
-    float r = 1.5;
-    float t = time * 100;
-    float z = -r * (t - sin(t));
-
-    camera->translate(Vector3(0.0, 0.0, z - camera->getPosition().z));
 }
 
 void BatmanScene::draw()
@@ -125,6 +131,7 @@ void BatmanScene::draw()
     // draw feet
     drawBodyElement(&leftFoot);
     drawBodyElement(&rightFoot);
+    drawBodyElement(&boundaries);
 }
 
 void BatmanScene::drawBodyElement(std::vector<Sphere>* elements)

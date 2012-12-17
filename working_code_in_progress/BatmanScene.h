@@ -16,6 +16,8 @@ private:
     std::vector<Sphere> leftFoot;
     std::vector<Sphere> rightFoot;
 
+    std::vector<Sphere> boundaries;
+
     float pi;
 
     float time;
@@ -30,6 +32,8 @@ private:
     void swingRightShoulder();
 
     void followBatman();
+
+    void translateBoundaries();
 
 public:
     BatmanScene();
