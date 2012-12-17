@@ -63,8 +63,10 @@ void BatmanScene::createScene()
     // shoulder setup
     Vector3 shoulderHeightCenter((cape->getNode(0, cape->getNumberNodesHeight() - 1)->getPosition() +
                                   cape->getNode(cape->getNumberNodesWidth() - 1, cape->getNumberNodesHeight() - 1)->getPosition()) / 2.0 -
-                                  Vector3(0.0, 1.0, 2.0));
+                                  Vector3(0.0, 1.0, 1.0));
+    std::cout << shoulderHeightCenter.toString() << std::endl;
     leftShoulder.push_back(Sphere(shoulderHeightCenter + Vector3(-2.0,  0.0, 0.0), 1.2));
+    rightShoulder.push_back(Sphere(shoulderHeightCenter + Vector3(2.0,  0.0, 0.0), 1.2));
 
     // rightFoot.push_back(Sphere(Vector3(7.5, 12.0, 5.0), 1.5));
     // rightFoot.push_back(Sphere(Vector3(7.5, 10.0, 5.0), 1.5));
@@ -99,8 +101,8 @@ void BatmanScene::simulate()
     // swingLeftFoot();
     // swingRightFoot();
 
-    swingLeftShoulder();
-    swingRightShoulder();
+    // swingLeftShoulder();
+    // swingRightShoulder();
 
     cape->handleSphereIntersections(&leftFoot);
     cape->handleSphereIntersections(&rightFoot);
