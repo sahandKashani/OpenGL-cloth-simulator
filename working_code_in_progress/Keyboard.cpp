@@ -21,8 +21,9 @@ Keyboard* Keyboard::getInstance()
 }
 
 Keyboard::Keyboard() :
-    angleIncrement(0.015625), // 2^(-6)
-    translationIncrement(0.125) // 2^(-3)
+    angleIncrement(0.015625),    // 2^(-6)
+    translationIncrement(0.125), // 2^(-3)
+    spacebarPressed(false)
 {}
 
 void Keyboard::resetKeyboardStatus()
@@ -142,6 +143,17 @@ void Keyboard::handleNormalKeyboardInput(unsigned char key, int x, int y)
         case '3':
             drawingSettings->toggleDrawTrianglesEnabled();
             break;
+        case 32:
+            spacebarPressed = !spacebarPressed;
+
+            if(spacebarPressed)
+            {
+                drawingSettings->setTimeStep(0.0001);
+            }
+            else
+            {
+                drawingSettings->setTimeStep(0.0);
+            }
 
         default:
             // toggle enable state for keyboard buttons which are to be

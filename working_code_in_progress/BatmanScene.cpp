@@ -6,8 +6,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-float BatmanScene::timeStep = 0.0001;
-
 BatmanScene::BatmanScene() :
     Scene(),
     pi(3.141592)
@@ -126,21 +124,25 @@ void BatmanScene::translateBoundaries()
 
 void BatmanScene::simulate()
 {
-    time += timeStep;
-    cape->applyForces(timeStep);
-    cape->satisfyConstraints();
+    float timeStep = DrawingSettings::getInstance()->getTimeStep();
+    if(timeStep != 0.0)
+    {
+        time += timeStep;
+        cape->applyForces(timeStep);
+        cape->satisfyConstraints();
 
-    // swingLeftFoot();
-    // swingLeftShoulder();
-    // swingRightFoot();
-    // swingRightShoulder();
+        // swingLeftFoot();
+        // swingLeftShoulder();
+        // swingRightFoot();
+        // swingRightShoulder();
 
-    translateBoundaries();
-    cape->handleSphereIntersections(&leftFoot);
-    cape->handleSphereIntersections(&rightFoot);
-    cape->handleSphereIntersections(&boundaries);
-    cape->handleSphereIntersections(&otherSpheres);
-    cape->handleSelfIntersections();
+        // translateBoundaries();
+        // cape->handleSphereIntersections(&leftFoot);
+        // cape->handleSphereIntersections(&rightFoot);
+        // cape->handleSphereIntersections(&boundaries);
+        cape->handleSphereIntersections(&otherSpheres);
+        cape->handleSelfIntersections();
+    }
 }
 
 void BatmanScene::drawFeet()

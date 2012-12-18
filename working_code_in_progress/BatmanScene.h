@@ -53,8 +53,6 @@ public:
     BatmanScene();
     void draw();
     void simulate();
-
-    static float timeStep;
 };
 
 #endif

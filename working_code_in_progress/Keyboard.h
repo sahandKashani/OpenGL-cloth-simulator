@@ -12,6 +12,8 @@ private:
     float angleIncrement;
     float translationIncrement;
 
+    bool spacebarPressed;
+
 protected:
     Keyboard();
 
