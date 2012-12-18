@@ -21,12 +21,12 @@ void BatmanScene::createScene()
     setupCamera();
 
     // cannot put more than 7 rigidity for cloth
-    cape = new Cloth(15.0, 15.0, 15, 2);
+    cape = new Cloth(15.0, 15.0, 20, 2);
 
     setupClothTips();
     setClothMass(1.0);
-    // createRunningScene();
-    createCenterCollisionBallScene();
+    createRunningScene();
+    // createCenterCollisionBallScene();
     addForces();
 
     time = 0.0;
@@ -131,16 +131,23 @@ void BatmanScene::simulate()
         cape->applyForces(timeStep);
         cape->satisfyConstraints();
 
-        // swingLeftFoot();
-        // swingLeftShoulder();
-        // swingRightFoot();
-        // swingRightShoulder();
+        if(runningSceneEnabled)
+        {
+            swingLeftFoot();
+            swingLeftShoulder();
+            swingRightFoot();
+            swingRightShoulder();
 
-        // translateBoundaries();
-        // cape->handleSphereIntersections(&leftFoot);
-        // cape->handleSphereIntersections(&rightFoot);
-        // cape->handleSphereIntersections(&boundaries);
-        cape->handleSphereIntersections(&otherSpheres);
+            translateBoundaries();
+            cape->handleSphereIntersections(&leftFoot);
+            cape->handleSphereIntersections(&rightFoot);
+            cape->handleSphereIntersections(&boundaries);
+        }
+        else
+        {
+            cape->handleSphereIntersections(&otherSpheres);
+        }
+
         cape->handleSelfIntersections();
     }
 }
