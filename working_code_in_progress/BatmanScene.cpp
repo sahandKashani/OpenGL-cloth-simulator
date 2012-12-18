@@ -21,12 +21,22 @@ void BatmanScene::createScene()
     setupCamera();
 
     // cannot put more than 7 rigidity for cloth
-    cape = new Cloth(15.0, 15.0, 20, 2);
+    cape = new Cloth(15.0, 15.0, 20, 1);
 
     setupClothTips();
     setClothMass(1.0);
-    createRunningScene();
-    // createCenterCollisionBallScene();
+
+    runningSceneEnabled = false;
+
+    if(runningSceneEnabled)
+    {
+        createRunningScene();
+    }
+    else
+    {
+        createCenterCollisionBallScene();
+    }
+
     addForces();
 
     time = 0.0;
@@ -69,9 +79,11 @@ void BatmanScene::setupCamera()
     farPlane  = 200.0;
 
     camera = new Camera();
-    camera->setPosition(Vector3(-10.0, 7.5, 20.0));
-    camera->setViewDirection(Vector3(1.0, 0.0, -1.0));
-    camera->setUpDirection(Vector3(0.0, 1.0, 0.0));
+    // camera->setPosition(Vector3(-10.0, 7.5, 20.0));
+    // camera->setViewDirection(Vector3(1.0, 0.0, -1.0));
+    camera->setPosition(Vector3(5, 22.3435, 21.378));
+    camera->setViewDirection(Vector3(0, -0.533303, -0.845924));
+    camera->setUpDirection(Vector3(0, 0.845924, -0.533303));
     camera->saveCameraSetup();
 }
 

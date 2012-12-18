@@ -32,7 +32,7 @@ DrawingSettings::DrawingSettings() :
     structuralConstraintColor    (1.0, 1.0, 1.0),
     shearConstraintColor         (1.0, 1.0, 1.0),
     sphereColor                  (1.0, 0.1, 0.1),
-    triangleColor                (0.5, 0.5, 0.5),
+    triangleColor                (0.5, 0.5, 1.0),
     floorColor                   (1.0, 1.0, 1.0),
     arrowColor                   (0.0, 1.0, 0.0),
     timeStep                     (0.0)

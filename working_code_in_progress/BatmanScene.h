@@ -49,6 +49,8 @@ private:
     void createCenterCollisionBallScene();
     void createRunningScene();
 
+    bool runningSceneEnabled;
+
 public:
     BatmanScene();
     void draw();
