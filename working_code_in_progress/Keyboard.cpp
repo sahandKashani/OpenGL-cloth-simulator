@@ -148,7 +148,7 @@ void Keyboard::handleNormalKeyboardInput(unsigned char key, int x, int y)
 
             if(spacebarPressed)
             {
-                drawingSettings->setTimeStep(0.0005);
+                drawingSettings->setTimeStep(drawingSettings->getOriginalTimeStep());
             }
             else
             {

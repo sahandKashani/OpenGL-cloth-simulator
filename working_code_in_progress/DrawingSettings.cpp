@@ -35,7 +35,8 @@ DrawingSettings::DrawingSettings() :
     triangleColor                (0.5, 0.5, 1.0),
     floorColor                   (1.0, 1.0, 1.0),
     arrowColor                   (0.0, 1.0, 0.0),
-    timeStep                     (0.0)
+    timeStep                     (0.0),
+    originalTimeStep             (0.0)
 {}
 
 bool DrawingSettings::isDrawWireFrameEnabled()
@@ -203,6 +204,16 @@ Vector3 DrawingSettings::getFloorColor()
 Vector3 DrawingSettings::getArrowColor()
 {
     return arrowColor;
+}
+
+float DrawingSettings::getOriginalTimeStep()
+{
+    return originalTimeStep;
+}
+
+void DrawingSettings::setOriginalTimeStep(float time)
+{
+    originalTimeStep = time;
 }
 
 float DrawingSettings::getTimeStep()

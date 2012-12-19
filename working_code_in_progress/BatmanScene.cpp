@@ -18,15 +18,25 @@ void BatmanScene::createScene()
     GLfloat light_position[] = {0.0, 1.0, 1.0, 0.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
+    runningSceneEnabled = true;
+
     setupCamera();
 
-    // cannot put more than 7 rigidity for cloth
-    cape = new Cloth(10.0, 15.0, 20, 2);
+    if(runningSceneEnabled)
+    {
+        // cannot put more than 7 rigidity for cape
+        cape = new Cloth(10.0, 15.0, 20, 2);
+        setClothMass(0.5);
+        DrawingSettings::getInstance()->setOriginalTimeStep(0.001);
+    }
+    else
+    {
+        cape = new Cloth(15.0, 15.0, 20, 1);
+        setClothMass(1.0);
+        DrawingSettings::getInstance()->setOriginalTimeStep(0.0001);
+    }
 
     setupClothTips();
-    setClothMass(1.0);
-
-    runningSceneEnabled = true;
 
     if(runningSceneEnabled)
     {

@@ -28,6 +28,7 @@ private:
     Vector3 arrowColor;
 
     float timeStep;
+    float originalTimeStep;
 
 protected:
     DrawingSettings();
@@ -70,6 +71,8 @@ public:
 
     float getTimeStep();
     void setTimeStep(float time);
+    float getOriginalTimeStep();
+    void setOriginalTimeStep(float time);
 };
 
 #endif
