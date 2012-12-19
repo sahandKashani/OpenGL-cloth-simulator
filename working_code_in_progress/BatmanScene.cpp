@@ -26,7 +26,7 @@ void BatmanScene::createScene()
     {
         // cannot put more than 7 rigidity for cape
         cape = new Cloth(10.0, 15.0, 20, 2);
-        setClothMass(0.5);
+        setClothMass(0.1);
         DrawingSettings::getInstance()->setOriginalTimeStep(0.001);
     }
     else
@@ -55,7 +55,7 @@ void BatmanScene::createScene()
 void BatmanScene::createRunningScene()
 {
     setupFeet();
-    // createBoundaries();
+    createBoundaries();
 }
 
 void BatmanScene::addForces()
@@ -172,9 +172,10 @@ void BatmanScene::simulate()
             swingRightFoot();
             swingRightShoulder();
 
-            // translateBoundaries();
             cape->handleSphereIntersections(&leftFoot);
             cape->handleSphereIntersections(&rightFoot);
+
+            // translateBoundaries();
             // cape->handleSphereIntersections(&boundaries);
         }
         else
@@ -202,11 +203,18 @@ void BatmanScene::draw()
     DrawingSettings::getInstance()->chooseRenderingMethod();
     drawWorldAxis();
     cape->draw();
-    drawFeet();
-    drawOtherSpheres();
 
-    // TODO : remove
-    drawBodyElement(&boundaries);
+    if(runningSceneEnabled)
+    {
+        drawFeet();
+
+        // TODO : remove
+        // drawBodyElement(&boundaries);
+    }
+    else
+    {
+        drawOtherSpheres();
+    }
 }
 
 void BatmanScene::drawBodyElement(std::vector<Sphere>* elements)
