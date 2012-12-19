@@ -15,9 +15,12 @@ private:
 
     std::vector<Sphere> leftFoot;
     std::vector<Sphere> rightFoot;
-    std::vector<Sphere> leftShoulder;
-    std::vector<Sphere> rightShoulder;
-    std::vector<Sphere> body;
+
+    std::vector<Sphere> boundaries;
+
+    std::vector<Sphere> otherSpheres;
+
+    float pi;
 
     float time;
 
@@ -29,6 +32,24 @@ private:
 
     void swingLeftShoulder();
     void swingRightShoulder();
+
+    void followBatman();
+
+    void translateBoundaries();
+
+    void setClothMass(float mass);
+    void setupClothTips();
+    void createBoundaries();
+    void setupCamera();
+    void setupFeet();
+
+    void drawFeet();
+    void drawOtherSpheres();
+    void addForces();
+    void createCenterCollisionBallScene();
+    void createRunningScene();
+
+    bool runningSceneEnabled;
 
 public:
     BatmanScene();

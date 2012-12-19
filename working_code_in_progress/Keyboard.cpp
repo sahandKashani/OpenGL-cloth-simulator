@@ -21,8 +21,9 @@ Keyboard* Keyboard::getInstance()
 }
 
 Keyboard::Keyboard() :
-    angleIncrement(0.015625), // 2^(-6)
-    translationIncrement(0.125) // 2^(-3)
+    angleIncrement(0.015625),    // 2^(-6)
+    translationIncrement(0.125), // 2^(-3)
+    spacebarPressed(false)
 {}
 
 void Keyboard::resetKeyboardStatus()
@@ -142,6 +143,17 @@ void Keyboard::handleNormalKeyboardInput(unsigned char key, int x, int y)
         case '3':
             drawingSettings->toggleDrawTrianglesEnabled();
             break;
+        case 32:
+            spacebarPressed = !spacebarPressed;
+
+            if(spacebarPressed)
+            {
+                drawingSettings->setTimeStep(drawingSettings->getOriginalTimeStep());
+            }
+            else
+            {
+                drawingSettings->setTimeStep(0.0);
+            }
 
         default:
             // toggle enable state for keyboard buttons which are to be
@@ -236,17 +248,18 @@ void Keyboard::showHelp()
 
     // drawing controls
     std::cout << "drawing controls:" << std::endl;
-    std::cout << "  F5 : toggle draw structural      constraints" << std::endl;
-    std::cout << "  F6 : toggle draw shear           constraints" << std::endl;
-    std::cout << "  F7 : toggle draw structural bend constraints" << std::endl;
-    std::cout << "  F8 : toggle draw shear      bend constraints" << std::endl;
-    std::cout << "  F9 : toggle draw nodes" << std::endl;
-    std::cout << "  F10: toggle draw wireframe" << std::endl;
-    std::cout << "  F11: toggle draw world axis" << std::endl;
-    std::cout << "  F12: toggle draw spheres" << std::endl;
-    std::cout << "  1  : toggle draw arrows" << std::endl;
-    std::cout << "  2  : toggle draw floor" << std::endl;
-    std::cout << "  3  : toggle draw triangles" << std::endl;
+    std::cout << "  F5   : toggle draw structural      constraints" << std::endl;
+    std::cout << "  F6   : toggle draw shear           constraints" << std::endl;
+    std::cout << "  F7   : toggle draw structural bend constraints" << std::endl;
+    std::cout << "  F8   : toggle draw shear      bend constraints" << std::endl;
+    std::cout << "  F9   : toggle draw nodes" << std::endl;
+    std::cout << "  F10  : toggle draw wireframe" << std::endl;
+    std::cout << "  F11  : toggle draw world axis" << std::endl;
+    std::cout << "  F12  : toggle draw spheres" << std::endl;
+    std::cout << "  1    : toggle draw arrows" << std::endl;
+    std::cout << "  2    : toggle draw floor" << std::endl;
+    std::cout << "  3    : toggle draw triangles" << std::endl;
+    std::cout << "  space: toggle pause" << std::endl;
 
     std::cout << std::endl;
 

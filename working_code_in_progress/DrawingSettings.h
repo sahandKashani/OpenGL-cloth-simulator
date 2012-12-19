@@ -27,6 +27,9 @@ private:
     Vector3 floorColor;
     Vector3 arrowColor;
 
+    float timeStep;
+    float originalTimeStep;
+
 protected:
     DrawingSettings();
 
@@ -65,6 +68,11 @@ public:
     Vector3 getTriangleColor();
     Vector3 getFloorColor();
     Vector3 getArrowColor();
+
+    float getTimeStep();
+    void setTimeStep(float time);
+    float getOriginalTimeStep();
+    void setOriginalTimeStep(float time);
 };
 
 #endif
