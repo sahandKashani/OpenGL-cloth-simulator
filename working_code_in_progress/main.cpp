@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 
     glutInitWindowSize(400, 400);
-    glutInitWindowPosition(1520, 800);
+    glutInitWindowPosition(800, 800);
 
     glutCreateWindow("Cloth Simulator");
 

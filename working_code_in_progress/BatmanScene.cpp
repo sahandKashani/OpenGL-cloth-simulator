@@ -21,12 +21,12 @@ void BatmanScene::createScene()
     setupCamera();
 
     // cannot put more than 7 rigidity for cloth
-    cape = new Cloth(15.0, 15.0, 20, 1);
+    cape = new Cloth(10.0, 15.0, 20, 2);
 
     setupClothTips();
     setClothMass(1.0);
 
-    runningSceneEnabled = false;
+    runningSceneEnabled = true;
 
     if(runningSceneEnabled)
     {
@@ -45,16 +45,20 @@ void BatmanScene::createScene()
 void BatmanScene::createRunningScene()
 {
     setupFeet();
-    createBoundaries();
+    // createBoundaries();
 }
 
 void BatmanScene::addForces()
 {
     Vector3 gravity(0.0, -1.0, 0.0);
-    Vector3 wind(0.0, 0.0, 10.0);
+    Vector3 wind(0.0, 0.0, 15.0);
 
     cape->addForce(gravity);
-    cape->addForce(wind);
+
+    if(!runningSceneEnabled)
+    {
+        cape->addForce(wind);
+    }
 }
 
 void BatmanScene::createCenterCollisionBallScene()
@@ -79,11 +83,19 @@ void BatmanScene::setupCamera()
     farPlane  = 200.0;
 
     camera = new Camera();
-    // camera->setPosition(Vector3(-10.0, 7.5, 20.0));
-    // camera->setViewDirection(Vector3(1.0, 0.0, -1.0));
-    camera->setPosition(Vector3(5, 22.3435, 21.378));
-    camera->setViewDirection(Vector3(0, -0.533303, -0.845924));
-    camera->setUpDirection(Vector3(0, 0.845924, -0.533303));
+    if(runningSceneEnabled)
+    {
+        camera->setPosition(Vector3(-10.0, 7.5, 20.0));
+        camera->setViewDirection(Vector3(1.0, 0.0, -1.0));
+        camera->setUpDirection(Vector3(0.0, 1.0, 0.0));
+    }
+    else
+    {
+        camera->setPosition(Vector3(7.5, 22.3435, 21.378));
+        camera->setViewDirection(Vector3(0, -0.533303, -0.845924));
+        camera->setUpDirection(Vector3(0, 0.845924, -0.533303));
+    }
+
     camera->saveCameraSetup();
 }
 
@@ -150,10 +162,10 @@ void BatmanScene::simulate()
             swingRightFoot();
             swingRightShoulder();
 
-            translateBoundaries();
+            // translateBoundaries();
             cape->handleSphereIntersections(&leftFoot);
             cape->handleSphereIntersections(&rightFoot);
-            cape->handleSphereIntersections(&boundaries);
+            // cape->handleSphereIntersections(&boundaries);
         }
         else
         {
