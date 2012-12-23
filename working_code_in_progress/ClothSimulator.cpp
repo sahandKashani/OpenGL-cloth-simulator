@@ -36,8 +36,7 @@ void ClothSimulator::createScene()
 {
     Keyboard* keyboard = Keyboard::getInstance();
 
-    // TODO : Enable later
-    // keyboard->showHelp();
+    keyboard->showHelp();
     keyboard->resetKeyboardStatus();
 
     scene = new BatmanScene();

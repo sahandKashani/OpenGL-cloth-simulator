@@ -18,7 +18,8 @@ void BatmanScene::createScene()
     GLfloat light_position[] = {0.0, 1.0, 1.0, 0.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-    runningSceneEnabled = true;
+    runningSceneEnabled = false;
+    // runningSceneEnabled = true;
 
     setupCamera();
 

@@ -22,7 +22,7 @@ Keyboard* Keyboard::getInstance()
 
 Keyboard::Keyboard() :
     angleIncrement(0.015625),    // 2^(-6)
-    translationIncrement(0.125), // 2^(-3)
+    translationIncrement(0.5), // 2^(-3)
     spacebarPressed(false)
 {}
 
