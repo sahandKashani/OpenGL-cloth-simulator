@@ -1,4 +1,4 @@
-ICG 2012: Cloth Simulation Project
+# Cloth Simulation Project
 
 Florian Briant
 
